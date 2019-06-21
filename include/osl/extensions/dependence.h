@@ -170,8 +170,9 @@ struct osl_dependence {
 };
 typedef struct osl_dependence osl_dependence;
 
-typedef struct osl_dependence osl_dependence_t;
-typedef struct osl_dependence* osl_dependence_p;
+/* The following typedefs are deprecated. Use osl_dependence. */
+typedef struct osl_dependence osl_dependence_t OSL_DEPRECATED;
+typedef struct osl_dependence* osl_dependence_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
