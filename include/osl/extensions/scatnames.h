@@ -85,8 +85,9 @@ struct osl_scatnames {
 };
 typedef struct osl_scatnames osl_scatnames;
 
-typedef struct osl_scatnames osl_scatnames_t;
-typedef struct osl_scatnames* osl_scatnames_p;
+/* The following typedefs are deprecated. Use osl_scatnames. */
+typedef struct osl_scatnames osl_scatnames_t OSL_DEPRECATED;
+typedef struct osl_scatnames* osl_scatnames_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
