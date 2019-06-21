@@ -2972,8 +2972,7 @@ struct osl_pluto_unroll @{
   unsigned int factor;            /* unroll factor */
   struct osl_pluto_unroll * next; /* next @{ iter, jam, factor @} */
 @};
-typedef struct osl_pluto_unroll   osl_pluto_unroll_t;
-typedef struct osl_pluto_unroll * osl_pluto_unroll_p;
+typedef struct osl_pluto_unroll osl_pluto_unroll;
 @end group
 @end example
 

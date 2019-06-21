@@ -74,7 +74,7 @@ extern "C" {
 #define OSL_URI_PLUTO_UNROLL "pluto_unroll"
 
 /**
- * The osl_pluto_unroll_t structure stores the pluto_unroll
+ * The osl_pluto_unroll structure stores the pluto_unroll
  * that Pluto wants to unroll
  */
 struct osl_pluto_unroll {
@@ -83,6 +83,8 @@ struct osl_pluto_unroll {
   unsigned int factor;           /**< \brief unroll factor */
   struct osl_pluto_unroll* next; /**< \brief next { iter, jam, factor } */
 };
+typedef struct osl_pluto_unroll osl_pluto_unroll;
+
 typedef struct osl_pluto_unroll osl_pluto_unroll_t;
 typedef struct osl_pluto_unroll* osl_pluto_unroll_p;
 
@@ -90,35 +92,35 @@ typedef struct osl_pluto_unroll* osl_pluto_unroll_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_pluto_unroll_idump(FILE*, const osl_pluto_unroll_t*, int);
-void osl_pluto_unroll_dump(FILE*, const osl_pluto_unroll_t*);
-char* osl_pluto_unroll_sprint(const osl_pluto_unroll_t*);
+void osl_pluto_unroll_idump(FILE*, const osl_pluto_unroll*, int);
+void osl_pluto_unroll_dump(FILE*, const osl_pluto_unroll*);
+char* osl_pluto_unroll_sprint(const osl_pluto_unroll*);
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_pluto_unroll_t* osl_pluto_unroll_sread(char**);
+osl_pluto_unroll* osl_pluto_unroll_sread(char**);
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_pluto_unroll_t* osl_pluto_unroll_malloc(void);
-void osl_pluto_unroll_free(osl_pluto_unroll_t*);
+osl_pluto_unroll* osl_pluto_unroll_malloc(void);
+void osl_pluto_unroll_free(osl_pluto_unroll*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-void osl_pluto_unroll_fill(osl_pluto_unroll_t*, char const* const, bool,
+void osl_pluto_unroll_fill(osl_pluto_unroll*, char const* const, bool,
                            unsigned int);
-osl_pluto_unroll_t* osl_pluto_unroll_clone(const osl_pluto_unroll_t*);
-bool osl_pluto_unroll_equal_one(const osl_pluto_unroll_t*,
-                                const osl_pluto_unroll_t*);
-bool osl_pluto_unroll_equal(const osl_pluto_unroll_t*,
-                            const osl_pluto_unroll_t*);
-osl_strings* osl_pluto_unroll_to_strings(const osl_pluto_unroll_t*);
+osl_pluto_unroll* osl_pluto_unroll_clone(const osl_pluto_unroll*);
+bool osl_pluto_unroll_equal_one(const osl_pluto_unroll*,
+                                const osl_pluto_unroll*);
+bool osl_pluto_unroll_equal(const osl_pluto_unroll*,
+                            const osl_pluto_unroll*);
+osl_strings* osl_pluto_unroll_to_strings(const osl_pluto_unroll*);
 osl_interface* osl_pluto_unroll_interface(void);
 
 #if defined(__cplusplus)

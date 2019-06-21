@@ -37,13 +37,13 @@ int main(int argc, char** argv)
 
   int nb_fail = 0;
   
-  osl_pluto_unroll_p p0 = NULL;
-  osl_pluto_unroll_p p1 = NULL;
-  osl_pluto_unroll_p pc = NULL;
+  osl_pluto_unroll* p0 = NULL;
+  osl_pluto_unroll* p1 = NULL;
+  osl_pluto_unroll* pc = NULL;
   
   // Free without malloc
   printf("// Free without malloc\n");
-  osl_pluto_unroll_p p = NULL;
+  osl_pluto_unroll* p = NULL;
   osl_pluto_unroll_free(p);
   if (p != NULL) { nb_fail++; }
   printf("\n");

@@ -71,7 +71,7 @@
 
 /**
  * osl_loop_idump function:
- * this function displays an osl_pluto_unroll_t structure (pluto_unroll) into a
+ * this function displays an osl_pluto_unroll structure (pluto_unroll) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others
  * idump functions.
@@ -81,7 +81,7 @@
  * \param[in] level        Number of spaces before printing, for each line.
  */
 void osl_pluto_unroll_idump(FILE* const file,
-                            const osl_pluto_unroll_t* pluto_unroll, int level) {
+                            const osl_pluto_unroll* pluto_unroll, int level) {
   int j, first = 1, number = 1;
 
   // Go to the right level.
@@ -89,7 +89,7 @@ void osl_pluto_unroll_idump(FILE* const file,
     fprintf(file, "|\t");
 
   if (pluto_unroll != NULL)
-    fprintf(file, "+-- osl_pluto_unroll_t\n");
+    fprintf(file, "+-- osl_pluto_unroll\n");
   else
     fprintf(file, "+-- NULL pluto_unroll\n");
 
@@ -100,7 +100,7 @@ void osl_pluto_unroll_idump(FILE* const file,
       for (j = 0; j < level; j++)
         fprintf(file, "|\t");
 
-      fprintf(file, "|   osl_pluto_unroll_t (node %d)\n", number);
+      fprintf(file, "|   osl_pluto_unroll (node %d)\n", number);
     } else {
       first = 0;
     }
@@ -143,27 +143,27 @@ void osl_pluto_unroll_idump(FILE* const file,
 
 /**
  * osl_pluto_unroll_dump function:
- * this function prints the content of an osl_pluto_unroll_t structure
+ * this function prints the content of an osl_pluto_unroll structure
  * (*pluto_unroll) into a file (file, possibly stdout).
  *
  * \param[in] file         The file where the information has to be printed.
  * \param[in] pluto_unroll The pluto_unroll structure to print.
  */
 void osl_pluto_unroll_dump(FILE* const file,
-                           const osl_pluto_unroll_t* pluto_unroll) {
+                           const osl_pluto_unroll* pluto_unroll) {
   osl_pluto_unroll_idump(file, pluto_unroll, 0);
 }
 
 /**
  * osl_pluto_unroll_sprint function:
- * this function prints the content of an osl_pluto_unroll_t structure
+ * this function prints the content of an osl_pluto_unroll structure
  * (*pluto_unroll) into a string (returned) in the OpenScop textual format.
  *
  * \param[in] pluto_unroll The loop structure to print.
  *
  * \return a string containing the OpenScop dump of the loop structure.
  */
-char* osl_pluto_unroll_sprint(const osl_pluto_unroll_t* pluto_unroll) {
+char* osl_pluto_unroll_sprint(const osl_pluto_unroll* pluto_unroll) {
   char* string = NULL;
   char buffer[OSL_MAX_STRING] = {0};
 
@@ -217,12 +217,12 @@ char* osl_pluto_unroll_sprint(const osl_pluto_unroll_t* pluto_unroll) {
  *
  * \return a pointer to the pluto_unroll structure that has been read.
  */
-osl_pluto_unroll_t* osl_pluto_unroll_sread(char** input) {
-  osl_pluto_unroll_p p = NULL;
+osl_pluto_unroll* osl_pluto_unroll_sread(char** input) {
+  osl_pluto_unroll* p = NULL;
   if (osl_util_read_int(NULL, input) == 1) {
     p = osl_pluto_unroll_malloc();
   }
-  osl_pluto_unroll_p r = p;
+  osl_pluto_unroll* r = p;
 
   while (p != NULL) {
     // iter
@@ -247,17 +247,17 @@ osl_pluto_unroll_t* osl_pluto_unroll_sread(char** input) {
 
 /**
  * osl_pluto_unroll_malloc function:
- * this function allocates the memory space for an osl_pluto_unroll_t
+ * this function allocates the memory space for an osl_pluto_unroll
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  *
  * \return a pointer to an empty pluto_unroll structure with fields set to
  *         default values.
  */
-osl_pluto_unroll_t* osl_pluto_unroll_malloc(void) {
-  osl_pluto_unroll_p pluto_unroll = NULL;
+osl_pluto_unroll* osl_pluto_unroll_malloc(void) {
+  osl_pluto_unroll* pluto_unroll = NULL;
 
-  OSL_malloc(pluto_unroll, osl_pluto_unroll_p, sizeof(osl_pluto_unroll_t));
+  OSL_malloc(pluto_unroll, osl_pluto_unroll*, sizeof(osl_pluto_unroll));
   pluto_unroll->iter = NULL;
   pluto_unroll->jam = false;
   pluto_unroll->factor = 0;
@@ -273,7 +273,7 @@ osl_pluto_unroll_t* osl_pluto_unroll_malloc(void) {
  * \param[in,out] pluto_unroll The pointer to the pluto_unroll structure
  *                             we want to free.
  */
-void osl_pluto_unroll_free(osl_pluto_unroll_t* pluto_unroll) {
+void osl_pluto_unroll_free(osl_pluto_unroll* pluto_unroll) {
   if (pluto_unroll != NULL) {
     osl_pluto_unroll_free(pluto_unroll->next);
 
@@ -289,14 +289,14 @@ void osl_pluto_unroll_free(osl_pluto_unroll_t* pluto_unroll) {
 
 /**
  * osl_pluto_unroll_fill function:
- * this function fill the osl_pluto_unroll_t with the iterator name,
+ * this function fill the osl_pluto_unroll with the iterator name,
  * if jam or not and the unroll factor
  *
- * \param[in] pluto_unroll The pointer to the osl_pluto_unroll_t
+ * \param[in] pluto_unroll The pointer to the osl_pluto_unroll
  * \param[in] jam          true if jam, falsee otherwise
  * \param[in] factor       Unroll factor
  */
-void osl_pluto_unroll_fill(osl_pluto_unroll_t* pluto_unroll,
+void osl_pluto_unroll_fill(osl_pluto_unroll* pluto_unroll,
                            char const* const iterator_name, bool jam,
                            unsigned int factor) {
   if (pluto_unroll != NULL) {
@@ -318,20 +318,20 @@ void osl_pluto_unroll_fill(osl_pluto_unroll_t* pluto_unroll,
 /**
  * osl_pluto_unroll_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of a
- * list of osl_pluto_unroll_t data structures.
+ * list of osl_pluto_unroll data structures.
  *
  * \param[in] pluto_unroll The pointer to the list of pluto_unroll structure to
  *                         clone.
  *
  * \return a pointer to the clone of list of the pluto_unroll structure.
  */
-osl_pluto_unroll_t* osl_pluto_unroll_clone(
-    const osl_pluto_unroll_t* pluto_unroll) {
-  osl_pluto_unroll_p p = NULL;
+osl_pluto_unroll* osl_pluto_unroll_clone(
+    const osl_pluto_unroll* pluto_unroll) {
+  osl_pluto_unroll* p = NULL;
   if (pluto_unroll != NULL) {
     p = osl_pluto_unroll_malloc();
   }
-  osl_pluto_unroll_p r = p;
+  osl_pluto_unroll* r = p;
 
   while (pluto_unroll != NULL) {
     osl_pluto_unroll_fill(p, pluto_unroll->iter, pluto_unroll->jam,
@@ -360,8 +360,8 @@ osl_pluto_unroll_t* osl_pluto_unroll_clone(
  *
  * \return 1 if a and b are the same (content-wise), 0 otherwise.
  */
-bool osl_pluto_unroll_equal(const osl_pluto_unroll_t* a,
-                            const osl_pluto_unroll_t* b) {
+bool osl_pluto_unroll_equal(const osl_pluto_unroll* a,
+                            const osl_pluto_unroll* b) {
   if (a == b) {
     return 1;
   }
