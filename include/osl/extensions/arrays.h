@@ -86,8 +86,9 @@ struct osl_arrays {
 };
 typedef struct osl_arrays osl_arrays;
 
-typedef struct osl_arrays osl_arrays_t;
-typedef struct osl_arrays* osl_arrays_p;
+/* The following typedefs are deprecated. Use osl_arrays. */
+typedef struct osl_arrays osl_arrays_t OSL_DEPRECATED;
+typedef struct osl_arrays* osl_arrays_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
