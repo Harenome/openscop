@@ -84,8 +84,9 @@ struct osl_names {
 };
 typedef struct osl_names osl_names;
 
-typedef struct osl_names osl_names_t;
-typedef struct osl_names* osl_names_p;
+/* The following typedefs are deprecated. Use osl_names. */
+typedef struct osl_names osl_names_t OSL_DEPRECATED;
+typedef struct osl_names* osl_names_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
