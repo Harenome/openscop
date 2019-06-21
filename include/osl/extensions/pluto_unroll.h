@@ -85,8 +85,9 @@ struct osl_pluto_unroll {
 };
 typedef struct osl_pluto_unroll osl_pluto_unroll;
 
-typedef struct osl_pluto_unroll osl_pluto_unroll_t;
-typedef struct osl_pluto_unroll* osl_pluto_unroll_p;
+/* The following typedefs are deprecated. Use osl_pluto_unroll. */
+typedef struct osl_pluto_unroll osl_pluto_unroll_t OSL_DEPRECATED;
+typedef struct osl_pluto_unroll* osl_pluto_unroll_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
