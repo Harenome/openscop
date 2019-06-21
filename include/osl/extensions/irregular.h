@@ -103,8 +103,9 @@ struct osl_irregular {
 };
 typedef struct osl_irregular osl_irregular;
 
-typedef struct osl_irregular osl_irregular_t;
-typedef struct osl_irregular* osl_irregular_p;
+/* The following typedefs are deprecated. Use osl_irregular. */
+typedef struct osl_irregular osl_irregular_t OSL_DEPRECATED;
+typedef struct osl_irregular* osl_irregular_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
