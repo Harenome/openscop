@@ -73,7 +73,7 @@ extern "C" {
 #define OSL_URI_COORDINATES "coordinates"
 
 /**
- * The osl_coordinates_t structure stores a coordinates extension to the core
+ * The osl_coordinates structure stores a coordinates extension to the core
  * OpenScop representation. It provides information about the SCoP location in
  * the original source file (file name, starting and ending lines/columns,
  * indentation level).
@@ -86,6 +86,8 @@ struct osl_coordinates {
   int column_end;   /**< Ending column of the SCoP in the ending line. */
   int indent;       /**< Indentation (number of spaces starting each line).*/
 };
+typedef struct osl_coordinates osl_coordinates;
+
 typedef struct osl_coordinates osl_coordinates_t;
 typedef struct osl_coordinates* osl_coordinates_p;
 
@@ -93,31 +95,31 @@ typedef struct osl_coordinates* osl_coordinates_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_coordinates_idump(FILE*, const osl_coordinates_t*, int)
+void osl_coordinates_idump(FILE*, const osl_coordinates*, int)
     OSL_NONNULL_ARGS(1);
-void osl_coordinates_dump(FILE*, const osl_coordinates_t*) OSL_NONNULL_ARGS(1);
-char* osl_coordinates_sprint(const osl_coordinates_t*) OSL_WARN_UNUSED_RESULT;
+void osl_coordinates_dump(FILE*, const osl_coordinates*) OSL_NONNULL_ARGS(1);
+char* osl_coordinates_sprint(const osl_coordinates*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_coordinates_t* osl_coordinates_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_coordinates* osl_coordinates_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_coordinates_t* osl_coordinates_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_coordinates_free(osl_coordinates_t*);
+osl_coordinates* osl_coordinates_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_coordinates_free(osl_coordinates*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_coordinates_t* osl_coordinates_clone(const osl_coordinates_t*)
+osl_coordinates* osl_coordinates_clone(const osl_coordinates*)
     OSL_WARN_UNUSED_RESULT;
-bool osl_coordinates_equal(const osl_coordinates_t*, const osl_coordinates_t*);
+bool osl_coordinates_equal(const osl_coordinates*, const osl_coordinates*);
 osl_interface* osl_coordinates_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)

@@ -2668,8 +2668,7 @@ struct osl_coordinates @{
   int   end;    /* Last line of the SCoP in the source file */
   int   indent; /* Indentation */
 @};
-typedef struct osl_coordinates  osl_coordinates_t;
-typedef struct osl_coordinates* osl_coordinates_p;
+typedef struct osl_coordinates osl_coordinates;
 @end group
 @end example
 
