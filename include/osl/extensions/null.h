@@ -73,12 +73,14 @@ extern "C" {
 #define OSL_URI_NULL "null"
 
 /**
- * The osl_null_t structure stores a null extention to the core
+ * The osl_null structure stores a null extention to the core
  * OpenScop representation. It contains simply nothing.
  */
 struct osl_null {
   int fake_member_to_disable_warning;
 };
+typedef struct osl_null osl_null;
+
 typedef struct osl_null osl_null_t;
 typedef struct osl_null* osl_null_p;
 
@@ -86,28 +88,28 @@ typedef struct osl_null* osl_null_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_null_idump(FILE*, const osl_null_t*, int) OSL_NONNULL_ARGS(1);
-void osl_null_dump(FILE*, const osl_null_t*) OSL_NONNULL_ARGS(1);
-char* osl_null_sprint(const osl_null_t*) OSL_WARN_UNUSED_RESULT;
+void osl_null_idump(FILE*, const osl_null*, int) OSL_NONNULL_ARGS(1);
+void osl_null_dump(FILE*, const osl_null*) OSL_NONNULL_ARGS(1);
+char* osl_null_sprint(const osl_null*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_null_t* osl_null_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_null* osl_null_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_null_t* osl_null_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_null_free(osl_null_t*);
+osl_null* osl_null_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_null_free(osl_null*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
-osl_null_t* osl_null_clone(const osl_null_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_null_equal(const osl_null_t*, const osl_null_t*);
+osl_null* osl_null_clone(const osl_null*) OSL_WARN_UNUSED_RESULT;
+bool osl_null_equal(const osl_null*, const osl_null*);
 osl_interface* osl_null_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)

@@ -74,7 +74,7 @@
 
 /**
  * osl_null_idump function:
- * this function displays an osl_null_t structure (*null) into a
+ * this function displays an osl_null structure (*null) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others
  * idump functions.
@@ -82,7 +82,7 @@
  * \param[in] null  The null structure to print.
  * \param[in] level Number of spaces before printing, for each line.
  */
-void osl_null_idump(FILE* const file, const osl_null_t* const null, int level) {
+void osl_null_idump(FILE* const file, const osl_null* const null, int level) {
   int j;
 
   // Go to the right level.
@@ -90,7 +90,7 @@ void osl_null_idump(FILE* const file, const osl_null_t* const null, int level) {
     fprintf(file, "|\t");
 
   if (null != NULL)
-    fprintf(file, "+-- osl_null_t\n");
+    fprintf(file, "+-- osl_null\n");
   else
     fprintf(file, "+-- NULL null\n");
 
@@ -102,23 +102,23 @@ void osl_null_idump(FILE* const file, const osl_null_t* const null, int level) {
 
 /**
  * osl_null_dump function:
- * this function prints the content of an osl_null_t structure
+ * this function prints the content of an osl_null structure
  * (*null) into a file (file, possibly stdout).
  * \param[in] file The file where the information has to be printed.
  * \param[in] null The null structure to print.
  */
-void osl_null_dump(FILE* const file, const osl_null_t* const null) {
+void osl_null_dump(FILE* const file, const osl_null* const null) {
   osl_null_idump(file, null, 0);
 }
 
 /**
  * osl_null_sprint function:
- * this function prints the content of an osl_null_t structure
+ * this function prints the content of an osl_null structure
  * (*null) into a string (returned) in the OpenScop textual format.
  * \param[in] null The null structure to print.
  * \return A string containing the OpenScop dump of the null structure.
  */
-char* osl_null_sprint(const osl_null_t* const null) {
+char* osl_null_sprint(const osl_null* const null) {
   char* string = NULL;
 
   if (null != NULL) {
@@ -144,8 +144,8 @@ char* osl_null_sprint(const osl_null_t* const null) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the null structure that has been read.
  */
-osl_null_t* osl_null_sread(char** input) {
-  osl_null_p null;
+osl_null* osl_null_sread(char** input) {
+  osl_null* null;
 
   if (*input == NULL) {
     OSL_debug("no null optional tag");
@@ -167,26 +167,26 @@ osl_null_t* osl_null_sread(char** input) {
 
 /**
  * osl_null_malloc function:
- * this function allocates the memory space for an osl_null_t
+ * this function allocates the memory space for an osl_null
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty null structure with fields set to
  *         default values.
  */
-osl_null_t* osl_null_malloc(void) {
-  osl_null_p null;
+osl_null* osl_null_malloc(void) {
+  osl_null* null;
 
-  OSL_malloc(null, osl_null_p, sizeof(osl_null_t));
+  OSL_malloc(null, osl_null*, sizeof(osl_null));
   return null;
 }
 
 /**
  * osl_null_free function:
- * this function frees the allocated memory for an osl_null_t
+ * this function frees the allocated memory for an osl_null
  * structure.
  * \param[in,out] null The pointer to the null structure to free.
  */
-void osl_null_free(osl_null_t* null) {
+void osl_null_free(osl_null* null) {
   if (null != NULL) {
     free(null);
   }
@@ -199,12 +199,12 @@ void osl_null_free(osl_null_t* null) {
 /**
  * osl_null_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_null_t data structure.
+ * osl_null data structure.
  * \param[in] null The pointer to the null structure to clone.
  * \return A pointer to the clone of the null structure.
  */
-osl_null_t* osl_null_clone(const osl_null_t* null) {
-  osl_null_p clone;
+osl_null* osl_null_clone(const osl_null* null) {
+  osl_null* clone;
 
   if (null == NULL)
     return NULL;
@@ -221,7 +221,7 @@ osl_null_t* osl_null_clone(const osl_null_t* null) {
  * \param[in] c2  The second null structure.
  * \return 1 if c1 and c2 are the same (content-wise), 0 otherwise.
  */
-bool osl_null_equal(const osl_null_t* const c1, const osl_null_t* const c2) {
+bool osl_null_equal(const osl_null* const c1, const osl_null* const c2) {
   if (c1 == c2)
     return 1;
 
