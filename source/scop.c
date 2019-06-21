@@ -894,7 +894,7 @@ void osl_scop_register_extension(osl_scop* scop, osl_interface* interface) {
 
     textual = osl_generic_lookup(scop->extension, interface->URI);
     if (textual != NULL) {
-      extension_string = ((osl_textual_p)textual->data)->textual;
+      extension_string = ((osl_textual*)textual->data)->textual;
       new = osl_generic_sread(&extension_string, interface);
       osl_generic_add(&scop->extension, new);
     }

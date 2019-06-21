@@ -73,13 +73,15 @@ extern "C" {
 #define OSL_URI_TEXTUAL "textual"
 
 /**
- * The osl_textual_t structure stores the complete textual
+ * The osl_textual structure stores the complete textual
  * representation of the scop extension field. It is a special case of
  * extension since it does not require start and end tag.
  */
 struct osl_textual {
   char* textual; /**< Full extension string as a 0-terminated string. */
 };
+typedef struct osl_textual osl_textual;
+
 typedef struct osl_textual osl_textual_t;
 typedef struct osl_textual* osl_textual_p;
 
@@ -87,29 +89,29 @@ typedef struct osl_textual* osl_textual_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_textual_idump(FILE*, const osl_textual_t*, int) OSL_NONNULL_ARGS(1);
-void osl_textual_dump(FILE*, const osl_textual_t*) OSL_NONNULL_ARGS(1);
-char* osl_textual_sprint(const osl_textual_t*) OSL_WARN_UNUSED_RESULT;
+void osl_textual_idump(FILE*, const osl_textual*, int) OSL_NONNULL_ARGS(1);
+void osl_textual_dump(FILE*, const osl_textual*) OSL_NONNULL_ARGS(1);
+char* osl_textual_sprint(const osl_textual*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_textual_t* osl_textual_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_textual* osl_textual_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_textual_t* osl_textual_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_textual_free(osl_textual_t*);
+osl_textual* osl_textual_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_textual_free(osl_textual*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_textual_t* osl_textual_clone(const osl_textual_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_textual_equal(const osl_textual_t*, const osl_textual_t*);
+osl_textual* osl_textual_clone(const osl_textual*) OSL_WARN_UNUSED_RESULT;
+bool osl_textual_equal(const osl_textual*, const osl_textual*);
 osl_interface* osl_textual_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
