@@ -1947,7 +1947,7 @@ A[i+j] += B[i] * C[j];
 @menu
 * osl_int::
 * osl_relation::
-* osl_relation_list_t::
+* osl_relation_list::
 * osl_interface::
 * osl_generic::
 * osl_strings::
@@ -2055,8 +2055,8 @@ Finally, the @code{usr} field is provided for user's convenience.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_relation_list_t
-@subsection osl_relation_list_t
+@node osl_relation_list
+@subsection osl_relation_list
 
 @example
 @group
@@ -2064,12 +2064,11 @@ struct osl_relation_list @{
   osl_relation* elt;             /* Element of the list */
   struct osl_relation_list* next; /* Next element of the list */
 @};
-typedef struct osl_relation_list  osl_relation_list_t;
-typedef struct osl_relation_list* osl_relation_list_p;
+typedef struct osl_relation_list  osl_relation_list;
 @end group
 @end example
 
-@noindent The @code{osl_relation_list_t} structure is a @code{NULL}-terminated
+@noindent The @code{osl_relation_list} structure is a @code{NULL}-terminated
 linked list of @code{osl_relation} data structures.
 @code{elt} is a relation element of the list and @code{next} is the pointer to
 the next element of the list.
@@ -2186,7 +2185,7 @@ substitutions inside the expression.
 struct osl_statement @{
   osl_relation* domain;      /* Iteration domain */
   osl_relation* scattering;  /* Scattering relation */
-  osl_relation_list_p access; /* List of array access relations */
+  osl_relation_list* access; /* List of array access relations */
   osl_generic* extension;    /* Generic extensions */
   void* usr;                  /* A user-defined field */
   struct osl_statement* next; /* Next statement in the list */
@@ -2297,7 +2296,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    [   0   0   0   0  -1   0   0   1   0   0 ]
 |    |    |    [   0   0   0   0   0  -1   0   0   0   0 ]
 |    |    |    
-|    |    +-- osl_relation_list_t
+|    |    +-- osl_relation_list
 |    |    |    |    
 |    |    |    +-- osl_relation (WRITE, 32 bits)
 |    |    |    |    3 8 3 2 0 1
@@ -2337,7 +2336,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    [   0   0   0   0   0   0  -1   0   0   0   1   0   0 ]
 |    |    |    [   0   0   0   0   0   0   0  -1   0   0   0   0   0 ]
 |    |    |    
-|    |    +-- osl_relation_list_t
+|    |    +-- osl_relation_list
 |    |    |    |    
 |    |    |    +-- osl_relation (WRITE, 32 bits)
 |    |    |    |    3 9 3 3 0 1
@@ -2346,7 +2345,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    [   0   0   0  -1   0   1   0   0   0 ]
 |    |    |    |    
 |    |    |    V
-|    |    |  osl_relation_list_t
+|    |    |  osl_relation_list
 |    |    |    |    
 |    |    |    +-- osl_relation (READ, 32 bits)
 |    |    |    |    3 9 3 3 0 1
@@ -2355,7 +2354,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    [   0   0   0  -1   0   1   0   0   0 ]
 |    |    |    |    
 |    |    |    V
-|    |    |  osl_relation_list_t
+|    |    |  osl_relation_list
 |    |    |    |    
 |    |    |    +-- osl_relation (READ, 32 bits)
 |    |    |    |    3 9 3 3 0 1
@@ -2364,7 +2363,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    [   0   0   0  -1   0   0   1   0   0 ]
 |    |    |    |    
 |    |    |    V
-|    |    |  osl_relation_list_t
+|    |    |  osl_relation_list
 |    |    |    |    
 |    |    |    +-- osl_relation (READ, 32 bits)
 |    |    |    |    3 9 3 3 0 1

@@ -75,7 +75,7 @@
 #include <osl/util.h>
 
 static osl_names* osl_statement_names(const osl_statement*);
-static void osl_statement_dispatch(osl_statement*, osl_relation_list_t*);
+static void osl_statement_dispatch(osl_statement*, osl_relation_list*);
 static osl_relation* osl_relation_clone_one_safe(const osl_relation*);
 
 /******************************************************************************
@@ -380,9 +380,9 @@ void osl_statement_print(FILE* const file, const osl_statement* statement) {
  * \param[in,out] stmt The statement where to dispatch the relations.
  * \param[in,out] list The "brute" relation list to sort and dispatch (freed).
  */
-void osl_statement_dispatch(osl_statement* stmt, osl_relation_list_t* list) {
-  osl_relation_list_p domain_list;
-  osl_relation_list_p scattering_list;
+void osl_statement_dispatch(osl_statement* stmt, osl_relation_list* list) {
+  osl_relation_list* domain_list;
+  osl_relation_list* scattering_list;
   size_t nb_domains, nb_scattering, nb_accesses;
 
   // Domain.
@@ -436,7 +436,7 @@ void osl_statement_dispatch(osl_statement* stmt, osl_relation_list_t* list) {
 osl_statement* osl_statement_pread(FILE* const file,
                                      osl_interface* registry, int precision) {
   osl_statement* stmt = osl_statement_malloc();
-  osl_relation_list_p list;
+  osl_relation_list* list;
   osl_generic* new = NULL;
   int i, nb_ext = 0;
 

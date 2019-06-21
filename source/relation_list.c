@@ -74,14 +74,14 @@
 
 /**
  * osl_relation_list_idump function:
- * Displays a osl_relation_list_t structure (a list of relations) into a
+ * Displays a osl_relation_list structure (a list of relations) into a
  * file (file, possibly stdout). See osl_relation_print_structure for
  * more details.
  * \param file   File where informations are printed.
  * \param l	 The list of relations whose information has to be printed.
  * \param level  Number of spaces before printing, for each line.
  */
-void osl_relation_list_idump(FILE* const file, const osl_relation_list_t* l,
+void osl_relation_list_idump(FILE* const file, const osl_relation_list* l,
                              int level) {
   int j, first = 1;
 
@@ -90,7 +90,7 @@ void osl_relation_list_idump(FILE* const file, const osl_relation_list_t* l,
     fprintf(file, "|\t");
 
   if (l != NULL)
-    fprintf(file, "+-- osl_relation_list_t\n");
+    fprintf(file, "+-- osl_relation_list\n");
   else
     fprintf(file, "+-- NULL relation list\n");
 
@@ -99,7 +99,7 @@ void osl_relation_list_idump(FILE* const file, const osl_relation_list_t* l,
       // Go to the right level.
       for (j = 0; j < level; j++)
         fprintf(file, "|\t");
-      fprintf(file, "|   osl_relation_list_t\n");
+      fprintf(file, "|   osl_relation_list\n");
     } else
       first = 0;
 
@@ -129,19 +129,19 @@ void osl_relation_list_idump(FILE* const file, const osl_relation_list_t* l,
 
 /**
  * osl_relation_dump function:
- * This function prints the content of a osl_relation_list_t into
+ * This function prints the content of a osl_relation_list into
  * a file (file, possibly stdout).
  * \param file File where informations are printed.
  * \param list The relation whose information has to be printed.
  */
 void osl_relation_list_dump(FILE* const file,
-                            const osl_relation_list_t* const list) {
+                            const osl_relation_list* const list) {
   osl_relation_list_idump(file, list, 0);
 }
 
 /**
  * osl_relation_list_pprint_elts function:
- * This function pretty-prints the elements of a osl_relation_list_t structure
+ * This function pretty-prints the elements of a osl_relation_list structure
  * into a file (file, possibly stdout) in the OpenScop format. I.e., it prints
  * only the elements and not the number of elements. It prints an element of the
  * list only if it is not NULL.
@@ -150,10 +150,10 @@ void osl_relation_list_dump(FILE* const file,
  * \param[in] names Array of constraint columns names.
  */
 void osl_relation_list_pprint_elts(FILE* const file,
-                                   const osl_relation_list_t* list,
+                                   const osl_relation_list* list,
                                    const osl_names* names) {
   size_t i;
-  const osl_relation_list_t* head = list;
+  const osl_relation_list* head = list;
 
   // Count the number of elements in the list with non-NULL content.
   i = osl_relation_list_count(list);
@@ -177,7 +177,7 @@ void osl_relation_list_pprint_elts(FILE* const file,
 
 /**
  * osl_relation_list_pprint_access_array_scoplib function:
- * This function pretty-prints the elements of a osl_relation_list_t structure
+ * This function pretty-prints the elements of a osl_relation_list structure
  * into a file (file, possibly stdout) in the SCoPLib format. I.e., it prints
  * only the elements and not the number of elements. It prints an element of the
  * list only if it is not NULL.
@@ -187,13 +187,13 @@ void osl_relation_list_pprint_elts(FILE* const file,
  * \param[in] add_fakeiter True of False
  */
 void osl_relation_list_pprint_access_array_scoplib(
-    FILE* const file, const osl_relation_list_t* list, const osl_names* names,
+    FILE* const file, const osl_relation_list* list, const osl_names* names,
     int add_fakeiter) {
   size_t i;
   int nb_rows_read = 0, nb_columns_read = 0;
   int nb_rows_write = 0, nb_columns_write = 0;
   int nb_rows_may_write = 0, nb_columns_may_write = 0;
-  const osl_relation_list_t* head;
+  const osl_relation_list* head;
 
   // Count the number of elements in the list with non-NULL content.
   i = osl_relation_list_count(list);
@@ -277,7 +277,7 @@ void osl_relation_list_pprint_access_array_scoplib(
 
 /**
  * osl_relation_list_pprint function:
- * This function pretty-prints the content of a osl_relation_list_t structure
+ * This function pretty-prints the content of a osl_relation_list structure
  * into a file (file, possibly stdout) in the OpenScop format. It prints
  * an element of the list only if it is not NULL.
  * \param[in] file  File where informations are printed.
@@ -285,7 +285,7 @@ void osl_relation_list_pprint_access_array_scoplib(
  * \param[in] names Array of constraint columns names.
  */
 void osl_relation_list_pprint(FILE* const file,
-                              const osl_relation_list_t* const list,
+                              const osl_relation_list* const list,
                               const osl_names* const names) {
   size_t i;
 
@@ -304,14 +304,14 @@ void osl_relation_list_pprint(FILE* const file,
 
 /**
  * osl_relation_list_print function:
- * This function prints the content of a osl_relation_list_t structure
+ * This function prints the content of a osl_relation_list structure
  * into a file (file, possibly stdout) in the OpenScop format. It prints
  * an element of the list only if it is not NULL.
  * \param file  File where informations are printed.
  * \param list  The relation list whose information has to be printed.
  */
 void osl_relation_list_print(FILE* const file,
-                             const osl_relation_list_t* list) {
+                             const osl_relation_list* list) {
   osl_relation_list_pprint(file, list, NULL);
 }
 
@@ -327,10 +327,10 @@ void osl_relation_list_print(FILE* const file,
  * \param[in] precision The precision of the relation elements.
  * \return A pointer to the relation list structure that has been read.
  */
-osl_relation_list_t* osl_relation_list_pread(FILE* const file, int precision) {
+osl_relation_list* osl_relation_list_pread(FILE* const file, int precision) {
   int i;
-  osl_relation_list_p list;
-  osl_relation_list_p res;
+  osl_relation_list* list;
+  osl_relation_list* res;
   int nb_mat;
 
   // Read the number of relations to read.
@@ -358,7 +358,7 @@ osl_relation_list_t* osl_relation_list_pread(FILE* const file, int precision) {
  * to the highest available precision if it is not defined.
  * \see{osl_relation_list_pread}
  */
-osl_relation_list_t* osl_relation_list_read(FILE* const foo) {
+osl_relation_list* osl_relation_list_read(FILE* const foo) {
   int precision = osl_util_get_precision();
   return osl_relation_list_pread(foo, precision);
 }
@@ -369,16 +369,16 @@ osl_relation_list_t* osl_relation_list_read(FILE* const foo) {
 
 /**
  * osl_relation_list_malloc function:
- * This function allocates the memory space for a osl_relation_list_t
+ * This function allocates the memory space for a osl_relation_list
  * structure and sets its fields with default values. Then it returns
  * a pointer to the allocated space.
  * \return A pointer to an empty relation list with fields set to default
  *         values.
  */
-osl_relation_list_t* osl_relation_list_malloc(void) {
-  osl_relation_list_p res;
+osl_relation_list* osl_relation_list_malloc(void) {
+  osl_relation_list* res;
 
-  OSL_malloc(res, osl_relation_list_p, sizeof(osl_relation_list_t));
+  OSL_malloc(res, osl_relation_list*, sizeof(osl_relation_list));
   res->elt = NULL;
   res->next = NULL;
 
@@ -387,12 +387,12 @@ osl_relation_list_t* osl_relation_list_malloc(void) {
 
 /**
  * osl_relation_list_free function:
- * This function frees the allocated memory for a osl_relation_list_t
+ * This function frees the allocated memory for a osl_relation_list
  * structure, and all the relations stored in the list.
  * \param list The pointer to the relation list we want to free.
  */
-void osl_relation_list_free(osl_relation_list_t* list) {
-  osl_relation_list_p tmp;
+void osl_relation_list_free(osl_relation_list* list) {
+  osl_relation_list* tmp;
 
   if (list == NULL)
     return;
@@ -412,14 +412,14 @@ void osl_relation_list_free(osl_relation_list_t* list) {
 
 /**
  * osl_relation_list_node function:
- * This function builds an osl_relation_list_t node and sets its
+ * This function builds an osl_relation_list node and sets its
  * relation element as a copy of the one provided as parameter.
  * If the relation provided as an argument is NULL, NULL is returned.
  * \param r The pointer to the relation to copy/paste in a list node.
  * \return A pointer to a relation list node containing a copy of "relation".
  */
-osl_relation_list_t* osl_relation_list_node(const osl_relation* const r) {
-  osl_relation_list_p new = NULL;
+osl_relation_list* osl_relation_list_node(const osl_relation* const r) {
+  osl_relation_list* new = NULL;
 
   if (r != NULL) {
     new = osl_relation_list_malloc();
@@ -431,12 +431,14 @@ osl_relation_list_t* osl_relation_list_node(const osl_relation* const r) {
 /**
  * osl_relation_list_clone function:
  * This functions builds and returns a quasi-"hard copy" (not a pointer copy)
- * of a osl_relation_list_t data structure provided as parameter.
+ * of a osl_relation_list data structure provided as parameter.
  * \param list  The pointer to the relation list we want to copy.
  * \return A pointer to the full copy of the relation list in parameter.
  */
-osl_relation_list_t* osl_relation_list_clone(const osl_relation_list_t* list) {
-  osl_relation_list_p clone = NULL, node, previous = NULL;
+osl_relation_list* osl_relation_list_clone(const osl_relation_list* list) {
+  osl_relation_list* clone = NULL;
+  osl_relation_list* node;
+  osl_relation_list* previous = NULL;
   int first = 1;
 
   while (list != NULL) {
@@ -467,9 +469,10 @@ osl_relation_list_t* osl_relation_list_clone(const osl_relation_list_t* list) {
  * \return A pointer to the relation list resulting from the concatenation of
  *         l1 and l2.
  */
-osl_relation_list_t* osl_relation_list_concat(
-    const osl_relation_list_t* const l1, const osl_relation_list_t* const l2) {
-  osl_relation_list_p new, end;
+osl_relation_list* osl_relation_list_concat(
+    const osl_relation_list* const l1, const osl_relation_list* const l2) {
+  osl_relation_list* new;
+  osl_relation_list* end;
 
   if (l1 == NULL)
     return osl_relation_list_clone(l2);
@@ -495,8 +498,8 @@ osl_relation_list_t* osl_relation_list_concat(
  * \param[in,out] l1  Pointer to the first relation list.
  * \param[in]     l2  The second relation list.
  */
-void osl_relation_list_add(osl_relation_list_t** l1,
-                           osl_relation_list_t* const l2) {
+void osl_relation_list_add(osl_relation_list** l1,
+                           osl_relation_list* const l2) {
   while (*l1 != NULL)
     l1 = &((*l1)->next);
 
@@ -511,8 +514,8 @@ void osl_relation_list_add(osl_relation_list_t** l1,
  * \param[in,out] node Relation node to add to the stack. Its next field is
  *                     updated to the previous head of the stack.
  */
-void osl_relation_list_push(osl_relation_list_t** head,
-                            osl_relation_list_t* node) {
+void osl_relation_list_push(osl_relation_list** head,
+                            osl_relation_list* node) {
   if (node != NULL) {
     node->next = *head;
     *head = node;
@@ -528,8 +531,8 @@ void osl_relation_list_push(osl_relation_list_t** head,
  *                     if there is none).
  * \return The top element of the stack (detached from the list).
  */
-osl_relation_list_t* osl_relation_list_pop(osl_relation_list_t** head) {
-  osl_relation_list_p top = NULL;
+osl_relation_list* osl_relation_list_pop(osl_relation_list** head) {
+  osl_relation_list* top = NULL;
 
   if (*head != NULL) {
     top = *head;
@@ -548,8 +551,8 @@ osl_relation_list_t* osl_relation_list_pop(osl_relation_list_t** head) {
  * \param[in,out] head Pointer to the head of the relation stack. It is
  *                     updated to the new element after duplication.
  */
-void osl_relation_list_dup(osl_relation_list_t** head) {
-  osl_relation_list_p top = osl_relation_list_pop(head);
+void osl_relation_list_dup(osl_relation_list** head) {
+  osl_relation_list* top = osl_relation_list_pop(head);
   osl_relation_list_push(head, osl_relation_list_clone(top));
   osl_relation_list_push(head, top);
 }
@@ -563,8 +566,8 @@ void osl_relation_list_dup(osl_relation_list_t** head) {
  *                     updated to the previous element in the stack (NULL
  *                     if there is none).
  */
-void osl_relation_list_drop(osl_relation_list_t** head) {
-  osl_relation_list_p top = osl_relation_list_pop(head);
+void osl_relation_list_drop(osl_relation_list** head) {
+  osl_relation_list* top = osl_relation_list_pop(head);
   osl_relation_list_free(top);
 }
 
@@ -576,7 +579,7 @@ void osl_relation_list_drop(osl_relation_list_t** head) {
  * \param[in,out] head Pointer to the head of the relation stack.
  *                     Updated to NULL.
  */
-void osl_relation_list_destroy(osl_relation_list_t** head) {
+void osl_relation_list_destroy(osl_relation_list** head) {
   while (*head != NULL)
     osl_relation_list_drop(head);
 }
@@ -589,8 +592,8 @@ void osl_relation_list_destroy(osl_relation_list_t** head) {
  * \param l2 The second relation list.
  * \return 1 if l1 and l2 are the same (content-wise), 0 otherwise.
  */
-int osl_relation_list_equal(const osl_relation_list_t* l1,
-                            const osl_relation_list_t* l2) {
+int osl_relation_list_equal(const osl_relation_list* l1,
+                            const osl_relation_list* l2) {
   while ((l1 != NULL) && (l2 != NULL)) {
     if (l1 == l2)
       return 1;
@@ -623,7 +626,7 @@ int osl_relation_list_equal(const osl_relation_list_t* l1,
  * \param expected_nb_parameters  Expected number of parameters.
  * \return 0 if the integrity check fails, 1 otherwise.
  */
-int osl_relation_list_integrity_check(const osl_relation_list_t* list, int type,
+int osl_relation_list_integrity_check(const osl_relation_list* list, int type,
                                       int expected_nb_output_dims,
                                       int expected_nb_input_dims,
                                       int expected_nb_parameters) {
@@ -648,7 +651,7 @@ int osl_relation_list_integrity_check(const osl_relation_list_t* list, int type,
  * \param list The list of relations to set the type.
  * \param type The type.
  */
-void osl_relation_list_set_type(osl_relation_list_t* list, int type) {
+void osl_relation_list_set_type(osl_relation_list* list, int type) {
   while (list != NULL) {
     if (list->elt != NULL) {
       list->elt->type = type;
@@ -666,12 +669,12 @@ void osl_relation_list_set_type(osl_relation_list_t* list, int type) {
  * \param type The filtering type.
  * \return A copy of the input list with only relation of the given type.
  */
-osl_relation_list_t* osl_relation_list_filter(const osl_relation_list_t* list,
+osl_relation_list* osl_relation_list_filter(const osl_relation_list* list,
                                               int type) {
-  osl_relation_list_p copy = osl_relation_list_clone(list);
-  osl_relation_list_p filtered = NULL;
-  osl_relation_list_p previous = NULL;
-  osl_relation_list_p trash;
+  osl_relation_list* copy = osl_relation_list_clone(list);
+  osl_relation_list* filtered = NULL;
+  osl_relation_list* previous = NULL;
+  osl_relation_list* trash;
   int first = 1;
 
   while (copy != NULL) {
@@ -705,7 +708,7 @@ osl_relation_list_t* osl_relation_list_filter(const osl_relation_list_t* list,
  * \param list The relation list to count the number of elements.
  * \return The number of nodes with non-NULL content in the relation list.
  */
-size_t osl_relation_list_count(const osl_relation_list_t* list) {
+size_t osl_relation_list_count(const osl_relation_list* list) {
   size_t i = 0;
 
   while (list != NULL) {
@@ -735,7 +738,7 @@ size_t osl_relation_list_count(const osl_relation_list_t* list) {
  * \param[in,out] nb_localdims  Number of local dimensions attribute.
  * \param[in,out] array_id      Maximum array identifier attribute.
  */
-void osl_relation_list_get_attributes(const osl_relation_list_t* list,
+void osl_relation_list_get_attributes(const osl_relation_list* list,
                                       int* nb_parameters, int* nb_iterators,
                                       int* nb_scattdims, int* nb_localdims,
                                       int* array_id) {
