@@ -74,7 +74,7 @@ extern "C" {
 #define OSL_URI_SCATNAMES "scatnames"
 
 /**
- * The osl_scatnames_t structure stores a scatnames extention to the core
+ * The osl_scatnames structure stores a scatnames extention to the core
  * OpenScop representation. It is devoted to store the scattering dimension
  * names in a textual form. The names are stored using an osl_strings
  * structure and their order in the array corresponds to their dimension
@@ -83,6 +83,8 @@ extern "C" {
 struct osl_scatnames {
   osl_strings* names; /**< List of textual scattering dimension names. */
 };
+typedef struct osl_scatnames osl_scatnames;
+
 typedef struct osl_scatnames osl_scatnames_t;
 typedef struct osl_scatnames* osl_scatnames_p;
 
@@ -90,31 +92,31 @@ typedef struct osl_scatnames* osl_scatnames_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_scatnames_idump(FILE*, const osl_scatnames_t*, int)
+void osl_scatnames_idump(FILE*, const osl_scatnames*, int)
     OSL_NONNULL_ARGS(1);
-void osl_scatnames_dump(FILE*, const osl_scatnames_t*) OSL_NONNULL_ARGS(1);
-char* osl_scatnames_sprint(const osl_scatnames_t*) OSL_WARN_UNUSED_RESULT;
+void osl_scatnames_dump(FILE*, const osl_scatnames*) OSL_NONNULL_ARGS(1);
+char* osl_scatnames_sprint(const osl_scatnames*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_scatnames_t* osl_scatnames_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_scatnames* osl_scatnames_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_scatnames_t* osl_scatnames_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_scatnames_free(osl_scatnames_t*);
+osl_scatnames* osl_scatnames_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_scatnames_free(osl_scatnames*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_scatnames_t* osl_scatnames_clone(const osl_scatnames_t*)
+osl_scatnames* osl_scatnames_clone(const osl_scatnames*)
     OSL_WARN_UNUSED_RESULT;
-bool osl_scatnames_equal(const osl_scatnames_t*, const osl_scatnames_t*);
+bool osl_scatnames_equal(const osl_scatnames*, const osl_scatnames*);
 osl_interface* osl_scatnames_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)

@@ -2530,8 +2530,7 @@ beta_0 i beta_1 j beta_2
 struct osl_scatnames @{
   osl_strings* names;  /* List of textual scattering dimension names. */
 @};
-typedef struct osl_scatnames  osl_scatnames_t;
-typedef struct osl_scatnames* osl_scatnames_p;
+typedef struct osl_scatnames osl_scatnames;
 @end group
 @end example
 
