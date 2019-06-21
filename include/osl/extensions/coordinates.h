@@ -88,8 +88,9 @@ struct osl_coordinates {
 };
 typedef struct osl_coordinates osl_coordinates;
 
-typedef struct osl_coordinates osl_coordinates_t;
-typedef struct osl_coordinates* osl_coordinates_p;
+/* The following typedefs are deprecated. Use osl_coordinates. */
+typedef struct osl_coordinates osl_coordinates_t OSL_DEPRECATED;
+typedef struct osl_coordinates* osl_coordinates_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
