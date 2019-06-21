@@ -879,7 +879,8 @@ int osl_scop_get_nb_parameters(const osl_scop_t* scop) {
  * \param interface The extension interface to register within the scop.
  */
 void osl_scop_register_extension(osl_scop_t* scop, osl_interface* interface) {
-  osl_generic_p textual, new;
+  osl_generic* textual;
+  osl_generic* new;
   char* extension_string;
 
   if ((interface != NULL) && (scop != NULL)) {

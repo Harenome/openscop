@@ -1949,7 +1949,7 @@ A[i+j] += B[i] * C[j];
 * osl_relation_t::
 * osl_relation_list_t::
 * osl_interface::
-* osl_generic_t::
+* osl_generic::
 * osl_strings::
 * osl_body::
 * osl_statement::
@@ -2116,8 +2116,8 @@ and the section dedicated to writing extensions
 
 @c ---------------------------------------------------------------------------
 
-@node osl_generic_t
-@subsection osl_generic_t
+@node osl_generic
+@subsection osl_generic
 
 @example
 @group
@@ -2126,12 +2126,11 @@ struct osl_generic @{
   osl_interface* interface;   /* Interface to work with the data */
   struct osl_generic* next;   /* Pointer to the next generic */
 @};
-typedef struct osl_generic  osl_generic_t;
-typedef struct osl_generic* osl_generic_p;
+typedef struct osl_generic  osl_generic;
 @end group
 @end example
 
-@noindent The @code{osl_generic_t} structure represents a node in a
+@noindent The @code{osl_generic} structure represents a node in a
 @code{NULL}-terminated list of generic elements. It stores some data
 and operations with no pre-defined type. The information is accessible
 through the @code{data} pointer while the type and operations are
@@ -2189,7 +2188,7 @@ struct osl_statement @{
   osl_relation_p domain;      /* Iteration domain */
   osl_relation_p scattering;  /* Scattering relation */
   osl_relation_list_p access; /* List of array access relations */
-  osl_generic_p extension;    /* Generic extensions */
+  osl_generic* extension;    /* Generic extensions */
   void* usr;                  /* A user-defined field */
   struct osl_statement* next; /* Next statement in the list */
 @};
@@ -2205,7 +2204,7 @@ framework. The order in the list may matter for naming conventions
 and the scattering are represented using an @code{osl_relation_p}
 structure while the accesses are using a list of
 relations: one for each memory access in the statement.
-The extensions part is a list of generics @code{osl_generic_t} which can
+The extensions part is a list of generics @code{osl_generic} which can
 contain useful structures such as @code{body}.
 The @code{body} field should provide information about the statement body
 (since it has a generic type, the specification is not strict about how it
@@ -2223,10 +2222,10 @@ struct osl_scop @{
   int version;                /* Version of the data structure */
   char* language;             /* Target language */
   osl_relation_p context;     /* Constraints on the parameters */
-  osl_generic_p parameters;   /* Information about parameters */
+  osl_generic* parameters;   /* Information about parameters */
   osl_statement* statement;  /* Statement list */
   osl_interface* registry;    /* Registered extension interfaces */
-  osl_generic_p extension;    /* Extension list */
+  osl_generic* extension;    /* Extension list */
   void* usr;                  /* A user-defined field */
   struct osl_scop* next;      /* Next scop in the list */
 @};
@@ -2275,7 +2274,7 @@ specification but to the OpenScop Library implementation:
 |    |    1 3 0 0 0 1
 |    |    [   1   1  -1 ]
 |    |    
-|    +-- osl_generic_t
+|    +-- osl_generic
 |    |    |    
 |    |    +-- osl_interface: URI = strings
 |    |    |    
@@ -2308,7 +2307,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    [   0   0   0  -1   0   1   0   0 ]
 |    |    |    |    
 |    |    |    
-|    |    +-- osl_generic_t
+|    |    +-- osl_generic
 |    |    |    |    
 |    |    |    +-- osl_interface: URI = body
 |    |    |    |    
@@ -2375,7 +2374,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    [   0   0   0  -1   0   1   0   0   0 ]
 |    |    |    |    
 |    |    |    
-|    |    +-- osl_generic_t
+|    |    +-- osl_generic
 |    |    |    |    
 |    |    |    +-- osl_interface: URI = body
 |    |    |    |    
@@ -2422,7 +2421,7 @@ XML-like tags corresponding to its URI (e.g., if the extension has the URI
 There is no specification or preferred way to write the extension body.
 Extensions in an OpenScop data structure must be accessible through one
 pointer. This pointer will be stored in the @code{data} field of an
-@code{osl_generic_t} container (@pxref{osl_generic_t}). There must be only
+@code{osl_generic} container (@pxref{osl_generic}). There must be only
 one extension with the same URI in an OpenScop file or data structure.
 
 Extension writers may write a short documentation about their extension to

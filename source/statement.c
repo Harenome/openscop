@@ -437,7 +437,7 @@ osl_statement* osl_statement_pread(FILE* const file,
                                      osl_interface* registry, int precision) {
   osl_statement* stmt = osl_statement_malloc();
   osl_relation_list_p list;
-  osl_generic_p new = NULL;
+  osl_generic* new = NULL;
   int i, nb_ext = 0;
 
   if (file) {

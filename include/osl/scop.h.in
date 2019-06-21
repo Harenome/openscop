@@ -91,10 +91,10 @@ struct osl_scop {
   int version;               /**< Version of the data structure */
   char* language;            /**< Target language (backend) */
   osl_relation_p context;    /**< Constraints on the SCoP parameters */
-  osl_generic_p parameters;  /**< NULL-terminated array of parameters */
+  osl_generic* parameters;  /**< NULL-terminated array of parameters */
   osl_statement* statement; /**< Statement list of the SCoP */
   osl_interface* registry;  /**< Registered extensions interfaces */
-  osl_generic_p extension;   /**< List of extensions */
+  osl_generic* extension;   /**< List of extensions */
   void* usr;                 /**< A user-defined field, not touched
                                   AT ALL by the OpenScop Library */
   struct osl_scop* next;     /**< Next statement in the linked list */
