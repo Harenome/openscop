@@ -83,8 +83,8 @@ extern "C" {
  * conventions (e.g. "S1" for the first statement in the list).
  */
 struct osl_statement {
-  osl_relation_p domain;      /**< Iteration domain of the statement */
-  osl_relation_p scattering;  /**< Scattering relation of the statement*/
+  osl_relation* domain;      /**< Iteration domain of the statement */
+  osl_relation* scattering;  /**< Scattering relation of the statement*/
   osl_relation_list_p access; /**< Access information */
   osl_generic* extension;    /**< A list of statement extensions */
   void* usr;                  /**< A user-defined field, not touched

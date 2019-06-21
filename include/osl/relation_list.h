@@ -75,7 +75,7 @@ extern "C" {
  * linked) list of relations.
  */
 struct osl_relation_list {
-  osl_relation_p elt;             /**< An element of the list. */
+  osl_relation* elt;             /**< An element of the list. */
   struct osl_relation_list* next; /**< Pointer to the next element
                                        of the list.*/
 };
@@ -123,7 +123,7 @@ void osl_relation_list_free(osl_relation_list_t*);
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_relation_list_t* osl_relation_list_node(const osl_relation_t*)
+osl_relation_list_t* osl_relation_list_node(const osl_relation*)
     OSL_WARN_UNUSED_RESULT;
 osl_relation_list_t* osl_relation_list_clone(const osl_relation_list_t*)
     OSL_WARN_UNUSED_RESULT;

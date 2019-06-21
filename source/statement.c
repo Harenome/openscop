@@ -76,7 +76,7 @@
 
 static osl_names* osl_statement_names(const osl_statement*);
 static void osl_statement_dispatch(osl_statement*, osl_relation_list_t*);
-static osl_relation_p osl_relation_clone_one_safe(const osl_relation_t*);
+static osl_relation* osl_relation_clone_one_safe(const osl_relation*);
 
 /******************************************************************************
  *                         Structure display functions                        *
@@ -605,8 +605,8 @@ osl_statement* osl_statement_clone(const osl_statement* const statement) {
 }
 
 /// Clone first part of the union, return NULL if input is NULL.
-osl_relation_t* osl_relation_clone_one_safe(
-    const osl_relation_t* const relation) {
+osl_relation* osl_relation_clone_one_safe(
+    const osl_relation* const relation) {
   if (relation == NULL)
     return NULL;
   return osl_relation_nclone(relation, 1);
@@ -625,7 +625,8 @@ osl_relation_t* osl_relation_clone_one_safe(
  */
 osl_statement* osl_statement_remove_unions(
     const osl_statement* const statement) {
-  osl_relation_p domain, scattering;
+  osl_relation* domain;
+  osl_relation* scattering;
   osl_statement* statement_ptr = NULL;
   osl_statement* result;
   if (!statement)

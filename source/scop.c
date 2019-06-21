@@ -806,9 +806,9 @@ int osl_scop_check_compatible_scoplib(const osl_scop_t* scop) {
   if (scop == NULL || scop->statement == NULL)
     return 1;
 
-  osl_relation_p domain;
+  osl_relation* domain;
   osl_statement* statement;
-  osl_relation_p scattering;
+  osl_relation* scattering;
   int precision = scop->statement->scattering->precision;
   int i, j;
 
@@ -950,7 +950,7 @@ void osl_scop_get_attributes(const osl_scop_t* scop, int* nb_parameters,
 void osl_scop_normalize_scattering(osl_scop_t* scop) {
   int max_scattering_dims = 0;
   osl_statement* statement;
-  osl_relation_p extended;
+  osl_relation* extended;
 
   if ((scop != NULL) && (scop->statement != NULL)) {
     // Get the max number of scattering dimensions.

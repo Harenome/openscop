@@ -82,7 +82,8 @@ static int test_unions(osl_scop_p scop) {
   osl_statement* nounion_stmt;
   osl_scop_p nounion_scop = osl_scop_remove_unions(scop);
   osl_scop_p nounion_scop_first = nounion_scop;
-  osl_relation_p domain, scattering;
+  osl_relation* domain;
+  osl_relation* scattering;
   int result = 1;
   osl_scop_print(stderr, nounion_scop);
   for ( ; scop != NULL && nounion_scop != NULL; scop = scop->next, nounion_scop = nounion_scop->next) {

@@ -139,7 +139,7 @@ struct osl_dependence {
                    *   - OSL_DEPENDENCE_RAR if source reads M and
                    *     target reads M too (input-dependence).
                    */
-  osl_relation_p domain; /**< Dependence polyhedron. */
+  osl_relation* domain; /**< Dependence polyhedron. */
 
   /* Other useful information */
 
@@ -162,8 +162,8 @@ struct osl_dependence {
    * You can use the function candl_dependence_init_fields of CandL
    */
 
-  osl_relation_p ref_source_access_ptr; /**< Pointer to the source access. */
-  osl_relation_p ref_target_access_ptr; /**< Pointer to the target access. */
+  osl_relation* ref_source_access_ptr; /**< Pointer to the source access. */
+  osl_relation* ref_target_access_ptr; /**< Pointer to the target access. */
 
   osl_statement* stmt_source_ptr; /**< Pointer to source statement. */
   osl_statement* stmt_target_ptr; /**< Pointer to target statement. */

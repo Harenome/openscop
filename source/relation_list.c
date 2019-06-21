@@ -418,7 +418,7 @@ void osl_relation_list_free(osl_relation_list_t* list) {
  * \param r The pointer to the relation to copy/paste in a list node.
  * \return A pointer to a relation list node containing a copy of "relation".
  */
-osl_relation_list_t* osl_relation_list_node(const osl_relation_t* const r) {
+osl_relation_list_t* osl_relation_list_node(const osl_relation* const r) {
   osl_relation_list_p new = NULL;
 
   if (r != NULL) {

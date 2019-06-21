@@ -1946,7 +1946,7 @@ A[i+j] += B[i] * C[j];
 
 @menu
 * osl_int::
-* osl_relation_t::
+* osl_relation::
 * osl_relation_list_t::
 * osl_interface::
 * osl_generic::
@@ -2003,8 +2003,8 @@ a multiple precision int, e.g., a @code{mpz_t} from the GNU GMP library.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_relation_t
-@subsection osl_relation_t
+@node osl_relation
+@subsection osl_relation
 
 @example
 @group
@@ -2021,12 +2021,11 @@ struct osl_relation @{
   void* usr;                  /* User-managed field */
   struct osl_relation*  next; /* Next relation in the union */
 @};
-typedef struct osl_relation  osl_relation_t;
-typedef struct osl_relation* osl_relation_p;
+typedef struct osl_relation osl_relation;
 @end group
 @end example
 
-@noindent The @code{osl_relation_t} structure stores a part of an
+@noindent The @code{osl_relation} structure stores a part of an
 union of relations. A union of relation is a @code{NULL}-terminated
 linked list of union parts (@code{next} field). The @code{type} field
 may provide some information about what the relation is encoding:
@@ -2062,7 +2061,7 @@ Finally, the @code{usr} field is provided for user's convenience.
 @example
 @group
 struct osl_relation_list @{
-  osl_relation_p elt;             /* Element of the list */
+  osl_relation* elt;             /* Element of the list */
   struct osl_relation_list* next; /* Next element of the list */
 @};
 typedef struct osl_relation_list  osl_relation_list_t;
@@ -2071,7 +2070,7 @@ typedef struct osl_relation_list* osl_relation_list_p;
 @end example
 
 @noindent The @code{osl_relation_list_t} structure is a @code{NULL}-terminated
-linked list of @code{osl_relation_t} data structures.
+linked list of @code{osl_relation} data structures.
 @code{elt} is a relation element of the list and @code{next} is the pointer to
 the next element of the list.
 
@@ -2185,8 +2184,8 @@ substitutions inside the expression.
 @example
 @group
 struct osl_statement @{
-  osl_relation_p domain;      /* Iteration domain */
-  osl_relation_p scattering;  /* Scattering relation */
+  osl_relation* domain;      /* Iteration domain */
+  osl_relation* scattering;  /* Scattering relation */
   osl_relation_list_p access; /* List of array access relations */
   osl_generic* extension;    /* Generic extensions */
   void* usr;                  /* A user-defined field */
@@ -2201,7 +2200,7 @@ in a @code{NULL}-terminated linked list of statements. Each node contains the
 useful information for a given statement to process it within a polyhedral
 framework. The order in the list may matter for naming conventions
 (e.g. "S1" for the first statement in the list). The iteration domain
-and the scattering are represented using an @code{osl_relation_p}
+and the scattering are represented using an @code{osl_relation}
 structure while the accesses are using a list of
 relations: one for each memory access in the statement.
 The extensions part is a list of generics @code{osl_generic} which can
@@ -2221,7 +2220,7 @@ totally managed by the user.
 struct osl_scop @{
   int version;                /* Version of the data structure */
   char* language;             /* Target language */
-  osl_relation_p context;     /* Constraints on the parameters */
+  osl_relation* context;     /* Constraints on the parameters */
   osl_generic* parameters;   /* Information about parameters */
   osl_statement* statement;  /* Statement list */
   osl_interface* registry;    /* Registered extension interfaces */
@@ -2270,7 +2269,7 @@ specification but to the OpenScop Library implementation:
 |    |    
 |    Language: C
 |    |    
-|    +-- osl_relation_t (CONTEXT, 32 bits)
+|    +-- osl_relation (CONTEXT, 32 bits)
 |    |    1 3 0 0 0 1
 |    |    [   1   1  -1 ]
 |    |    
@@ -2283,14 +2282,14 @@ specification but to the OpenScop Library implementation:
 |    |    
 |    +-- osl_statement (S1)
 |    |    |    
-|    |    +-- osl_relation_t (DOMAIN, 32 bits)
+|    |    +-- osl_relation (DOMAIN, 32 bits)
 |    |    |    4 5 2 0 0 1
 |    |    |    [   1   1   0   0   0 ]
 |    |    |    [   1  -1   0   1  -1 ]
 |    |    |    [   1   0   1   0   0 ]
 |    |    |    [   1   0  -1   1  -1 ]
 |    |    |    
-|    |    +-- osl_relation_t (SCATTERING, 32 bits)
+|    |    +-- osl_relation (SCATTERING, 32 bits)
 |    |    |    5 10 5 2 0 1
 |    |    |    [   0  -1   0   0   0   0   0   0   0   0 ]
 |    |    |    [   0   0  -1   0   0   0   1   0   0   0 ]
@@ -2300,7 +2299,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    
 |    |    +-- osl_relation_list_t
 |    |    |    |    
-|    |    |    +-- osl_relation_t (WRITE, 32 bits)
+|    |    |    +-- osl_relation (WRITE, 32 bits)
 |    |    |    |    3 8 3 2 0 1
 |    |    |    |    [   0  -1   0   0   0   0   0   1 ]
 |    |    |    |    [   0   0  -1   0   1   0   0   0 ]
@@ -2319,7 +2318,7 @@ specification but to the OpenScop Library implementation:
 |    |    V
 |    |  osl_statement (S2)
 |    |    |    
-|    |    +-- osl_relation_t (DOMAIN, 32 bits)
+|    |    +-- osl_relation (DOMAIN, 32 bits)
 |    |    |    6 6 3 0 0 1
 |    |    |    [   1   1   0   0   0   0 ]
 |    |    |    [   1  -1   0   0   1  -1 ]
@@ -2328,7 +2327,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    [   1   0   0   1   0   0 ]
 |    |    |    [   1   0   0  -1   1  -1 ]
 |    |    |    
-|    |    +-- osl_relation_t (SCATTERING, 32 bits)
+|    |    +-- osl_relation (SCATTERING, 32 bits)
 |    |    |    7 13 7 3 0 1
 |    |    |    [   0  -1   0   0   0   0   0   0   0   0   0   0   0 ]
 |    |    |    [   0   0  -1   0   0   0   0   0   1   0   0   0   0 ]
@@ -2340,7 +2339,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    
 |    |    +-- osl_relation_list_t
 |    |    |    |    
-|    |    |    +-- osl_relation_t (WRITE, 32 bits)
+|    |    |    +-- osl_relation (WRITE, 32 bits)
 |    |    |    |    3 9 3 3 0 1
 |    |    |    |    [   0  -1   0   0   0   0   0   0   1 ]
 |    |    |    |    [   0   0  -1   0   1   0   0   0   0 ]
@@ -2349,7 +2348,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    V
 |    |    |  osl_relation_list_t
 |    |    |    |    
-|    |    |    +-- osl_relation_t (READ, 32 bits)
+|    |    |    +-- osl_relation (READ, 32 bits)
 |    |    |    |    3 9 3 3 0 1
 |    |    |    |    [   0  -1   0   0   0   0   0   0   1 ]
 |    |    |    |    [   0   0  -1   0   1   0   0   0   0 ]
@@ -2358,7 +2357,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    V
 |    |    |  osl_relation_list_t
 |    |    |    |    
-|    |    |    +-- osl_relation_t (READ, 32 bits)
+|    |    |    +-- osl_relation (READ, 32 bits)
 |    |    |    |    3 9 3 3 0 1
 |    |    |    |    [   0  -1   0   0   0   0   0   0   2 ]
 |    |    |    |    [   0   0  -1   0   1   0   0   0   0 ]
@@ -2367,7 +2366,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    V
 |    |    |  osl_relation_list_t
 |    |    |    |    
-|    |    |    +-- osl_relation_t (READ, 32 bits)
+|    |    |    +-- osl_relation (READ, 32 bits)
 |    |    |    |    3 9 3 3 0 1
 |    |    |    |    [   0  -1   0   0   0   0   0   0   3 ]
 |    |    |    |    [   0   0  -1   0   0   0   1   0   0 ]
@@ -3188,7 +3187,7 @@ matrix (@pxref{Relations}):
 
 @example
 @group
-osl_relation_p osl_relation_malloc(int nb_rows, int nb_columns);
+osl_relation* osl_relation_malloc(int nb_rows, int nb_columns);
 @end group
 @end example
 
@@ -3199,7 +3198,7 @@ function is provided to explicitly set a given precision:
 
 @example
 @group
-osl_relation_p osl_relation_pmalloc(int precision,
+osl_relation* osl_relation_pmalloc(int precision,
                                     int nb_rows, int nb_columns);
 @end group
 @end example

@@ -71,23 +71,23 @@
 #include <osl/util.h>
 #include <osl/vector.h>
 
-static char* osl_relation_sprint_type(const osl_relation_t*);
-static void osl_relation_print_type(FILE*, const osl_relation_t*);
+static char* osl_relation_sprint_type(const osl_relation*);
+static void osl_relation_print_type(FILE*, const osl_relation*);
 static char* osl_relation_expression_element(const osl_int, int, int*, int,
                                              const char*);
 
-static char** osl_relation_strings(const osl_relation_t*, const osl_names*);
-static char* osl_relation_subexpression(const osl_relation_t*, int, int, int,
+static char** osl_relation_strings(const osl_relation*, const osl_names*);
+static char* osl_relation_subexpression(const osl_relation*, int, int, int,
                                         int, char**);
-static int osl_relation_is_simple_output(const osl_relation_t*, int);
-static char* osl_relation_sprint_comment(const osl_relation_t*, int, char**,
+static int osl_relation_is_simple_output(const osl_relation*, int);
+static char* osl_relation_sprint_comment(const osl_relation*, int, char**,
                                          char**);
-static char* osl_relation_column_string(const osl_relation_t*, char**);
-static char* osl_relation_column_string_scoplib(const osl_relation_t*, char**);
-static osl_names* osl_relation_names(const osl_relation_t*);
+static char* osl_relation_column_string(const osl_relation*, char**);
+static char* osl_relation_column_string_scoplib(const osl_relation*, char**);
+static osl_names* osl_relation_names(const osl_relation*);
 static int osl_relation_read_type(FILE*, char**);
 static int osl_relation_check_attribute(int*, int);
-static int osl_relation_check_nb_columns(const osl_relation_t*, int, int, int);
+static int osl_relation_check_nb_columns(const osl_relation*, int, int, int);
 
 /******************************************************************************
  *                          Structure display function                        *
@@ -95,12 +95,12 @@ static int osl_relation_check_nb_columns(const osl_relation_t*, int, int, int);
 
 /**
  * osl_relation_sprint_type function:
- * this function prints the textual type of an osl_relation_t structure into
+ * this function prints the textual type of an osl_relation structure into
  * a string, according to the OpenScop specification, and returns that string.
  * \param[in] relation The relation whose type has to be printed.
  * \return A string containing the relation type.
  */
-char* osl_relation_sprint_type(const osl_relation_t* relation) {
+char* osl_relation_sprint_type(const osl_relation* relation) {
   char* string = NULL;
 
   OSL_malloc(string, char*, OSL_MAX_STRING * sizeof(char));
@@ -150,12 +150,12 @@ char* osl_relation_sprint_type(const osl_relation_t* relation) {
 
 /**
  * osl_relation_print_type function:
- * this function displays the textual type of an osl_relation_t structure into
+ * this function displays the textual type of an osl_relation structure into
  * a file (file, possibly stdout), according to the OpenScop specification.
  * \param[in] file     File where informations are printed.
  * \param[in] relation The relation whose type has to be printed.
  */
-void osl_relation_print_type(FILE* const file, const osl_relation_t* relation) {
+void osl_relation_print_type(FILE* const file, const osl_relation* relation) {
   char* string = osl_relation_sprint_type(relation);
   fprintf(file, "%s", string);
   free(string);
@@ -163,7 +163,7 @@ void osl_relation_print_type(FILE* const file, const osl_relation_t* relation) {
 
 /**
  * osl_relation_idump function:
- * this function displays a osl_relation_t structure (*relation) into a
+ * this function displays a osl_relation structure (*relation) into a
  * file (file, possibly stdout) in a way that trends to be understandable.
  * It includes an indentation level (level) in order to work with others
  * idump functions.
@@ -171,7 +171,7 @@ void osl_relation_print_type(FILE* const file, const osl_relation_t* relation) {
  * \param[in] relation The relation whose information has to be printed.
  * \param[in] level    Number of spaces before printing, for each line.
  */
-void osl_relation_idump(FILE* const file, const osl_relation_t* relation,
+void osl_relation_idump(FILE* const file, const osl_relation* relation,
                         int level) {
   int i, j, first = 1;
 
@@ -180,7 +180,7 @@ void osl_relation_idump(FILE* const file, const osl_relation_t* relation,
     fprintf(file, "|\t");
 
   if (relation != NULL) {
-    fprintf(file, "+-- osl_relation_t (");
+    fprintf(file, "+-- osl_relation (");
     osl_relation_print_type(file, relation);
     fprintf(file, ", ");
     osl_int_dump_precision(file, relation->precision);
@@ -194,7 +194,7 @@ void osl_relation_idump(FILE* const file, const osl_relation_t* relation,
       // Go to the right level.
       for (j = 0; j < level; j++)
         fprintf(file, "|\t");
-      fprintf(file, "|   osl_relation_t (");
+      fprintf(file, "|   osl_relation (");
       osl_relation_print_type(file, relation);
       fprintf(file, ", ");
       osl_int_dump_precision(file, relation->precision);
@@ -246,12 +246,12 @@ void osl_relation_idump(FILE* const file, const osl_relation_t* relation,
 
 /**
  * osl_relation_dump function:
- * this function prints the content of a osl_relation_t structure
+ * this function prints the content of a osl_relation structure
  * (*relation) into a file (file, possibly stdout).
  * \param[in] file     File where informations are printed.
  * \param[in] relation The relation whose information have to be printed.
  */
-void osl_relation_dump(FILE* const file, const osl_relation_t* const relation) {
+void osl_relation_dump(FILE* const file, const osl_relation* const relation) {
   osl_relation_idump(file, relation, 0);
 }
 
@@ -338,7 +338,7 @@ char* osl_relation_expression_element(const osl_int val, int precision,
  * \param[in] names    The set of names for each element.
  * \return An array of strings with one string per constraint matrix column.
  */
-char** osl_relation_strings(const osl_relation_t* relation,
+char** osl_relation_strings(const osl_relation* relation,
                             const osl_names* names) {
   char** strings;
   char temp[OSL_MAX_STRING];
@@ -412,7 +412,7 @@ char** osl_relation_strings(const osl_relation_t* relation,
  * \param[in] strings Array of textual names of the various elements.
  * \return A string that contains the printing of an affine (sub-)expression.
  */
-char* osl_relation_subexpression(const osl_relation_t* relation, int row,
+char* osl_relation_subexpression(const osl_relation* relation, int row,
                                  int start, int stop, int oppose,
                                  char** strings) {
   int i, first = 1, constant;
@@ -457,7 +457,7 @@ char* osl_relation_subexpression(const osl_relation_t* relation, int row,
  * \param[in] strings Array of textual names of the various elements.
  * \return A string that contains the printing of an affine expression.
  */
-char* osl_relation_expression(const osl_relation_t* relation, int row,
+char* osl_relation_expression(const osl_relation* relation, int row,
                               char** strings) {
   return osl_relation_subexpression(relation, row, 1, relation->nb_columns - 1,
                                     0, strings);
@@ -474,7 +474,7 @@ char* osl_relation_expression(const osl_relation_t* relation, int row,
  * \param[in] row      The row corresponding to the constraint to test.
  * \return 1 or -1 if the row is a simple output, 0 otherwise.
  */
-int osl_relation_is_simple_output(const osl_relation_t* relation, int row) {
+int osl_relation_is_simple_output(const osl_relation* relation, int row) {
   int i;
   int first = 1;
   int sign = 0;
@@ -524,7 +524,7 @@ int osl_relation_is_simple_output(const osl_relation_t* relation, int row) {
  * \param[in] arrays   Array of textual identifiers of the arrays.
  * \return A string which contains the comment for the row.
  */
-char* osl_relation_sprint_comment(const osl_relation_t* relation, int row,
+char* osl_relation_sprint_comment(const osl_relation* relation, int row,
                                   char** strings, char** arrays) {
   int sign;
   size_t high_water_mark = OSL_MAX_STRING;
@@ -590,7 +590,7 @@ char* osl_relation_sprint_comment(const osl_relation_t* relation, int row,
  * \param[in] strings  Array of textual names of the various elements.
  * \return A fancy comment string with all the dimension names.
  */
-char* osl_relation_column_string(const osl_relation_t* relation,
+char* osl_relation_column_string(const osl_relation* relation,
                                  char** strings) {
   int i, j;
   int index_output_dims;
@@ -664,7 +664,7 @@ char* osl_relation_column_string(const osl_relation_t* relation,
  * \param[in] strings  Array of textual names of the various elements.
  * \return A fancy comment string with all the dimension names.
  */
-char* osl_relation_column_string_scoplib(const osl_relation_t* relation,
+char* osl_relation_column_string_scoplib(const osl_relation* relation,
                                          char** strings) {
   int i, j;
   int index_output_dims;
@@ -742,7 +742,7 @@ char* osl_relation_column_string_scoplib(const osl_relation_t* relation,
  * \param[in] relation The relation we have to generate names for.
  * \return A set of generated names for the input relation dimensions.
  */
-osl_names* osl_relation_names(const osl_relation_t* relation) {
+osl_names* osl_relation_names(const osl_relation* relation) {
   int nb_parameters = OSL_UNDEFINED;
   int nb_iterators = OSL_UNDEFINED;
   int nb_scattdims = OSL_UNDEFINED;
@@ -763,7 +763,7 @@ osl_names* osl_relation_names(const osl_relation_t* relation) {
  * \param[in] relation The input union of relations.
  * \return The number of components in the input union of relations.
  */
-int osl_relation_nb_components(const osl_relation_t* relation) {
+int osl_relation_nb_components(const osl_relation* relation) {
   int nb_components = 0;
 
   while (relation != NULL) {
@@ -776,14 +776,14 @@ int osl_relation_nb_components(const osl_relation_t* relation) {
 
 /**
  * osl_relation_spprint_polylib function:
- * this function pretty-prints the content of an osl_relation_t structure
+ * this function pretty-prints the content of an osl_relation structure
  * (*relation) into a string in the extended polylib format, and returns this
  * string. This format is the same as OpenScop's, minus the type.
  * \param[in] relation The relation whose information has to be printed.
  * \param[in] names    The names of the constraint columns for comments.
  * \return A string containing the relation pretty-printing.
  */
-char* osl_relation_spprint_polylib(const osl_relation_t* relation,
+char* osl_relation_spprint_polylib(const osl_relation* relation,
                                    const osl_names* names) {
   int i, j;
   int part, nb_parts;
@@ -876,7 +876,7 @@ char* osl_relation_spprint_polylib(const osl_relation_t* relation,
 
 /**
  * osl_relation_spprint_polylib_scoplib function:
- * this function pretty-prints the content of an osl_relation_t structure
+ * this function pretty-prints the content of an osl_relation structure
  * (*relation) into a string in the extended polylib format, and returns this
  * string.
  * \param[in] relation        The relation whose information has to be printed.
@@ -885,7 +885,7 @@ char* osl_relation_spprint_polylib(const osl_relation_t* relation,
  * \param[in] add_fakeiter
  * \return A string containing the relation pretty-printing.
  */
-char* osl_relation_spprint_polylib_scoplib(const osl_relation_t* relation,
+char* osl_relation_spprint_polylib_scoplib(const osl_relation* relation,
                                            const osl_names* names,
                                            int print_nth_part,
                                            int add_fakeiter) {
@@ -1129,13 +1129,13 @@ char* osl_relation_spprint_polylib_scoplib(const osl_relation_t* relation,
 
 /**
  * osl_relation_spprint function:
- * this function pretty-prints the content of an osl_relation_t structure
+ * this function pretty-prints the content of an osl_relation structure
  * (*relation) into a string in the OpenScop format, and returns this string.
  * \param[in] relation The relation whose information has to be printed.
  * \param[in] names    The names of the constraint columns for comments.
  * \return A string
  */
-char* osl_relation_spprint(const osl_relation_t* relation,
+char* osl_relation_spprint(const osl_relation* relation,
                            const osl_names* names) {
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
@@ -1162,7 +1162,7 @@ char* osl_relation_spprint(const osl_relation_t* relation,
 
 /**
  * osl_relation_spprint_scoplib function:
- * this function pretty-prints the content of an osl_relation_t structure
+ * this function pretty-prints the content of an osl_relation structure
  * (*relation) into a string in the SCoPLib format, and returns this string.
  * \param[in] relation        The relation whose information has to be printed.
  * \param[in] names           The names of the constraint columns for comments.
@@ -1170,7 +1170,7 @@ char* osl_relation_spprint(const osl_relation_t* relation,
  * \param[in] add_fakeiter
  * \return A string
  */
-char* osl_relation_spprint_scoplib(const osl_relation_t* relation,
+char* osl_relation_spprint_scoplib(const osl_relation* relation,
                                    const osl_names* names, int print_nth_part,
                                    int add_fakeiter) {
   size_t high_water_mark = OSL_MAX_STRING;
@@ -1191,13 +1191,13 @@ char* osl_relation_spprint_scoplib(const osl_relation_t* relation,
 
 /**
  * osl_relation_pprint function:
- * this function pretty-prints the content of an osl_relation_t structure
+ * this function pretty-prints the content of an osl_relation structure
  * (*relation) into a file (file, possibly stdout) in the OpenScop format.
  * \param[in] file     File where informations are printed.
  * \param[in] relation The relation whose information has to be printed.
  * \param[in] names    The names of the constraint columns for comments.
  */
-void osl_relation_pprint(FILE* const file, const osl_relation_t* const relation,
+void osl_relation_pprint(FILE* const file, const osl_relation* const relation,
                          const osl_names* const names) {
   char* string = osl_relation_spprint(relation, names);
   fprintf(file, "%s", string);
@@ -1206,7 +1206,7 @@ void osl_relation_pprint(FILE* const file, const osl_relation_t* const relation,
 
 /**
  * osl_relation_pprint_scoplib function:
- * this function pretty-prints the content of an osl_relation_t structure
+ * this function pretty-prints the content of an osl_relation structure
  * (*relation) into a file (file, possibly stdout) in the SCoPLibformat.
  * \param[in] file     File where informations are printed.
  * \param[in] relation The relation whose information has to be printed.
@@ -1215,7 +1215,7 @@ void osl_relation_pprint(FILE* const file, const osl_relation_t* const relation,
  * \param[in] add_fakeiter
  */
 void osl_relation_pprint_scoplib(FILE* file,
-                                 const osl_relation_t* const relation,
+                                 const osl_relation* const relation,
                                  const osl_names* const names,
                                  int print_nth_part, int add_fakeiter) {
   char* string = osl_relation_spprint_scoplib(relation, names, print_nth_part,
@@ -1226,23 +1226,23 @@ void osl_relation_pprint_scoplib(FILE* file,
 
 /**
  * osl_relation_sprint function:
- * this function prints the content of an osl_relation_t structure
+ * this function prints the content of an osl_relation structure
  * (*relation) into a string (returned) in the OpenScop textual format.
  * \param[in] relation  The relation structure to print.
  * \return A string containing the OpenScop dump of the relation structure.
  */
-char* osl_relation_sprint(const osl_relation_t* relation) {
+char* osl_relation_sprint(const osl_relation* relation) {
   return osl_relation_spprint(relation, NULL);
 }
 
 /**
  * osl_relation_print function:
- * this function prints the content of an osl_relation_t structure
+ * this function prints the content of an osl_relation structure
  * (*relation) into a file (file, possibly stdout) in the OpenScop format.
  * \param[in] file     File where informations are printed.
  * \param[in] relation The relation whose information has to be printed.
  */
-void osl_relation_print(FILE* const file, const osl_relation_t* relation) {
+void osl_relation_print(FILE* const file, const osl_relation* relation) {
   osl_relation_pprint(file, relation, NULL);
 }
 
@@ -1329,7 +1329,7 @@ return_type:
  * \param[in] precision The precision of the relation elements.
  * \return A pointer to the relation structure that has been read.
  */
-osl_relation_t* osl_relation_pread(FILE* foo, int precision) {
+osl_relation* osl_relation_pread(FILE* foo, int precision) {
   int i, j, k, n, read = 0;
   int nb_rows, nb_columns;
   int nb_output_dims, nb_input_dims, nb_local_dims, nb_parameters;
@@ -1339,7 +1339,9 @@ osl_relation_t* osl_relation_pread(FILE* foo, int precision) {
   int first = 1;
   int type;
   char *c, s[OSL_MAX_STRING], str[OSL_MAX_STRING], *tmp;
-  osl_relation_p relation, relation_union = NULL, previous = NULL;
+  osl_relation* relation;
+  osl_relation* relation_union = NULL;
+  osl_relation* previous = NULL;
 
   type = osl_relation_read_type(foo, NULL);
 
@@ -1421,9 +1423,9 @@ osl_relation_t* osl_relation_pread(FILE* foo, int precision) {
  * input.
  * \see{osl_relation_psread_polylib}
  */
-osl_relation_t* osl_relation_psread(char** input, int precision) {
+osl_relation* osl_relation_psread(char** input, int precision) {
   int type;
-  osl_relation_p relation;
+  osl_relation* relation;
 
   type = osl_relation_read_type(NULL, input);
   relation = osl_relation_psread_polylib(input, precision);
@@ -1443,7 +1445,7 @@ osl_relation_t* osl_relation_psread(char** input, int precision) {
  * \param[in]     precision The precision of the relation elements.
  * \return A pointer to the relation structure that has been read.
  */
-osl_relation_t* osl_relation_psread_polylib(char** input, int precision) {
+osl_relation* osl_relation_psread_polylib(char** input, int precision) {
   int i, j, k, n, read = 0;
   int nb_rows, nb_columns;
   int nb_output_dims, nb_input_dims, nb_local_dims, nb_parameters;
@@ -1452,7 +1454,9 @@ osl_relation_t* osl_relation_psread_polylib(char** input, int precision) {
   int read_attributes = 1;
   int first = 1;
   char str[OSL_MAX_STRING], *tmp;
-  osl_relation_p relation, relation_union = NULL, previous = NULL;
+  osl_relation* relation;
+  osl_relation* relation_union = NULL;
+  osl_relation* previous = NULL;
 
   // Read each part of the union (the number of parts may be updated inside)
   for (k = 0; k < nb_union_parts; k++) {
@@ -1541,7 +1545,7 @@ osl_relation_t* osl_relation_psread_polylib(char** input, int precision) {
  * to the highest available precision if it is not defined.
  * \see{osl_relation_psread}
  */
-osl_relation_t* osl_relation_sread(char** input) {
+osl_relation* osl_relation_sread(char** input) {
   int precision = osl_util_get_precision();
   return osl_relation_psread(input, precision);
 }
@@ -1553,7 +1557,7 @@ osl_relation_t* osl_relation_sread(char** input) {
  * to the highest available precision if it is not defined.
  * \see{osl_relation_posread_polylib}
  */
-osl_relation_t* osl_relation_sread_polylib(char** input) {
+osl_relation* osl_relation_sread_polylib(char** input) {
   int precision = osl_util_get_precision();
   return osl_relation_psread_polylib(input, precision);
 }
@@ -1565,7 +1569,7 @@ osl_relation_t* osl_relation_sread_polylib(char** input) {
  * to the highest available precision if it is not defined.
  * \see{osl_relation_pread}
  */
-osl_relation_t* osl_relation_read(FILE* foo) {
+osl_relation* osl_relation_read(FILE* foo) {
   int precision = osl_util_get_precision();
   return osl_relation_pread(foo, precision);
 }
@@ -1577,7 +1581,7 @@ osl_relation_t* osl_relation_read(FILE* foo) {
 /**
  * osl_relation_pmalloc function:
  * (precision malloc) this function allocates the memory space for an
- * osl_relation_t structure and sets its fields with default values.
+ * osl_relation structure and sets its fields with default values.
  * Then it returns a pointer to the allocated space.
  * \param[in] precision  The precision of the constraint matrix.
  * \param[in] nb_rows    The number of row of the relation to allocate.
@@ -1585,9 +1589,9 @@ osl_relation_t* osl_relation_read(FILE* foo) {
  * \return A pointer to an empty relation with fields set to default values
  *         and a ready-to-use constraint matrix.
  */
-osl_relation_t* osl_relation_pmalloc(int precision, int nb_rows,
+osl_relation* osl_relation_pmalloc(int precision, int nb_rows,
                                      int nb_columns) {
-  osl_relation_p relation;
+  osl_relation* relation;
   osl_int **p, *q;
   int i, j;
 
@@ -1598,7 +1602,7 @@ osl_relation_t* osl_relation_pmalloc(int precision, int nb_rows,
   if ((nb_rows < 0) || (nb_columns < 0))
     OSL_error("negative sizes");
 
-  OSL_malloc(relation, osl_relation_p, sizeof(osl_relation_t));
+  OSL_malloc(relation, osl_relation*, sizeof(osl_relation));
   relation->type = OSL_UNDEFINED;
   relation->nb_rows = nb_rows;
   relation->nb_columns = nb_columns;
@@ -1635,22 +1639,22 @@ osl_relation_t* osl_relation_pmalloc(int precision, int nb_rows,
  * to the highest available precision if it is not defined.
  * \see{osl_relation_pmalloc}
  */
-osl_relation_t* osl_relation_malloc(int nb_rows, int nb_columns) {
+osl_relation* osl_relation_malloc(int nb_rows, int nb_columns) {
   int precision = osl_util_get_precision();
   return osl_relation_pmalloc(precision, nb_rows, nb_columns);
 }
 
-osl_relation_t* osl_relation_interface_malloc(void) {
+osl_relation* osl_relation_interface_malloc(void) {
   return osl_relation_malloc(0, 0);
 }
 
 /**
  * osl_relation_free_inside function:
  * this function frees the allocated memory for the inside of a
- * osl_relation_t structure, i.e. only m.
+ * osl_relation structure, i.e. only m.
  * \param[in] relation The pointer to the relation we want to free internals.
  */
-void osl_relation_free_inside(osl_relation_t* relation) {
+void osl_relation_free_inside(osl_relation* relation) {
   int i, nb_elements;
 
   if (relation == NULL)
@@ -1670,12 +1674,12 @@ void osl_relation_free_inside(osl_relation_t* relation) {
 
 /**
  * osl_relation_free function:
- * this function frees the allocated memory for an osl_relation_t
+ * this function frees the allocated memory for an osl_relation
  * structure.
  * \param[in] relation The pointer to the relation we want to free.
  */
-void osl_relation_free(osl_relation_t* relation) {
-  osl_relation_p tmp;
+void osl_relation_free(osl_relation* relation) {
+  osl_relation* tmp;
 
   while (relation != NULL) {
     tmp = relation->next;
@@ -1699,10 +1703,12 @@ void osl_relation_free(osl_relation_t* relation) {
  * \return A pointer to the clone of the relation union restricted to the
  *         first n parts of the relation union.
  */
-osl_relation_t* osl_relation_nclone(const osl_relation_t* relation, int n) {
+osl_relation* osl_relation_nclone(const osl_relation* relation, int n) {
   int i, j, k;
   int first = 1, nb_components, nb_parts;
-  osl_relation_p clone = NULL, node, previous = NULL;
+  osl_relation* clone = NULL;
+  osl_relation* node;
+  osl_relation* previous = NULL;
 
   nb_components = osl_relation_nb_components(relation);
   nb_parts = (n == -1) ? nb_components : n;
@@ -1740,7 +1746,7 @@ osl_relation_t* osl_relation_nclone(const osl_relation_t* relation, int n) {
 /**
  * osl_relation_clone_nconstraints function:
  * this functions builds and returns a "hard copy" (not a pointer copy) of a
- * osl_relation_t data structure such that the clone is restricted to the
+ * osl_relation data structure such that the clone is restricted to the
  * "n" first rows of the relation. This applies to all the parts in the case
  * of a relation union.
  * \param[in] relation The pointer to the relation we want to clone.
@@ -1749,11 +1755,13 @@ osl_relation_t* osl_relation_nclone(const osl_relation_t* relation, int n) {
  * \return A pointer to the clone of the relation union restricted to the
  *         first n rows of constraint matrix for each part of the union.
  */
-osl_relation_t* osl_relation_clone_nconstraints(const osl_relation_t* relation,
+osl_relation* osl_relation_clone_nconstraints(const osl_relation* relation,
                                                 int n) {
   int i, j;
   int first = 1, all_rows = 0;
-  osl_relation_p clone = NULL, node, previous = NULL;
+  osl_relation* clone = NULL;
+  osl_relation* node;
+  osl_relation* previous = NULL;
 
   if (n == -1)
     all_rows = 1;
@@ -1794,11 +1802,11 @@ osl_relation_t* osl_relation_clone_nconstraints(const osl_relation_t* relation,
 /**
  * osl_relation_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_relation_t data structure (the full union of relation).
+ * osl_relation data structure (the full union of relation).
  * \param[in] relation The pointer to the relation we want to clone.
  * \return A pointer to the clone of the union of relations.
  */
-osl_relation_t* osl_relation_clone(const osl_relation_t* relation) {
+osl_relation* osl_relation_clone(const osl_relation* relation) {
   if (relation == NULL)
     return NULL;
 
@@ -1814,7 +1822,7 @@ osl_relation_t* osl_relation_clone(const osl_relation_t* relation) {
  * \param[in,out] r1  Pointer to the first relation (union).
  * \param[in]     r2  The second relation (union).
  */
-void osl_relation_add(osl_relation_t** r1, osl_relation_t* r2) {
+void osl_relation_add(osl_relation** r1, osl_relation* r2) {
   while (*r1 != NULL)
     r1 = &((*r1)->next);
 
@@ -1830,14 +1838,12 @@ void osl_relation_add(osl_relation_t** r1, osl_relation_t* r2) {
  * \param[in] r2 The second relation.
  * \return A new relation corresponding to the union of r1 and r2.
  */
-osl_relation_t* osl_relation_union(osl_relation_t* r1, osl_relation_t* r2) {
-  osl_relation_p copy1, copy2;
-
+osl_relation* osl_relation_union(osl_relation* r1, osl_relation* r2) {
   if ((r1 == NULL) && (r2 == NULL))
     return NULL;
 
-  copy1 = osl_relation_clone(r1);
-  copy2 = osl_relation_clone(r2);
+  osl_relation* copy1 = osl_relation_clone(r1);
+  osl_relation* copy2 = osl_relation_clone(r2);
   osl_relation_add(&copy1, copy2);
 
   return copy1;
@@ -1852,7 +1858,7 @@ osl_relation_t* osl_relation_union(osl_relation_t* r1, osl_relation_t* r2) {
  * \param[in]     vector   The vector that will replace a row of the relation.
  * \param[in]     row      The row of the relation to be replaced.
  */
-void osl_relation_replace_vector(osl_relation_t* const relation,
+void osl_relation_replace_vector(osl_relation* const relation,
                                  const osl_vector_t* const vector, int row) {
   int i;
 
@@ -1875,7 +1881,7 @@ void osl_relation_replace_vector(osl_relation_t* const relation,
  * \param[in]     vector   The vector that will replace a row of the relation.
  * \param[in]     row      The row of the relation to add the vector.
  */
-void osl_relation_add_vector(osl_relation_t* relation,
+void osl_relation_add_vector(osl_relation* relation,
                              const osl_vector_t* vector, int row) {
   int i;
 
@@ -1902,7 +1908,7 @@ void osl_relation_add_vector(osl_relation_t* relation,
  * \param[in]     vector   The vector to subtract to a relation row.
  * \param[in]     row      The row of the relation to subtract the vector.
  */
-void osl_relation_sub_vector(osl_relation_t* relation,
+void osl_relation_sub_vector(osl_relation* relation,
                              const osl_vector_t* const vector, int row) {
   int i;
 
@@ -1933,9 +1939,9 @@ void osl_relation_sub_vector(osl_relation_t* relation,
  * \param[in]     row      The row where to insert the vector (-1 to
  *                         insert it after the relation constraints).
  */
-void osl_relation_insert_vector(osl_relation_t* relation,
+void osl_relation_insert_vector(osl_relation* relation,
                                 const osl_vector_t* vector, int row) {
-  osl_relation_p temp;
+  osl_relation* temp;
 
   temp = osl_relation_from_vector(vector);
   osl_relation_insert_constraints(relation, temp, row);
@@ -1953,12 +1959,10 @@ void osl_relation_insert_vector(osl_relation_t* relation,
  * \return A pointer to the relation resulting from the concatenation of
  *         the constraints of the relation and of the vector.
  */
-osl_relation_t* osl_relation_concat_vector(osl_relation_t* const relation,
+osl_relation* osl_relation_concat_vector(osl_relation* const relation,
                                            const osl_vector_t* vector) {
-  osl_relation_p new, temp;
-
-  temp = osl_relation_from_vector(vector);
-  new = osl_relation_concat_constraints(relation, temp);
+  osl_relation* temp = osl_relation_from_vector(vector);
+  osl_relation* new = osl_relation_concat_constraints(relation, temp);
   osl_relation_free(temp);
   return new;
 }
@@ -1970,7 +1974,7 @@ osl_relation_t* osl_relation_concat_vector(osl_relation_t* const relation,
  * \param[in,out] relation The relation to add a row in.
  * \param[in]     row      The row where to insert the blank row.
  */
-void osl_relation_insert_blank_row(osl_relation_t* const relation, int row) {
+void osl_relation_insert_blank_row(osl_relation* const relation, int row) {
   osl_vector_p vector;
 
   if (relation != NULL) {
@@ -1988,10 +1992,10 @@ void osl_relation_insert_blank_row(osl_relation_t* const relation, int row) {
  * \param[in,out] relation The relation to add a column in.
  * \param[in]     column   The column where to insert the blank column.
  */
-void osl_relation_insert_blank_column(osl_relation_t* const relation,
+void osl_relation_insert_blank_column(osl_relation* const relation,
                                       int column) {
   int i, j;
-  osl_relation_p temp;
+  osl_relation* temp;
 
   if (relation == NULL)
     return;
@@ -2029,8 +2033,8 @@ void osl_relation_insert_blank_column(osl_relation_t* const relation,
  * \param[in] vector The vector to convert to a relation.
  * \return A pointer to a relation resulting from the vector conversion.
  */
-osl_relation_t* osl_relation_from_vector(const osl_vector_t* vector) {
-  osl_relation_p relation;
+osl_relation* osl_relation_from_vector(const osl_vector_t* vector) {
+  osl_relation* relation;
 
   if (vector == NULL)
     return NULL;
@@ -2049,8 +2053,8 @@ osl_relation_t* osl_relation_from_vector(const osl_vector_t* vector) {
  * \param[in]     r2  The relation containing the new rows.
  * \param[in]     row The first row of the relation r1 to be replaced.
  */
-void osl_relation_replace_constraints(osl_relation_t* r1,
-                                      const osl_relation_t* r2, int row) {
+void osl_relation_replace_constraints(osl_relation* r1,
+                                      const osl_relation* r2, int row) {
   int i, j;
 
   if ((r1 == NULL) || (r2 == NULL) || (r1->precision != r2->precision) ||
@@ -2075,10 +2079,10 @@ void osl_relation_replace_constraints(osl_relation_t* r1,
  * \param[in]     row The row where to insert the constraints (-1 to
  *                    insert them after those of "r1").
  */
-void osl_relation_insert_constraints(osl_relation_t* r1,
-                                     const osl_relation_t* r2, int row) {
+void osl_relation_insert_constraints(osl_relation* r1,
+                                     const osl_relation* r2, int row) {
   int i, j;
-  osl_relation_p temp;
+  osl_relation* temp;
 
   if ((r1 == NULL) || (r2 == NULL))
     return;
@@ -2122,7 +2126,7 @@ void osl_relation_insert_constraints(osl_relation_t* r1,
  * \param[in]     c1       The row corresponding to the first constraint.
  * \param[in]     c2       The row corresponding to the second constraint.
  */
-void osl_relation_swap_constraints(osl_relation_t* relation, int c1, int c2) {
+void osl_relation_swap_constraints(osl_relation* relation, int c1, int c2) {
   int i;
 
   if ((relation == NULL) || (c1 == c2))
@@ -2143,9 +2147,9 @@ void osl_relation_swap_constraints(osl_relation_t* relation, int c1, int c2) {
  * \param[in,out] r   The relation to remove a row.
  * \param[in]     row The row number to remove.
  */
-void osl_relation_remove_row(osl_relation_t* r, int row) {
+void osl_relation_remove_row(osl_relation* r, int row) {
   int i, j;
-  osl_relation_p temp;
+  osl_relation* temp;
 
   if (r == NULL)
     return;
@@ -2181,9 +2185,9 @@ void osl_relation_remove_row(osl_relation_t* r, int row) {
  * \param[in,out] r      The relation to remove a column.
  * \param[in]     column The column number to remove.
  */
-void osl_relation_remove_column(osl_relation_t* r, int column) {
+void osl_relation_remove_column(osl_relation* r, int column) {
   int i, j;
-  osl_relation_p temp;
+  osl_relation* temp;
 
   if (r == NULL)
     return;
@@ -2223,11 +2227,11 @@ void osl_relation_remove_column(osl_relation_t* r, int column) {
  * \param[in]     insert   The relation containing the columns to add.
  * \param[in]     column   The column where to insert the new columns.
  */
-void osl_relation_insert_columns(osl_relation_t* const relation,
-                                 const osl_relation_t* const insert,
+void osl_relation_insert_columns(osl_relation* const relation,
+                                 const osl_relation* const insert,
                                  int column) {
   int i, j;
-  osl_relation_p temp;
+  osl_relation* temp;
 
   if ((relation == NULL) || (insert == NULL))
     return;
@@ -2276,9 +2280,9 @@ void osl_relation_insert_columns(osl_relation_t* const relation,
  * \return A pointer to the relation resulting from the concatenation of
  *         the first elements of r1 and r2.
  */
-osl_relation_p osl_relation_concat_constraints(const osl_relation_t* const r1,
-                                               const osl_relation_t* const r2) {
-  osl_relation_p new;
+osl_relation* osl_relation_concat_constraints(const osl_relation* const r1,
+                                               const osl_relation* const r2) {
+  osl_relation* new;
 
   if (r1 == NULL)
     return osl_relation_clone(r2);
@@ -2311,8 +2315,8 @@ osl_relation_p osl_relation_concat_constraints(const osl_relation_t* const r1,
  * \param[in] r2 The second relation.
  * \return 1 if r1 and r2 are the same (content-wise), 0 otherwise.
  */
-bool osl_relation_part_equal(const osl_relation_t* const r1,
-                             const osl_relation_t* const r2) {
+bool osl_relation_part_equal(const osl_relation* const r1,
+                             const osl_relation* const r2) {
   int i, j;
 
   if (r1 == r2)
@@ -2345,7 +2349,7 @@ bool osl_relation_part_equal(const osl_relation_t* const r1,
  * \param[in] r2 The second relation.
  * \return 1 if r1 and r2 are the same (content-wise), 0 otherwise.
  */
-bool osl_relation_equal(const osl_relation_t* r1, const osl_relation_t* r2) {
+bool osl_relation_equal(const osl_relation* r1, const osl_relation* r2) {
   while ((r1 != NULL) && (r2 != NULL)) {
     if (!osl_relation_part_equal(r1, r2))
       return 0;
@@ -2399,7 +2403,7 @@ int osl_relation_check_attribute(int* expected, int actual) {
  * \param[in] expected_nb_parameters  Expected number of parameters.
  * \return 0 if the number of columns seems incorrect, 1 otherwise.
  */
-int osl_relation_check_nb_columns(const osl_relation_t* relation,
+int osl_relation_check_nb_columns(const osl_relation* relation,
                                   int expected_nb_output_dims,
                                   int expected_nb_input_dims,
                                   int expected_nb_parameters) {
@@ -2439,7 +2443,7 @@ int osl_relation_check_nb_columns(const osl_relation_t* relation,
  * \param[in] expected_nb_parameters  Expected number of parameters.
  * \return 0 if the integrity check fails, 1 otherwise.
  */
-int osl_relation_integrity_check(const osl_relation_t* relation,
+int osl_relation_integrity_check(const osl_relation* relation,
                                  int expected_type, int expected_nb_output_dims,
                                  int expected_nb_input_dims,
                                  int expected_nb_parameters) {
@@ -2562,7 +2566,7 @@ int osl_relation_integrity_check(const osl_relation_t* relation,
  * \param[in]     nb_local_dims  Number of local dimensions.
  * \param[in]     nb_parameters  Number of parameters.
  */
-void osl_relation_set_attributes_one(osl_relation_t* relation,
+void osl_relation_set_attributes_one(osl_relation* relation,
                                      int nb_output_dims, int nb_input_dims,
                                      int nb_local_dims, int nb_parameters) {
   if (relation != NULL) {
@@ -2583,7 +2587,7 @@ void osl_relation_set_attributes_one(osl_relation_t* relation,
  * \param[in]     nb_local_dims  Number of local dimensions.
  * \param[in]     nb_parameters  Number of parameters.
  */
-void osl_relation_set_attributes(osl_relation_t* relation, int nb_output_dims,
+void osl_relation_set_attributes(osl_relation* relation, int nb_output_dims,
                                  int nb_input_dims, int nb_local_dims,
                                  int nb_parameters) {
   while (relation != NULL) {
@@ -2600,7 +2604,7 @@ void osl_relation_set_attributes(osl_relation_t* relation, int nb_output_dims,
  * \param relation The relation to set the type.
  * \param type     The type.
  */
-void osl_relation_set_type(osl_relation_t* relation, int type) {
+void osl_relation_set_type(osl_relation* relation, int type) {
   while (relation != NULL) {
     relation->type = type;
     relation = relation->next;
@@ -2615,7 +2619,7 @@ void osl_relation_set_type(osl_relation_t* relation, int type) {
  * \param[in] relation The relation where to find an array identifier.
  * \return The array identifier in the relation or OSL_UNDEFINED.
  */
-int osl_relation_get_array_id(const osl_relation_t* relation) {
+int osl_relation_get_array_id(const osl_relation* relation) {
   int i;
   int first = 1;
   int array_id = OSL_UNDEFINED;
@@ -2708,7 +2712,7 @@ int osl_relation_get_array_id(const osl_relation_t* relation) {
  * \param relation The relation to check wheter it is an access relation or not.
  * \return 1 if the relation is an access relation, 0 otherwise.
  */
-int osl_relation_is_access(const osl_relation_t* const relation) {
+int osl_relation_is_access(const osl_relation* const relation) {
   if (relation == NULL)
     return 0;
 
@@ -2738,7 +2742,7 @@ int osl_relation_is_access(const osl_relation_t* const relation) {
  * \param[in,out] nb_localdims  Number of local dimensions attribute.
  * \param[in,out] array_id      Maximum array identifier attribute.
  */
-void osl_relation_get_attributes(const osl_relation_t* relation,
+void osl_relation_get_attributes(const osl_relation* relation,
                                  int* const nb_parameters,
                                  int* const nb_iterators,
                                  int* const nb_scattdims,
@@ -2819,13 +2823,15 @@ void osl_relation_get_attributes(const osl_relation_t* relation,
  * \param[in] dim      The number of output dimension to reach.
  * \return A new relation: "relation" extended to "dim" output dims.
  */
-osl_relation_t* osl_relation_extend_output(const osl_relation_t* relation,
+osl_relation* osl_relation_extend_output(const osl_relation* relation,
                                            int dim) {
   int i, j;
   int first = 1;
   int offset;
   int precision = relation->precision;
-  osl_relation_p extended = NULL, node, previous = NULL;
+  osl_relation* extended = NULL;
+  osl_relation* node;
+  osl_relation* previous = NULL;
 
   while (relation != NULL) {
     if (relation->nb_output_dims > dim)
@@ -2902,7 +2908,7 @@ osl_interface* osl_relation_interface(void) {
  * \param[in]     precision Precision wanted for the relation
  * \param[in,out] r         A osl relation to change the precision
  */
-void osl_relation_set_precision(int const precision, osl_relation_t* r) {
+void osl_relation_set_precision(int const precision, osl_relation* r) {
   while (r != NULL) {
     if (precision != r->precision) {
       size_t i;
@@ -2925,8 +2931,8 @@ void osl_relation_set_precision(int const precision, osl_relation_t* r) {
  * \param[in,out] a A osl relation to change the precision if necessary
  * \param[in,out] b A osl relation to change the precision if necessary
  */
-void osl_relation_set_same_precision(osl_relation_t* const a,
-                                     osl_relation_t* const b) {
+void osl_relation_set_same_precision(osl_relation* const a,
+                                     osl_relation* const b) {
   if (a != NULL && b != NULL && a->precision != b->precision) {
     if (a->precision == OSL_PRECISION_MP || b->precision == OSL_PRECISION_MP) {
       osl_relation_set_precision(OSL_PRECISION_MP, a);
@@ -2947,9 +2953,10 @@ void osl_relation_set_same_precision(osl_relation_t* const a,
  * \param[in,out] relation_list Pointer to the head of relation union list.
  * \param[in]     part          The part to remove (must be in the list).
  */
-void osl_relation_remove_part(osl_relation_t** relation_list,
-                              osl_relation_t* part) {
-  osl_relation_p relation, previous;
+void osl_relation_remove_part(osl_relation** relation_list,
+                              osl_relation* part) {
+  osl_relation* relation;
+  osl_relation* previous;
 
   if (relation_list == NULL || *relation_list == NULL || part == NULL) {
     return;

@@ -71,8 +71,8 @@ int main(int argc, char** argv)
    */
   char* p_string = string;
   
-  osl_relation_p r0 = osl_relation_sread(&p_string);
-  osl_relation_p r1 = osl_relation_clone(r0);
+  osl_relation* r0 = osl_relation_sread(&p_string);
+  osl_relation* r1 = osl_relation_clone(r0);
   
   printf("r0 %d =\n", r0->precision);
   osl_relation_print(stdout, r0);
