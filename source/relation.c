@@ -1859,7 +1859,7 @@ osl_relation* osl_relation_union(osl_relation* r1, osl_relation* r2) {
  * \param[in]     row      The row of the relation to be replaced.
  */
 void osl_relation_replace_vector(osl_relation* const relation,
-                                 const osl_vector_t* const vector, int row) {
+                                 const osl_vector* const vector, int row) {
   int i;
 
   if ((relation == NULL) || (vector == NULL) ||
@@ -1882,7 +1882,7 @@ void osl_relation_replace_vector(osl_relation* const relation,
  * \param[in]     row      The row of the relation to add the vector.
  */
 void osl_relation_add_vector(osl_relation* relation,
-                             const osl_vector_t* vector, int row) {
+                             const osl_vector* vector, int row) {
   int i;
 
   if ((relation == NULL) || (vector == NULL) ||
@@ -1909,7 +1909,7 @@ void osl_relation_add_vector(osl_relation* relation,
  * \param[in]     row      The row of the relation to subtract the vector.
  */
 void osl_relation_sub_vector(osl_relation* relation,
-                             const osl_vector_t* const vector, int row) {
+                             const osl_vector* const vector, int row) {
   int i;
 
   if ((relation == NULL) || (vector == NULL) ||
@@ -1940,7 +1940,7 @@ void osl_relation_sub_vector(osl_relation* relation,
  *                         insert it after the relation constraints).
  */
 void osl_relation_insert_vector(osl_relation* relation,
-                                const osl_vector_t* vector, int row) {
+                                const osl_vector* vector, int row) {
   osl_relation* temp;
 
   temp = osl_relation_from_vector(vector);
@@ -1960,7 +1960,7 @@ void osl_relation_insert_vector(osl_relation* relation,
  *         the constraints of the relation and of the vector.
  */
 osl_relation* osl_relation_concat_vector(osl_relation* const relation,
-                                           const osl_vector_t* vector) {
+                                           const osl_vector* vector) {
   osl_relation* temp = osl_relation_from_vector(vector);
   osl_relation* new = osl_relation_concat_constraints(relation, temp);
   osl_relation_free(temp);
@@ -1975,7 +1975,7 @@ osl_relation* osl_relation_concat_vector(osl_relation* const relation,
  * \param[in]     row      The row where to insert the blank row.
  */
 void osl_relation_insert_blank_row(osl_relation* const relation, int row) {
-  osl_vector_p vector;
+  osl_vector* vector;
 
   if (relation != NULL) {
     vector = osl_vector_pmalloc(relation->precision, relation->nb_columns);
@@ -2033,7 +2033,7 @@ void osl_relation_insert_blank_column(osl_relation* const relation,
  * \param[in] vector The vector to convert to a relation.
  * \return A pointer to a relation resulting from the vector conversion.
  */
-osl_relation* osl_relation_from_vector(const osl_vector_t* vector) {
+osl_relation* osl_relation_from_vector(const osl_vector* vector) {
   osl_relation* relation;
 
   if (vector == NULL)

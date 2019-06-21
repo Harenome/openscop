@@ -71,7 +71,7 @@ extern "C" {
 #endif
 
 /**
- * The osl_vector_t structure stores a vector information in the PolyLib
+ * The osl_vector structure stores a vector information in the PolyLib
  * format (the first entry has a specific meaning). When a vector
  * describes a linear constraint, a 0 means it is an equality == 0, a 1 means
  * an inequality >= 0. When the vector describes an array access, a number
@@ -82,6 +82,8 @@ struct osl_vector {
   int size;      /**< Number of vector entries */
   osl_int* v;  /**< An array of integer values */
 };
+typedef struct osl_vector osl_vector;
+
 typedef struct osl_vector osl_vector_t;
 typedef struct osl_vector* osl_vector_p;
 
@@ -89,33 +91,33 @@ typedef struct osl_vector* osl_vector_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_vector_idump(FILE*, const osl_vector_t*, int) OSL_NONNULL_ARGS(1);
-void osl_vector_dump(FILE*, const osl_vector_t*) OSL_NONNULL_ARGS(1);
+void osl_vector_idump(FILE*, const osl_vector*, int) OSL_NONNULL_ARGS(1);
+void osl_vector_dump(FILE*, const osl_vector*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_vector_t* osl_vector_pmalloc(int, int) OSL_WARN_UNUSED_RESULT;
-osl_vector_t* osl_vector_malloc(int) OSL_WARN_UNUSED_RESULT;
-void osl_vector_free(osl_vector_t*);
+osl_vector* osl_vector_pmalloc(int, int) OSL_WARN_UNUSED_RESULT;
+osl_vector* osl_vector_malloc(int) OSL_WARN_UNUSED_RESULT;
+void osl_vector_free(osl_vector*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_vector_t* osl_vector_add_scalar(const osl_vector_t*,
+osl_vector* osl_vector_add_scalar(const osl_vector*,
                                     int) OSL_WARN_UNUSED_RESULT;
-osl_vector_t* osl_vector_mul_scalar(const osl_vector_t*,
+osl_vector* osl_vector_mul_scalar(const osl_vector*,
                                     int) OSL_WARN_UNUSED_RESULT;
-osl_vector_t* osl_vector_add(const osl_vector_t*,
-                             const osl_vector_t*) OSL_WARN_UNUSED_RESULT;
-osl_vector_t* osl_vector_sub(const osl_vector_t*,
-                             const osl_vector_t*) OSL_WARN_UNUSED_RESULT;
-void osl_vector_tag_inequality(osl_vector_t*);
-void osl_vector_tag_equality(osl_vector_t*);
-int osl_vector_equal(const osl_vector_t*, const osl_vector_t*);
-int osl_vector_is_scalar(const osl_vector_t*);
+osl_vector* osl_vector_add(const osl_vector*,
+                             const osl_vector*) OSL_WARN_UNUSED_RESULT;
+osl_vector* osl_vector_sub(const osl_vector*,
+                             const osl_vector*) OSL_WARN_UNUSED_RESULT;
+void osl_vector_tag_inequality(osl_vector*);
+void osl_vector_tag_equality(osl_vector*);
+int osl_vector_equal(const osl_vector*, const osl_vector*);
+int osl_vector_is_scalar(const osl_vector*);
 
 #if defined(__cplusplus)
 }

@@ -185,15 +185,15 @@ void osl_relation_add(osl_relation**, osl_relation*);
 void osl_relation_remove_part(osl_relation**, osl_relation*);
 osl_relation* osl_relation_union(osl_relation*,
                                    osl_relation*) OSL_WARN_UNUSED_RESULT;
-void osl_relation_replace_vector(osl_relation*, const osl_vector_t*, int);
-void osl_relation_insert_vector(osl_relation*, const osl_vector_t*, int);
-osl_relation* osl_relation_concat_vector(osl_relation*, const osl_vector_t*)
+void osl_relation_replace_vector(osl_relation*, const osl_vector*, int);
+void osl_relation_insert_vector(osl_relation*, const osl_vector*, int);
+osl_relation* osl_relation_concat_vector(osl_relation*, const osl_vector*)
     OSL_WARN_UNUSED_RESULT;
 void osl_relation_insert_blank_row(osl_relation*, int);
 void osl_relation_insert_blank_column(osl_relation*, int);
-void osl_relation_add_vector(osl_relation*, const osl_vector_t*, int);
-void osl_relation_sub_vector(osl_relation*, const osl_vector_t*, int);
-osl_relation* osl_relation_from_vector(const osl_vector_t*)
+void osl_relation_add_vector(osl_relation*, const osl_vector*, int);
+void osl_relation_sub_vector(osl_relation*, const osl_vector*, int);
+osl_relation* osl_relation_from_vector(const osl_vector*)
     OSL_WARN_UNUSED_RESULT;
 void osl_relation_replace_constraints(osl_relation*, const osl_relation*,
                                       int);
