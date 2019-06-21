@@ -1951,7 +1951,7 @@ A[i+j] += B[i] * C[j];
 * osl_interface::
 * osl_generic_t::
 * osl_strings::
-* osl_body_t::
+* osl_body::
 * osl_statement::
 * osl_scop_t::
 @end menu
@@ -2159,8 +2159,8 @@ its manipulation through a generic type.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_body_t
-@subsection osl_body_t
+@node osl_body
+@subsection osl_body
 
 @example
 @group
@@ -2168,12 +2168,11 @@ struct osl_body @{
   osl_strings* iterators;    /* Original iterators */
   osl_strings* expression;   /* Original statement expression */
 @};
-typedef struct osl_body  osl_body_t;
-typedef struct osl_body* osl_body_p;
+typedef struct osl_body  osl_body;
 @end group
 @end example
 
-@noindent The @code{osl_body_t} structure stores a statement body in a
+@noindent The @code{osl_body} structure stores a statement body in a
 textual form. The complete original expression (directly copy-pasted
 from the original code) is in the expression field while the textual forms
 of the original iterators are in the iterators field. They may be used for
@@ -2210,7 +2209,7 @@ The extensions part is a list of generics @code{osl_generic_t} which can
 contain useful structures such as @code{body}.
 The @code{body} field should provide information about the statement body
 (since it has a generic type, the specification is not strict about how it
-is used), e.g., using the @code{osl_body_t} data structure (@pxref{osl_body_t}).
+is used), e.g., using the @code{osl_body} data structure (@pxref{osl_body}).
 It is also possible to use the @code{usr} field, but it has to be
 totally managed by the user.
 
@@ -2791,7 +2790,7 @@ a++ + b[i+1][j];
 @example
 @group
 struct osl_extbody @{
-  osl_body_p body;
+  osl_body* body;
   int nb_access;   /**< Nb of access. */
   int * start;     /**< Array of nb_access start. */
   int * length;    /**< Array of nb_access length. */

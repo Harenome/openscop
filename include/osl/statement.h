@@ -144,7 +144,7 @@ int osl_statement_integrity_check(const osl_statement*, int);
 int osl_statement_get_nb_iterators(const osl_statement*);
 void osl_statement_get_attributes(const osl_statement*, int*, int*, int*,
                                   int*, int*);
-osl_body_t* osl_statement_get_body(const osl_statement*);
+osl_body* osl_statement_get_body(const osl_statement*);
 #if defined(__cplusplus)
 }
 #endif

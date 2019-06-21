@@ -74,7 +74,7 @@ extern "C" {
 #define OSL_URI_BODY "body"
 
 /**
- * The osl_body_t structure stores a statement body in a textual form.
+ * The osl_body structure stores a statement body in a textual form.
  * The complete original expression (directly copy-pasted from the original
  * code) is in the expression field while the textual forms of the original
  * iterators are in the iterators field. They may be used for substitutions
@@ -84,6 +84,8 @@ struct osl_body {
   osl_strings* iterators;  /**< Original iterators */
   osl_strings* expression; /**< Original statement expression */
 };
+typedef struct osl_body osl_body;
+
 typedef struct osl_body osl_body_t;
 typedef struct osl_body* osl_body_p;
 typedef struct osl_body const osl_const_body_t;
@@ -94,31 +96,31 @@ typedef struct osl_body const* const osl_const_body_const_p;
 /******************************************************************************
  *                          Structure display function                        *
  ******************************************************************************/
-void osl_body_idump(FILE*, const osl_body_t*, int) OSL_NONNULL_ARGS(1);
-void osl_body_dump(FILE*, const osl_body_t*) OSL_NONNULL_ARGS(1);
-char* osl_body_sprint(const osl_body_t*) OSL_WARN_UNUSED_RESULT;
-void osl_body_print(FILE*, const osl_body_t*) OSL_NONNULL_ARGS(1);
+void osl_body_idump(FILE*, const osl_body*, int) OSL_NONNULL_ARGS(1);
+void osl_body_dump(FILE*, const osl_body*) OSL_NONNULL_ARGS(1);
+char* osl_body_sprint(const osl_body*) OSL_WARN_UNUSED_RESULT;
+void osl_body_print(FILE*, const osl_body*) OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
-void osl_body_print_scoplib(FILE* file, const osl_body_t* body)
+void osl_body_print_scoplib(FILE* file, const osl_body* body)
     OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                              Reading function                              *
  ******************************************************************************/
-osl_body_t* osl_body_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_body* osl_body_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                   Memory allocation/deallocation function                  *
  ******************************************************************************/
-osl_body_t* osl_body_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_body_free(osl_body_t*);
+osl_body* osl_body_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_body_free(osl_body*);
 
 /******************************************************************************
  *                           Processing functions                             *
  ******************************************************************************/
-osl_body_t* osl_body_clone(const osl_body_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_body_equal(const osl_body_t*, const osl_body_t*);
+osl_body* osl_body_clone(const osl_body*) OSL_WARN_UNUSED_RESULT;
+bool osl_body_equal(const osl_body*, const osl_body*);
 osl_interface* osl_body_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)

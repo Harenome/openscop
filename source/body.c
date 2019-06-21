@@ -74,7 +74,7 @@
 
 /**
  * osl_body_idump function:
- * this function displays an osl_body_t structure (*body) into a
+ * this function displays an osl_body structure (*body) into a
  * file (file, possibly stdout) in a way that trends to be understandable.
  * It includes an indentation level (level) in order to work with others
  * dumping functions.
@@ -82,7 +82,7 @@
  * \param[in] body  The body whose information has to be printed.
  * \param[in] level Number of spaces before printing, for each line.
  */
-void osl_body_idump(FILE* const file, const osl_body_t* const body, int level) {
+void osl_body_idump(FILE* const file, const osl_body* const body, int level) {
   int j;
 
   // Go to the right level.
@@ -90,7 +90,7 @@ void osl_body_idump(FILE* const file, const osl_body_t* const body, int level) {
     fprintf(file, "|\t");
 
   if (body != NULL) {
-    fprintf(file, "+-- osl_body_t\n");
+    fprintf(file, "+-- osl_body\n");
 
     // A blank line.
     for (j = 0; j <= level + 1; j++)
@@ -114,23 +114,23 @@ void osl_body_idump(FILE* const file, const osl_body_t* const body, int level) {
 
 /**
  * osl_body_dump function:
- * this function prints the content of an osl_body_t structure
+ * this function prints the content of an osl_body structure
  * (*body) into  a file (file, possibly stdout).
  * \param[in] file File where informations are printed.
  * \param[in] body The body whose information has to be printed.
  */
-void osl_body_dump(FILE* const file, const osl_body_t* const body) {
+void osl_body_dump(FILE* const file, const osl_body* const body) {
   osl_body_idump(file, body, 0);
 }
 
 /**
  * osl_body_print function:
- * this function prints the content of an osl_body_t structure
+ * this function prints the content of an osl_body structure
  * (*body) into a file (file, possibly stdout) in the OpenScop format.
  * \param[in] file  File where informations are printed.
  * \param[in] body  The body whose information has to be printed.
  */
-void osl_body_print(FILE* const file, const osl_body_t* const body) {
+void osl_body_print(FILE* const file, const osl_body* const body) {
   size_t nb_iterators;
 
   if (body != NULL) {
@@ -152,12 +152,12 @@ void osl_body_print(FILE* const file, const osl_body_t* const body) {
 
 /**
  * osl_body_print_scoplib function:
- * this function prints the content of an osl_body_t structure
+ * this function prints the content of an osl_body structure
  * (*body) into a file (file, possibly stdout) in the SCoPLib format.
  * \param[in] file  File where informations are printed.
  * \param[in] body  The body whose information has to be printed.
  */
-void osl_body_print_scoplib(FILE* const file, const osl_body_t* const body) {
+void osl_body_print_scoplib(FILE* const file, const osl_body* const body) {
   size_t nb_iterators;
 
   if (body != NULL) {
@@ -179,12 +179,12 @@ void osl_body_print_scoplib(FILE* const file, const osl_body_t* const body) {
 
 /**
  * osl_body_sprint function:
- * this function prints the content of an osl_body_t structure
+ * this function prints the content of an osl_body structure
  * (*body) into a string (returned) in the OpenScop textual format.
  * \param[in] body The body structure which has to be printed.
  * \return A string containing the OpenScop dump of the body structure.
  */
-char* osl_body_sprint(const osl_body_t* const body) {
+char* osl_body_sprint(const osl_body* const body) {
   size_t nb_iterators;
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
@@ -236,8 +236,8 @@ char* osl_body_sprint(const osl_body_t* const body) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the body structure that has been read.
  */
-osl_body_t* osl_body_sread(char** input) {
-  osl_body_p body = NULL;
+osl_body* osl_body_sread(char** input) {
+  osl_body* body = NULL;
   char* expression;
   int nb_iterators;
 
@@ -270,15 +270,15 @@ osl_body_t* osl_body_sread(char** input) {
 
 /**
  * osl_body_malloc function:
- * this function allocates the memory space for an osl_body_t
+ * this function allocates the memory space for an osl_body
  * structure and sets its fields with default values. Then it returns a pointer
  * to the allocated space.
  * \return A pointer to an empty body with fields set to default values.
  */
-osl_body_t* osl_body_malloc(void) {
-  osl_body_p body;
+osl_body* osl_body_malloc(void) {
+  osl_body* body;
 
-  OSL_malloc(body, osl_body_p, sizeof(osl_body_t));
+  OSL_malloc(body, osl_body*, sizeof(osl_body));
   body->iterators = NULL;
   body->expression = NULL;
 
@@ -287,11 +287,11 @@ osl_body_t* osl_body_malloc(void) {
 
 /**
  * osl_body_free function:
- * this function frees the allocated memory for an osl_body_t
+ * this function frees the allocated memory for an osl_body
  * structure.
  * \param[in,out] body The pointer to the body we want to free.
  */
-void osl_body_free(osl_body_t* body) {
+void osl_body_free(osl_body* body) {
   if (body != NULL) {
     osl_strings_free(body->iterators);
     osl_strings_free(body->expression);
@@ -306,13 +306,13 @@ void osl_body_free(osl_body_t* body) {
 /**
  * osl_body_clone function:
  * this functions builds and returns a "hard copy" (not a pointer copy) of an
- * osl_body_t data structure provided as parameter. However, let us
+ * osl_body data structure provided as parameter. However, let us
  * recall here that non-string elements are untouched by the OpenScop Library.
  * \param[in] body The pointer to the body we want to copy.
  * \return A pointer to the full copy of the body provided as parameter.
  */
-osl_body_t* osl_body_clone(const osl_body_t* body) {
-  osl_body_p copy = NULL;
+osl_body* osl_body_clone(const osl_body* body) {
+  osl_body* copy = NULL;
 
   if (body != NULL) {
     copy = osl_body_malloc();
@@ -332,7 +332,7 @@ osl_body_t* osl_body_clone(const osl_body_t* body) {
  * \param[in] b2 The second body.
  * \return 1 if b1 and b2 are the same (content-wise), 0 otherwise.
  */
-bool osl_body_equal(const osl_body_t* const b1, const osl_body_t* const b2) {
+bool osl_body_equal(const osl_body* const b1, const osl_body* const b2) {
   if (b1 == b2)
     return 1;
 

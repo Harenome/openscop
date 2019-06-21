@@ -194,7 +194,7 @@ void osl_statement_pprint(FILE* const file, const osl_statement* statement,
   int number = 1;
   int iterators_backedup = 0;
   int nb_ext = 0;
-  osl_body_p body = NULL;
+  osl_body* body = NULL;
   osl_strings* iterators_backup = NULL;
   osl_names_t* names = NULL;
 
@@ -208,7 +208,7 @@ void osl_statement_pprint(FILE* const file, const osl_statement* statement,
 
   while (statement != NULL) {
     // If possible, replace iterator names with statement iterator names.
-    body = (osl_body_p)osl_generic_lookup(statement->extension, OSL_URI_BODY);
+    body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
     if (body && body->iterators != NULL) {
       iterators_backedup = 1;
       iterators_backup = names->iterators;
@@ -281,7 +281,7 @@ void osl_statement_pprint_scoplib(FILE* const file,
                                   const osl_names_t* input_names) {
   int number = 1;
   int iterators_backedup = 0;
-  osl_body_p body = NULL;
+  osl_body* body = NULL;
   osl_strings* iterators_backup = NULL;
   int add_fakeiter;
   osl_names_t* names = NULL;
@@ -296,7 +296,7 @@ void osl_statement_pprint_scoplib(FILE* const file,
 
   while (statement != NULL) {
     // If possible, replace iterator names with statement iterator names.
-    body = (osl_body_p)osl_generic_lookup(statement->extension, OSL_URI_BODY);
+    body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
     if (body && body->iterators != NULL) {
       iterators_backedup = 1;
       iterators_backup = names->iterators;
@@ -723,7 +723,7 @@ int osl_statement_equal(const osl_statement* const s1,
 int osl_statement_integrity_check(const osl_statement* statement,
                                   int expected_nb_parameters) {
   int expected_nb_iterators;
-  osl_body_p body = NULL;
+  osl_body* body = NULL;
 
   while (statement != NULL) {
     // Check the domain.
@@ -754,7 +754,7 @@ int osl_statement_integrity_check(const osl_statement* statement,
     }
 
     // Check the statement body.
-    body = (osl_body_p)osl_generic_lookup(statement->extension, OSL_URI_BODY);
+    body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
     if ((expected_nb_iterators != OSL_UNDEFINED) && body &&
         body->iterators != NULL &&
         ((size_t)expected_nb_iterators != osl_strings_size(body->iterators))) {
@@ -840,15 +840,15 @@ void osl_statement_get_attributes(const osl_statement* statement,
  * \param[in] statement The statement to search the body.
  * \return the body if found, NULL otherwise.
  */
-osl_body_t* osl_statement_get_body(const osl_statement* const statement) {
-  osl_body_p body;
+osl_body* osl_statement_get_body(const osl_statement* const statement) {
+  osl_body* body;
   osl_extbody_p ebody;
 
   if (statement == NULL || statement->extension == NULL) {
     return NULL;
   }
 
-  body = (osl_body_p)osl_generic_lookup(statement->extension, OSL_URI_BODY);
+  body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
   if (body != NULL)
     return body;
   ebody =

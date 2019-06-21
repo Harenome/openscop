@@ -79,7 +79,7 @@ extern "C" {
  * body. osl_extbody is replaced by the simple body.
  */
 struct osl_extbody {
-  osl_body_p body;
+  osl_body* body;
   size_t nb_access; /**< Nb of access. */
   int* start;       /**< Array of nb_access start. */
   int* length;      /**< Array of nb_access length. */
