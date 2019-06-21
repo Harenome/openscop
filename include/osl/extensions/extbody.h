@@ -75,7 +75,7 @@ extern "C" {
 #define OSL_URI_EXTBODY "extbody"
 
 /**
- * The osl_extbody_t structure stores the coordinates of each access in the
+ * The osl_extbody structure stores the coordinates of each access in the
  * body. osl_extbody is replaced by the simple body.
  */
 struct osl_extbody {
@@ -84,6 +84,8 @@ struct osl_extbody {
   int* start;       /**< Array of nb_access start. */
   int* length;      /**< Array of nb_access length. */
 };
+typedef struct osl_extbody osl_extbody;
+
 typedef struct osl_extbody osl_extbody_t;
 typedef struct osl_extbody* osl_extbody_p;
 typedef struct osl_extbody const osl_const_extbody_t;
@@ -94,31 +96,31 @@ typedef struct osl_extbody const* const osl_const_extbody_const_p;
 /******************************************************************************
  *                          Structure display function                        *
  ******************************************************************************/
-void osl_extbody_idump(FILE*, const osl_extbody_t*, int) OSL_NONNULL_ARGS(1);
-void osl_extbody_dump(FILE*, const osl_extbody_t*) OSL_NONNULL_ARGS(1);
-char* osl_extbody_sprint(const osl_extbody_t*) OSL_WARN_UNUSED_RESULT;
+void osl_extbody_idump(FILE*, const osl_extbody*, int) OSL_NONNULL_ARGS(1);
+void osl_extbody_dump(FILE*, const osl_extbody*) OSL_NONNULL_ARGS(1);
+char* osl_extbody_sprint(const osl_extbody*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_extbody_t* osl_extbody_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_extbody* osl_extbody_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_extbody_t* osl_extbody_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_extbody_free(osl_extbody_t*);
+osl_extbody* osl_extbody_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_extbody_free(osl_extbody*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_extbody_t* osl_extbody_clone(const osl_extbody_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_extbody_equal(const osl_extbody_t*, const osl_extbody_t*);
+osl_extbody* osl_extbody_clone(const osl_extbody*) OSL_WARN_UNUSED_RESULT;
+bool osl_extbody_equal(const osl_extbody*, const osl_extbody*);
 osl_interface* osl_extbody_interface(void) OSL_WARN_UNUSED_RESULT;
-void osl_extbody_add(osl_extbody_t*, int, int);
+void osl_extbody_add(osl_extbody*, int, int);
 
 #if defined(__cplusplus)
 }

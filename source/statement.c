@@ -843,7 +843,7 @@ void osl_statement_get_attributes(const osl_statement* statement,
  */
 osl_body* osl_statement_get_body(const osl_statement* const statement) {
   osl_body* body;
-  osl_extbody_p ebody;
+  osl_extbody* ebody;
 
   if (statement == NULL || statement->extension == NULL) {
     return NULL;
@@ -853,7 +853,7 @@ osl_body* osl_statement_get_body(const osl_statement* const statement) {
   if (body != NULL)
     return body;
   ebody =
-      (osl_extbody_p)osl_generic_lookup(statement->extension, OSL_URI_EXTBODY);
+      (osl_extbody*)osl_generic_lookup(statement->extension, OSL_URI_EXTBODY);
   if (ebody != NULL)
     return ebody->body;
   return NULL;

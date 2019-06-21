@@ -75,7 +75,7 @@
 
 /**
  * osl_extbody_idump function:
- * this function displays an osl_extbody_t structure (*extbody) into a
+ * this function displays an osl_extbody structure (*extbody) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others idump
  * functions.
@@ -83,7 +83,7 @@
  * \param[in] ebody  The ebody structure to print.
  * \param[in] level  Number of spaces before printing, for each line.
  */
-void osl_extbody_idump(FILE* const file, const osl_extbody_t* const ebody,
+void osl_extbody_idump(FILE* const file, const osl_extbody* const ebody,
                        int level) {
   size_t i;
   int j;
@@ -93,7 +93,7 @@ void osl_extbody_idump(FILE* const file, const osl_extbody_t* const ebody,
     fprintf(file, "|\t");
 
   if (ebody != NULL)
-    fprintf(file, "+-- osl_extbody_t\n");
+    fprintf(file, "+-- osl_extbody\n");
   else
     fprintf(file, "+-- NULL extbody\n");
 
@@ -127,23 +127,23 @@ void osl_extbody_idump(FILE* const file, const osl_extbody_t* const ebody,
 
 /**
  * osl_extbody_dump function:
- * this function prints the content of an osl_extbody_t structure
+ * this function prints the content of an osl_extbody structure
  * (*ebody) into a file (file, possibly stdout).
  * \param[in] file   The file where the information has to be printed.
  * \param[in] ebody The ebody structure to print.
  */
-void osl_extbody_dump(FILE* const file, const osl_extbody_t* const ebody) {
+void osl_extbody_dump(FILE* const file, const osl_extbody* const ebody) {
   osl_extbody_idump(file, ebody, 0);
 }
 
 /**
  * osl_extbody_sprint function:
- * this function prints the content of an osl_extbody_t structure
+ * this function prints the content of an osl_extbody structure
  * (*ebody) into a string (returned) in the OpenScop textual format.
  * \param[in] ebody The ebody structure to print.
  * \return A string containing the OpenScop dump of the ebodystructure.
  */
-char* osl_extbody_sprint(const osl_extbody_t* const ebody) {
+char* osl_extbody_sprint(const osl_extbody* const ebody) {
   size_t i;
   size_t high_water_mark = OSL_MAX_STRING;
   char *string = NULL, *body_string = NULL;
@@ -193,10 +193,10 @@ char* osl_extbody_sprint(const osl_extbody_t* const ebody) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the extbody structure that has been read.
  */
-osl_extbody_t* osl_extbody_sread(char** input) {
+osl_extbody* osl_extbody_sread(char** input) {
   size_t k, nb_access_unsigned;
   int nb_access;
-  osl_extbody_p ebody;
+  osl_extbody* ebody;
 
   if (input == NULL) {
     OSL_debug("no extbody optional tag");
@@ -234,15 +234,15 @@ osl_extbody_t* osl_extbody_sread(char** input) {
 
 /**
  * osl_extbody_malloc function:
- * this function allocates the memory space for an osl_extbody_t
+ * this function allocates the memory space for an osl_extbody
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty extbody structure with fields set to
  *         default values.
  */
-osl_extbody_t* osl_extbody_malloc(void) {
-  osl_extbody_p ebody;
-  OSL_malloc(ebody, osl_extbody_p, sizeof(osl_extbody_t));
+osl_extbody* osl_extbody_malloc(void) {
+  osl_extbody* ebody;
+  OSL_malloc(ebody, osl_extbody*, sizeof(osl_extbody));
 
   ebody->nb_access = 0;
   ebody->start = NULL;
@@ -257,7 +257,7 @@ osl_extbody_t* osl_extbody_malloc(void) {
  * this function frees the allocated memory for an ebody structure.
  * \param[in,out] ebody The pointer to the extbody structure we want to free.
  */
-void osl_extbody_free(osl_extbody_t* ebody) {
+void osl_extbody_free(osl_extbody* ebody) {
   if (ebody != NULL) {
     free(ebody->start);
     free(ebody->length);
@@ -273,13 +273,13 @@ void osl_extbody_free(osl_extbody_t* ebody) {
 /**
  * osl_extbody_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_extbody_t data structure.
+ * osl_extbody data structure.
  * \param[in] ebody The pointer to the extbody structure to clone.
  * \return A pointer to the clone of the extbody structure.
  */
-osl_extbody_t* osl_extbody_clone(const osl_extbody_t* const ebody) {
+osl_extbody* osl_extbody_clone(const osl_extbody* const ebody) {
   size_t i;
-  osl_extbody_p clone;
+  osl_extbody* clone;
 
   if (ebody == NULL)
     return NULL;
@@ -309,8 +309,8 @@ osl_extbody_t* osl_extbody_clone(const osl_extbody_t* const ebody) {
  * \param[in] e2 The second extbody structure.
  * \return 1 if e1 and e2 are the same (content-wise), 0 otherwise.
  */
-bool osl_extbody_equal(const osl_extbody_t* const e1,
-                       const osl_extbody_t* const e2) {
+bool osl_extbody_equal(const osl_extbody* const e1,
+                       const osl_extbody* const e2) {
   size_t i, j, found;
 
   if (e1 == e2)
@@ -371,7 +371,7 @@ osl_interface* osl_extbody_interface(void) {
  * osl_extbody_add function:
  * This function add an entry in the list of coordinates
  */
-void osl_extbody_add(osl_extbody_t* ebody, int start, int length) {
+void osl_extbody_add(osl_extbody* ebody, int start, int length) {
   ebody->nb_access++;
 
   OSL_realloc(ebody->start, int*, sizeof(int) * ebody->nb_access);

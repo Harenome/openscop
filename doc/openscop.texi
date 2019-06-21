@@ -2787,8 +2787,7 @@ struct osl_extbody @{
   int * start;     /**< Array of nb_access start. */
   int * length;    /**< Array of nb_access length. */
 @};
-typedef struct osl_extbody  osl_extbody_t;
-typedef struct osl_extbody* osl_extbody_p;
+typedef struct osl_extbody osl_extbody;
 @end group
 @end example
 
