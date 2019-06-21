@@ -93,8 +93,9 @@ struct osl_statement {
 };
 typedef struct osl_statement osl_statement;
 
-typedef struct osl_statement osl_statement_t;
-typedef struct osl_statement* osl_statement_p;
+/* The following typedefs are deprecated. Use osl_statement. */
+typedef struct osl_statement osl_statement_t OSL_DEPRECATED;
+typedef struct osl_statement* osl_statement_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
