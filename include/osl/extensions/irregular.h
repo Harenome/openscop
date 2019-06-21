@@ -76,7 +76,7 @@ extern "C" {
 #define OSL_TAG_IRREGULAR_STOP "</" OSL_URI_IRREGULAR ">"
 
 /**
- * The osl_irregular_t structure stores an irregular extension to the core
+ * The osl_irregular structure stores an irregular extension to the core
  * OpenScop representation. It contains a list of predicates (in their textual
  * representation), and for each statement, its list of associated predicates.
  * The list of predicates contains both control and exit predicates (see
@@ -101,6 +101,8 @@ struct osl_irregular {
                            corresponding to the list of predicates associated
                            to the ith statement. */
 };
+typedef struct osl_irregular osl_irregular;
+
 typedef struct osl_irregular osl_irregular_t;
 typedef struct osl_irregular* osl_irregular_p;
 
@@ -108,36 +110,36 @@ typedef struct osl_irregular* osl_irregular_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_irregular_idump(FILE*, const osl_irregular_t*, int)
+void osl_irregular_idump(FILE*, const osl_irregular*, int)
     OSL_NONNULL_ARGS(1);
-void osl_irregular_dump(FILE*, const osl_irregular_t*) OSL_NONNULL_ARGS(1);
-char* osl_irregular_sprint(const osl_irregular_t*) OSL_WARN_UNUSED_RESULT;
+void osl_irregular_dump(FILE*, const osl_irregular*) OSL_NONNULL_ARGS(1);
+char* osl_irregular_sprint(const osl_irregular*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_irregular_t* osl_irregular_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_irregular* osl_irregular_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_irregular_t* osl_irregular_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_irregular_free(osl_irregular_t*);
+osl_irregular* osl_irregular_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_irregular_free(osl_irregular*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_irregular_t* osl_irregular_clone(const osl_irregular_t*)
+osl_irregular* osl_irregular_clone(const osl_irregular*)
     OSL_WARN_UNUSED_RESULT;
-bool osl_irregular_equal(const osl_irregular_t*, const osl_irregular_t*);
-osl_irregular_t* osl_irregular_add_control(const osl_irregular_t*, char**, int,
+bool osl_irregular_equal(const osl_irregular*, const osl_irregular*);
+osl_irregular* osl_irregular_add_control(const osl_irregular*, char**, int,
                                            const char*) OSL_WARN_UNUSED_RESULT;
-osl_irregular_t* osl_irregular_add_exit(const osl_irregular_t*, char**, int,
+osl_irregular* osl_irregular_add_exit(const osl_irregular*, char**, int,
                                         const char*) OSL_WARN_UNUSED_RESULT;
-osl_irregular_t* osl_irregular_add_predicates(const osl_irregular_t*,
+osl_irregular* osl_irregular_add_predicates(const osl_irregular*,
                                               const int*,
                                               int) OSL_WARN_UNUSED_RESULT;
 osl_interface* osl_irregular_interface(void) OSL_WARN_UNUSED_RESULT;
