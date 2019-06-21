@@ -1945,7 +1945,7 @@ A[i+j] += B[i] * C[j];
 @section OpenScop Data Structure Specification
 
 @menu
-* osl_int_t::
+* osl_int::
 * osl_relation_t::
 * osl_relation_list_t::
 * osl_interface_t::
@@ -1980,8 +1980,8 @@ representation (@pxref{OpenScop File Format Specification}).
 
 @c ---------------------------------------------------------------------------
 
-@node osl_int_t
-@subsection osl_int_t
+@node osl_int
+@subsection osl_int
 
 @example
 @group
@@ -1990,12 +1990,11 @@ union osl_int @{
   long long dp;               /* Double precision int */
   void*     mp;               /* Pointer to a multiple precision int */
 @};
-typedef union osl_int  osl_int_t;
-typedef union osl_int* osl_int_p;
+typedef union osl_int osl_int;
 @end group
 @end example
 
-@noindent The @code{osl_int_t} union stores an integer element. The
+@noindent The @code{osl_int} union stores an integer element. The
 union is used to implement the multiple precision support of OpenScop.
 A given implementation may or may not support a given precision type.
 However, dedicated functions or macros must tell the user whether a given
@@ -2018,7 +2017,7 @@ struct osl_relation @{
   int nb_input_dims;          /* Number of input dimensions */
   int nb_local_dims;          /* Number of local dimensions */
   int nb_parameters;          /* Number of parameters */
-  osl_int_t** m;              /* Matrix of constraints */
+  osl_int** m;                /* Matrix of constraints */
   void* usr;                  /* User-managed field */
   struct osl_relation*  next; /* Next relation in the union */
 @};

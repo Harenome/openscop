@@ -73,7 +73,7 @@
 
 static char* osl_relation_sprint_type(const osl_relation_t*);
 static void osl_relation_print_type(FILE*, const osl_relation_t*);
-static char* osl_relation_expression_element(const osl_int_t, int, int*, int,
+static char* osl_relation_expression_element(const osl_int, int, int*, int,
                                              const char*);
 
 static char** osl_relation_strings(const osl_relation_t*, const osl_names_t*);
@@ -269,7 +269,7 @@ void osl_relation_dump(FILE* const file, const osl_relation_t* const relation) {
  * \param[in]     name      String containing the name of the element.
  * \return A string that contains the printing of a value.
  */
-char* osl_relation_expression_element(const osl_int_t val, int precision,
+char* osl_relation_expression_element(const osl_int val, int precision,
                                       int* const first, int cst,
                                       const char* const name) {
   char *temp, *body, *sval;
@@ -1588,7 +1588,7 @@ osl_relation_t* osl_relation_read(FILE* foo) {
 osl_relation_t* osl_relation_pmalloc(int precision, int nb_rows,
                                      int nb_columns) {
   osl_relation_p relation;
-  osl_int_t **p, *q;
+  osl_int **p, *q;
   int i, j;
 
   if ((precision != OSL_PRECISION_SP) && (precision != OSL_PRECISION_DP) &&
@@ -1612,9 +1612,9 @@ osl_relation_t* osl_relation_pmalloc(int precision, int nb_rows,
       (nb_columns == OSL_UNDEFINED)) {
     relation->m = NULL;
   } else {
-    OSL_malloc(p, osl_int_t**, (size_t)nb_rows * sizeof(osl_int_t*));
-    OSL_malloc(q, osl_int_t*,
-               (size_t)nb_rows * (size_t)nb_columns * sizeof(osl_int_t));
+    OSL_malloc(p, osl_int**, (size_t)nb_rows * sizeof(osl_int*));
+    OSL_malloc(q, osl_int*,
+               (size_t)nb_rows * (size_t)nb_columns * sizeof(osl_int));
     relation->m = p;
     for (i = 0; i < nb_rows; i++) {
       relation->m[i] = q + i * nb_columns;

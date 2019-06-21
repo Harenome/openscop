@@ -80,7 +80,7 @@ extern "C" {
 struct osl_vector {
   int precision; /**< Precision of the integer elements. */
   int size;      /**< Number of vector entries */
-  osl_int_t* v;  /**< An array of integer values */
+  osl_int* v;  /**< An array of integer values */
 };
 typedef struct osl_vector osl_vector_t;
 typedef struct osl_vector* osl_vector_p;

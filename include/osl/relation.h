@@ -109,7 +109,7 @@ struct osl_relation {
   int nb_local_dims;         /**< Number of local (existentially
                                   quantified) dimensions */
   int nb_parameters;         /**< Number of parameters */
-  osl_int_t** m;             /**< An array of pointers to the beginning
+  osl_int** m;             /**< An array of pointers to the beginning
                                   of each row of the relation matrix */
   void* usr;                 /**< User-managed field, untouched by osl */
   struct osl_relation* next; /**< Pointer to the next relation in the

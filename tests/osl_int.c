@@ -41,21 +41,21 @@ int main(int argc, char** argv)
   
   int i;
   for (i = SCHAR_MIN; i <= SCHAR_MAX; ++i) {
-    osl_int_t a_sp; osl_int_init_set_si(OSL_PRECISION_SP, &a_sp, i);
-    osl_int_t a_dp; osl_int_init_set_si(OSL_PRECISION_DP, &a_dp, i);
-    osl_int_t a_mp; osl_int_init_set_si(OSL_PRECISION_MP, &a_mp, i);
+    osl_int a_sp; osl_int_init_set_si(OSL_PRECISION_SP, &a_sp, i);
+    osl_int a_dp; osl_int_init_set_si(OSL_PRECISION_DP, &a_dp, i);
+    osl_int a_mp; osl_int_init_set_si(OSL_PRECISION_MP, &a_mp, i);
     
     int j;
     for (j = SCHAR_MIN; j <= SCHAR_MAX; ++j) {
       int error = 0;
       
-      osl_int_t b_sp; osl_int_init_set_si(OSL_PRECISION_SP, &b_sp, j);
-      osl_int_t b_dp; osl_int_init_set_si(OSL_PRECISION_DP, &b_dp, j);
-      osl_int_t b_mp; osl_int_init_set_si(OSL_PRECISION_MP, &b_mp, j);
+      osl_int b_sp; osl_int_init_set_si(OSL_PRECISION_SP, &b_sp, j);
+      osl_int b_dp; osl_int_init_set_si(OSL_PRECISION_DP, &b_dp, j);
+      osl_int b_mp; osl_int_init_set_si(OSL_PRECISION_MP, &b_mp, j);
       
-      osl_int_t c_sp; osl_int_init(OSL_PRECISION_SP, &c_sp);
-      osl_int_t c_dp; osl_int_init(OSL_PRECISION_DP, &c_dp);
-      osl_int_t c_mp; osl_int_init(OSL_PRECISION_MP, &c_mp);
+      osl_int c_sp; osl_int_init(OSL_PRECISION_SP, &c_sp);
+      osl_int c_dp; osl_int_init(OSL_PRECISION_DP, &c_dp);
+      osl_int c_mp; osl_int_init(OSL_PRECISION_MP, &c_mp);
       
       int const a_sp_i = osl_int_get_si(OSL_PRECISION_SP, a_sp);
       int const a_dp_i = osl_int_get_si(OSL_PRECISION_DP, a_dp);
@@ -240,13 +240,13 @@ int main(int argc, char** argv)
       
       // osl_int_floor_div_q_r
       if (!error && b_sp_i != 0) {
-        osl_int_t q_sp; osl_int_init(OSL_PRECISION_SP, &q_sp);
-        osl_int_t q_dp; osl_int_init(OSL_PRECISION_DP, &q_dp);
-        osl_int_t q_mp; osl_int_init(OSL_PRECISION_MP, &q_mp);
+        osl_int q_sp; osl_int_init(OSL_PRECISION_SP, &q_sp);
+        osl_int q_dp; osl_int_init(OSL_PRECISION_DP, &q_dp);
+        osl_int q_mp; osl_int_init(OSL_PRECISION_MP, &q_mp);
         
-        osl_int_t r_sp; osl_int_init(OSL_PRECISION_SP, &r_sp);
-        osl_int_t r_dp; osl_int_init(OSL_PRECISION_DP, &r_dp);
-        osl_int_t r_mp; osl_int_init(OSL_PRECISION_MP, &r_mp);
+        osl_int r_sp; osl_int_init(OSL_PRECISION_SP, &r_sp);
+        osl_int r_dp; osl_int_init(OSL_PRECISION_DP, &r_dp);
+        osl_int r_mp; osl_int_init(OSL_PRECISION_MP, &r_mp);
       
         osl_int_floor_div_q_r(OSL_PRECISION_SP, &q_sp, &r_sp, a_sp, b_sp);
         osl_int_floor_div_q_r(OSL_PRECISION_DP, &q_dp, &r_dp, a_dp, b_dp);
