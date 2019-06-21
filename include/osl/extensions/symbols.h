@@ -91,8 +91,9 @@ struct osl_symbols {
 };
 typedef struct osl_symbols osl_symbols;
 
-typedef struct osl_symbols osl_symbols_t;
-typedef struct osl_symbols* osl_symbols_p;
+/* The following typedefs are deprecated. Use osl_symbols. */
+typedef struct osl_symbols osl_symbols_t OSL_DEPRECATED;
+typedef struct osl_symbols* osl_symbols_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
