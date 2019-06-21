@@ -114,8 +114,7 @@ void osl_arrays_free(osl_arrays_t*);
 
 osl_arrays_t* osl_arrays_clone(const osl_arrays_t*) OSL_WARN_UNUSED_RESULT;
 bool osl_arrays_equal(const osl_arrays_t*, const osl_arrays_t*);
-osl_strings_t* osl_arrays_to_strings(const osl_arrays_t*)
-    OSL_WARN_UNUSED_RESULT;
+osl_strings* osl_arrays_to_strings(const osl_arrays_t*) OSL_WARN_UNUSED_RESULT;
 int osl_arrays_add(osl_arrays_t*, int, const char*);
 size_t osl_arrays_get_index_from_id(const osl_arrays_t*, int);
 size_t osl_arrays_get_index_from_name(const osl_arrays_t*, const char*);

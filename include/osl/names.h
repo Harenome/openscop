@@ -76,11 +76,11 @@ extern "C" {
  * structure.
  */
 struct osl_names {
-  osl_strings_p parameters; /**< Parameter names */
-  osl_strings_p iterators;  /**< Iterator names */
-  osl_strings_p scatt_dims; /**< Scattering dimension names */
-  osl_strings_p local_dims; /**< Local dimension names */
-  osl_strings_p arrays;     /**< Array names */
+  osl_strings* parameters; /**< Parameter names */
+  osl_strings* iterators;  /**< Iterator names */
+  osl_strings* scatt_dims; /**< Scattering dimension names */
+  osl_strings* local_dims; /**< Local dimension names */
+  osl_strings* arrays;     /**< Array names */
 };
 typedef struct osl_names osl_names_t;
 typedef struct osl_names* osl_names_p;

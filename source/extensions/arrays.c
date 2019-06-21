@@ -345,9 +345,9 @@ bool osl_arrays_equal(const osl_arrays_t* const a1,
  * \param[in] arrays The arrays structure to convert to a strings.
  * \return A strings structure containing all the array names.
  */
-osl_strings_t* osl_arrays_to_strings(const osl_arrays_t* const arrays) {
+osl_strings* osl_arrays_to_strings(const osl_arrays_t* const arrays) {
   int i, max_id = 0;
-  osl_strings_p strings = NULL;
+  osl_strings* strings = NULL;
 
   if (arrays == NULL)
     return NULL;

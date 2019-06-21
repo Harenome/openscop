@@ -128,7 +128,7 @@ osl_loop_t* osl_loop_clone_one(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
 osl_loop_t* osl_loop_clone(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
 bool osl_loop_equal_one(const osl_loop_t*, const osl_loop_t*);
 bool osl_loop_equal(const osl_loop_t*, const osl_loop_t*);
-osl_strings_t* osl_loop_to_strings(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
+osl_strings* osl_loop_to_strings(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
 osl_interface_t* osl_loop_interface(void) OSL_WARN_UNUSED_RESULT;
 
 void osl_loop_add(osl_loop_t*, osl_loop_t**);

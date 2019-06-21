@@ -81,8 +81,8 @@ extern "C" {
  * inside the expression.
  */
 struct osl_body {
-  osl_strings_p iterators;  /**< Original iterators */
-  osl_strings_p expression; /**< Original statement expression */
+  osl_strings* iterators;  /**< Original iterators */
+  osl_strings* expression; /**< Original statement expression */
 };
 typedef struct osl_body osl_body_t;
 typedef struct osl_body* osl_body_p;

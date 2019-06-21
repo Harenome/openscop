@@ -195,7 +195,7 @@ void osl_statement_pprint(FILE* const file, const osl_statement_t* statement,
   int iterators_backedup = 0;
   int nb_ext = 0;
   osl_body_p body = NULL;
-  osl_strings_p iterators_backup = NULL;
+  osl_strings* iterators_backup = NULL;
   osl_names_t* names = NULL;
 
   // Generate the dimension names if necessary and replace iterators with
@@ -282,7 +282,7 @@ void osl_statement_pprint_scoplib(FILE* const file,
   int number = 1;
   int iterators_backedup = 0;
   osl_body_p body = NULL;
-  osl_strings_p iterators_backup = NULL;
+  osl_strings* iterators_backup = NULL;
   int add_fakeiter;
   osl_names_t* names = NULL;
 

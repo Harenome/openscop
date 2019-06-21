@@ -79,6 +79,8 @@ extern "C" {
 struct osl_strings {
   char** string; /**< NULL-terminated array of character strings */
 };
+typedef struct osl_strings osl_strings;
+
 typedef struct osl_strings osl_strings_t;
 typedef struct osl_strings* osl_strings_p;
 typedef struct osl_strings const osl_const_strings_t;
@@ -90,40 +92,40 @@ typedef struct osl_strings const* const osl_const_strings_const_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_strings_idump(FILE*, const osl_strings_t*, int) OSL_NONNULL_ARGS(1);
-void osl_strings_dump(FILE*, const osl_strings_t*) OSL_NONNULL_ARGS(1);
-char* osl_strings_sprint(const osl_strings_t*) OSL_WARN_UNUSED_RESULT;
-void osl_strings_print(FILE*, const osl_strings_t*);
+void osl_strings_idump(FILE*, const osl_strings*, int) OSL_NONNULL_ARGS(1);
+void osl_strings_dump(FILE*, const osl_strings*) OSL_NONNULL_ARGS(1);
+char* osl_strings_sprint(const osl_strings*) OSL_WARN_UNUSED_RESULT;
+void osl_strings_print(FILE*, const osl_strings*);
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_strings_t* osl_strings_sread(char**) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
-osl_strings_t* osl_strings_read(FILE*) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
+osl_strings* osl_strings_sread(char**) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
+osl_strings* osl_strings_read(FILE*) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_strings_t* osl_strings_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_strings_free(osl_strings_t*);
+osl_strings* osl_strings_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_strings_free(osl_strings*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_strings_t* osl_strings_clone(const osl_strings_t*) OSL_WARN_UNUSED_RESULT;
-void osl_strings_add(osl_strings_t*, char const* const) OSL_NONNULL;
-size_t osl_strings_find(const osl_strings_t*, char const* const) OSL_NONNULL;
-bool osl_strings_equal(const osl_strings_t*, const osl_strings_t*);
-size_t osl_strings_size(const osl_strings_t*);
-osl_strings_t* osl_strings_encapsulate(char*) OSL_WARN_UNUSED_RESULT;
+osl_strings* osl_strings_clone(const osl_strings*) OSL_WARN_UNUSED_RESULT;
+void osl_strings_add(osl_strings*, char const* const) OSL_NONNULL;
+size_t osl_strings_find(const osl_strings*, char const* const) OSL_NONNULL;
+bool osl_strings_equal(const osl_strings*, const osl_strings*);
+size_t osl_strings_size(const osl_strings*);
+osl_strings* osl_strings_encapsulate(char*) OSL_WARN_UNUSED_RESULT;
 osl_interface_t* osl_strings_interface(void) OSL_WARN_UNUSED_RESULT;
-osl_strings_t* osl_strings_generate(const char*,
-                                    int) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
-void osl_strings_add_strings(osl_strings_t**, const osl_strings_t*,
-                             const osl_strings_t*) OSL_NONNULL;
+osl_strings* osl_strings_generate(const char*,
+                                  int) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
+void osl_strings_add_strings(osl_strings**, const osl_strings*,
+                             const osl_strings*) OSL_NONNULL;
 
 #if defined(__cplusplus)
 }

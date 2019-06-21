@@ -152,7 +152,7 @@ char* osl_scatnames_sprint(const osl_scatnames_t* const scatnames) {
  */
 osl_scatnames_t* osl_scatnames_sread(char** input) {
   osl_scatnames_p scatnames = NULL;
-  osl_strings_p names = NULL;
+  osl_strings* names = NULL;
 
   if (*input == NULL) {
     OSL_debug("no scatnames optional tag");

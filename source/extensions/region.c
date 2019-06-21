@@ -110,7 +110,6 @@ void osl_region_text_idump(FILE* const file, const osl_region_text_t* text,
   }
 }
 
-
 osl_region_text_t osl_region_text_clone(const osl_region_text_t* source) {
   osl_region_text_t destination = {
       .count = 0,

@@ -1950,7 +1950,7 @@ A[i+j] += B[i] * C[j];
 * osl_relation_list_t::
 * osl_interface_t::
 * osl_generic_t::
-* osl_strings_t::
+* osl_strings::
 * osl_body_t::
 * osl_statement_t::
 * osl_scop_t::
@@ -2143,20 +2143,19 @@ extensions.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_strings_t
-@subsection osl_strings_t
+@node osl_strings
+@subsection osl_strings
 
 @example
 @group
 struct osl_string @{
   char** string;              /* NULL-terminated array of strings */
 @};
-typedef struct osl_strings  osl_strings_t;
-typedef struct osl_strings* osl_strings_p;
+typedef struct osl_strings  osl_strings;
 @end group
 @end example
 
-@noindent The @code{osl_strings_t} structure represents a NULL-terminated
+@noindent The @code{osl_strings} structure represents a NULL-terminated
 list of C character strings. It is encapsulated into a structure to allow
 its manipulation through a generic type.
 
@@ -2168,8 +2167,8 @@ its manipulation through a generic type.
 @example
 @group
 struct osl_body @{
-  osl_strings_p iterators;    /* Original iterators */
-  osl_strings_p expression;   /* Original statement expression */
+  osl_strings* iterators;    /* Original iterators */
+  osl_strings* expression;   /* Original statement expression */
 @};
 typedef struct osl_body  osl_body_t;
 typedef struct osl_body* osl_body_p;
@@ -2251,8 +2250,8 @@ in expressed in the @code{language} field. The constraints on the
 global parameters are detailed in the @code{context} field.
 The @code{paremeters} field should provide information about the
 parameters (since it has a generic type, the specification is not strict
-about how it is used), e.g., using the @code{osl_strings_t} data structure
-(@pxref{osl_strings_t}).
+about how it is used), e.g., using the @code{osl_strings} data structure
+(@pxref{osl_strings}).
 Finally, it contains the list of statements @code{statement}, the list
 of registered interfaces for generic types @code{registry} and the list of
 extentions @code{extension}.
@@ -2265,7 +2264,7 @@ The next figure gives a possible representation in memory for this
 SCoP thanks to the OpenScop data structures (it has been actually printed
 by the @code{osl_scop_dump} function), note that symbols like
 parameters, original iterators and statement expression are represented
-with an @code{osl_strings_t} which does not belong to the
+with an @code{osl_strings} which does not belong to the
 specification but to the OpenScop Library implementation:
 
 @c @smallexample
@@ -2284,7 +2283,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    
 |    |    +-- osl_interface_t: URI = strings
 |    |    |    
-|    |    +-- osl_strings_t: N
+|    |    +-- osl_strings: N
 |    |    |    
 |    |    
 |    +-- osl_statement_t (S1)
@@ -2317,9 +2316,9 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    
 |    |    |    +-- osl_interface_t: URI = body
 |    |    |    |    
-|    |    |    +-- osl_strings_t: i j
+|    |    |    +-- osl_strings: i j
 |    |    |    |    
-|    |    |    +-- osl_strings_t: C[i][j] = 0.0;
+|    |    |    +-- osl_strings: C[i][j] = 0.0;
 |    |    |    |    
 |    |    |    
 |    |    V
@@ -2384,9 +2383,9 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    
 |    |    |    +-- osl_interface_t: URI = body
 |    |    |    |    
-|    |    |    +-- osl_strings_t: i j k
+|    |    |    +-- osl_strings: i j k
 |    |    |    |    
-|    |    |    +-- osl_strings_t: C[i][j] = C[i][j] + A[i][k]*B[k][j];
+|    |    |    +-- osl_strings: C[i][j] = C[i][j] + A[i][k]*B[k][j];
 |    |    |    |    
 |    |    |    
 |    |    
@@ -2538,7 +2537,7 @@ beta_0 i beta_1 j beta_2
 @example
 @group
 struct osl_scatnames @{
-  osl_strings_p names;  /* List of textual scattering dimension names. */
+  osl_strings* names;  /* List of textual scattering dimension names. */
 @};
 typedef struct osl_scatnames  osl_scatnames_t;
 typedef struct osl_scatnames* osl_scatnames_p;

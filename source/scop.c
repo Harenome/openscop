@@ -207,8 +207,8 @@ osl_names_t* osl_scop_names(const osl_scop_t* scop) {
 void osl_scop_print(FILE* const file, const osl_scop_t* scop) {
   int parameters_backedup = 0;
   int arrays_backedup = 0;
-  osl_strings_p parameters_backup = NULL;
-  osl_strings_p arrays_backup = NULL;
+  osl_strings* parameters_backup = NULL;
+  osl_strings* arrays_backup = NULL;
   osl_names_p names;
   osl_arrays_p arrays;
 
@@ -300,8 +300,8 @@ void osl_scop_print(FILE* const file, const osl_scop_t* scop) {
 void osl_scop_print_scoplib(FILE* const file, const osl_scop_t* scop) {
   int parameters_backedup = 0;
   int arrays_backedup = 0;
-  osl_strings_p parameters_backup = NULL;
-  osl_strings_p arrays_backup = NULL;
+  osl_strings* parameters_backup = NULL;
+  osl_strings* arrays_backup = NULL;
   osl_names_p names;
   osl_arrays_p arrays;
 
@@ -412,7 +412,7 @@ osl_scop_t* osl_scop_pread(FILE* const file, osl_interface_t* const registry,
   osl_scop_p list = NULL, current = NULL, scop;
   osl_statement_p stmt = NULL;
   osl_statement_p prev = NULL;
-  osl_strings_p language;
+  osl_strings* language;
   int nb_statements;
   char* tmp;
   int first = 1;

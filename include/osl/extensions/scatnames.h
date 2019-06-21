@@ -76,12 +76,12 @@ extern "C" {
 /**
  * The osl_scatnames_t structure stores a scatnames extention to the core
  * OpenScop representation. It is devoted to store the scattering dimension
- * names in a textual form. The names are stored using an osl_strings_t
+ * names in a textual form. The names are stored using an osl_strings
  * structure and their order in the array corresponds to their dimension
  * order.
  */
 struct osl_scatnames {
-  osl_strings_p names; /**< List of textual scattering dimension names. */
+  osl_strings* names; /**< List of textual scattering dimension names. */
 };
 typedef struct osl_scatnames osl_scatnames_t;
 typedef struct osl_scatnames* osl_scatnames_p;

@@ -82,7 +82,7 @@
  * \param[in] strings The array of strings that has to be printed.
  * \param[in] level   Number of spaces before printing, for each line.
  */
-void osl_strings_idump(FILE* const file, const osl_strings_t* const strings,
+void osl_strings_idump(FILE* const file, const osl_strings* const strings,
                        const int level) {
   size_t i, nb_strings;
   int j;
@@ -92,7 +92,7 @@ void osl_strings_idump(FILE* const file, const osl_strings_t* const strings,
 
   if (strings != NULL) {
     nb_strings = osl_strings_size(strings);
-    fprintf(file, "+-- osl_strings_t:");
+    fprintf(file, "+-- osl_strings:");
     for (i = 0; i < nb_strings; i++)
       fprintf(file, " %s", strings->string[i]);
     fprintf(file, "\n");
@@ -107,23 +107,23 @@ void osl_strings_idump(FILE* const file, const osl_strings_t* const strings,
 
 /**
  * osl_strings_dump function:
- * this function prints the content of an osl_strings_t structure
+ * this function prints the content of an osl_strings structure
  * (*strings) into a file (file, possibly stdout).
  * \param[in] file    The file where the information has to be printed.
  * \param[in] strings The strings structure which has to be printed.
  */
-void osl_strings_dump(FILE* const file, const osl_strings_t* const strings) {
+void osl_strings_dump(FILE* const file, const osl_strings* const strings) {
   osl_strings_idump(file, strings, 0);
 }
 
 /**
  * osl_strings_sprint function:
- * this function prints the content of an osl_strings_t structure
+ * this function prints the content of an osl_strings structure
  * (*strings) into a string (returned) in the OpenScop textual format.
  * \param[in] strings The strings structure which has to be printed.
  * \return A string containing the OpenScop dump of the strings structure.
  */
-char* osl_strings_sprint(const osl_strings_t* strings) {
+char* osl_strings_sprint(const osl_strings* strings) {
   size_t i;
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
@@ -151,12 +151,12 @@ char* osl_strings_sprint(const osl_strings_t* strings) {
 
 /**
  * osl_strings_print function:
- * this function prints the content of an osl_strings_t structure
+ * this function prints the content of an osl_strings structure
  * (*body) into a file (file, possibly stdout) in the OpenScop format.
  * \param[in] file    File where informations are printed.
  * \param[in] strings The strings whose information has to be printed.
  */
-void osl_strings_print(FILE* const file, const osl_strings_t* const strings) {
+void osl_strings_print(FILE* const file, const osl_strings* const strings) {
   char* string;
 
   string = osl_strings_sprint(strings);
@@ -182,13 +182,13 @@ void osl_strings_print(FILE* const file, const osl_strings_t* const strings) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the strings structure that has been read.
  */
-osl_strings_t* osl_strings_sread(char** const input) {
+osl_strings* osl_strings_sread(char** const input) {
   char tmp[OSL_MAX_STRING];
   char* s;
   char** string = NULL;
   size_t i, nb_strings;
   int count;
-  osl_strings_p strings = NULL;
+  osl_strings* strings = NULL;
 
   // Skip blank/commented lines and spaces before the strings.
   osl_util_sskip_blank_and_comments(input);
@@ -246,9 +246,9 @@ osl_strings_t* osl_strings_sread(char** const input) {
  * \param[in] file The file where to read the strings structure.
  * \return The strings structure that has been read.
  */
-osl_strings_t* osl_strings_read(FILE* const file) {
+osl_strings* osl_strings_read(FILE* const file) {
   char buffer[OSL_MAX_STRING], *start;
-  osl_strings_p strings;
+  osl_strings* strings;
 
   start = osl_util_skip_blank_and_comments(file, buffer);
   strings = osl_strings_sread(&start);
@@ -262,16 +262,16 @@ osl_strings_t* osl_strings_read(FILE* const file) {
 
 /**
  * osl_strings_malloc function:
- * This function allocates the memory space for an osl_strings_t
+ * This function allocates the memory space for an osl_strings
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty strings structure with fields set to
  *         default values.
  */
-osl_strings_t* osl_strings_malloc(void) {
-  osl_strings_p strings;
+osl_strings* osl_strings_malloc(void) {
+  osl_strings* strings;
 
-  OSL_malloc(strings, osl_strings_p, sizeof(osl_strings_t));
+  OSL_malloc(strings, osl_strings*, sizeof(struct osl_strings));
   OSL_malloc(strings->string, char**, sizeof(char*));
   strings->string[0] = NULL;
 
@@ -283,7 +283,7 @@ osl_strings_t* osl_strings_malloc(void) {
  * this function frees the allocated memory for a strings data structure.
  * \param[in] strings The strings structure we want to free.
  */
-void osl_strings_free(osl_strings_t* const strings) {
+void osl_strings_free(osl_strings* const strings) {
   int i;
 
   if (strings != NULL) {
@@ -310,9 +310,9 @@ void osl_strings_free(osl_strings_t* const strings) {
  * \param[in] strings The strings structure to clone.
  * \return The clone of the strings structure.
  */
-osl_strings_t* osl_strings_clone(const osl_strings_t* const strings) {
+osl_strings* osl_strings_clone(const osl_strings* const strings) {
   size_t i, nb_strings;
-  osl_strings_p clone = NULL;
+  osl_strings* clone = NULL;
 
   if (strings == NULL)
     return NULL;
@@ -337,7 +337,7 @@ osl_strings_t* osl_strings_clone(const osl_strings_t* const strings) {
  * \param[in]     string  The string to find in strings.
  * \return the index where is the string, osl_strings_size if not found
  */
-size_t osl_strings_find(const osl_strings_t* const strings,
+size_t osl_strings_find(const osl_strings* const strings,
                         char const* const string) {
   size_t i;
   for (i = 0; i < osl_strings_size(strings); ++i) {
@@ -354,7 +354,7 @@ size_t osl_strings_find(const osl_strings_t* const strings,
  * \param[in,out] strings The strings structure.
  * \param[in]     string  The string to add in strings.
  */
-void osl_strings_add(osl_strings_t* const strings, char const* const string) {
+void osl_strings_add(osl_strings* const strings, char const* const string) {
   size_t original_size = osl_strings_size(strings);
   OSL_realloc(strings->string, char**, sizeof(char*) * (original_size + 1 + 1));
   strings->string[original_size + 1] = NULL;
@@ -370,8 +370,8 @@ void osl_strings_add(osl_strings_t* const strings, char const* const string) {
  * \param[in] s2 The second strings structure.
  * \return 1 if s1 and s2 are the same (content-wise), 0 otherwise.
  */
-bool osl_strings_equal(const osl_strings_t* const s1,
-                       const osl_strings_t* const s2) {
+bool osl_strings_equal(const osl_strings* const s1,
+                       const osl_strings* const s2) {
   size_t i, nb_s1;
 
   if (s1 == s2)
@@ -395,7 +395,7 @@ bool osl_strings_equal(const osl_strings_t* const s1,
  * \param[in] strings The strings structure we need to know the size.
  * \return The number of strings in the strings structure.
  */
-size_t osl_strings_size(const osl_strings_t* const strings) {
+size_t osl_strings_size(const osl_strings* const strings) {
   size_t size = 0;
 
   if ((strings != NULL) && (strings->string != NULL)) {
@@ -414,8 +414,8 @@ size_t osl_strings_size(const osl_strings_t* const strings) {
  * \param[in] string The string to encapsulate in a strings structure.
  * \return A new strings structure containing only the provided string.
  */
-osl_strings_t* osl_strings_encapsulate(char* string) {
-  osl_strings_p capsule = osl_strings_malloc();
+osl_strings* osl_strings_encapsulate(char* string) {
+  osl_strings* capsule = osl_strings_malloc();
   free(capsule->string);
   OSL_malloc(capsule->string, char**, 2 * sizeof(char*));
   capsule->string[0] = string;
@@ -454,11 +454,11 @@ osl_interface_t* osl_strings_interface(void) {
  * \param[in] nb_strings The number of strings to generate.
  * \return A new strings structure containing generated strings.
  */
-osl_strings_t* osl_strings_generate(const char* prefix, int nb_strings) {
+osl_strings* osl_strings_generate(const char* prefix, int nb_strings) {
   char** strings = NULL;
   char buff[strlen(prefix) + 16];  // TODO: better (log10(INT_MAX) ?) :-D.
   int i;
-  osl_strings_p generated;
+  osl_strings* generated;
 
   if (nb_strings) {
     OSL_malloc(strings, char**, sizeof(char*) * (size_t)(nb_strings + 1));
@@ -485,9 +485,8 @@ osl_strings_t* osl_strings_generate(const char* prefix, int nb_strings) {
  * \param str1[in] The first osl_strings.
  * \param str2[in] The second osl_strings.
  */
-void osl_strings_add_strings(osl_strings_t** const dest,
-                             const osl_strings_t* str1,
-                             const osl_strings_t* str2) {
+void osl_strings_add_strings(osl_strings** const dest, const osl_strings* str1,
+                             const osl_strings* str2) {
   struct osl_strings* res = NULL;
   unsigned int i = 0;
 
