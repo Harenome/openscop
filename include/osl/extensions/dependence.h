@@ -168,6 +168,7 @@ struct osl_dependence {
   osl_statement* stmt_source_ptr; /**< Pointer to source statement. */
   osl_statement* stmt_target_ptr; /**< Pointer to target statement. */
 };
+typedef struct osl_dependence osl_dependence;
 
 typedef struct osl_dependence osl_dependence_t;
 typedef struct osl_dependence* osl_dependence_p;
@@ -176,33 +177,33 @@ typedef struct osl_dependence* osl_dependence_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_dependence_idump(FILE*, const osl_dependence_t*, int) OSL_NONNULL_ARGS(1);
-void osl_dependence_dump(FILE*, const osl_dependence_t*) OSL_NONNULL_ARGS(1);
-char* osl_dependence_sprint(const osl_dependence_t*) OSL_WARN_UNUSED_RESULT;
-void osl_dependence_print(FILE*, const osl_dependence_t*) OSL_NONNULL_ARGS(1);
+void osl_dependence_idump(FILE*, const osl_dependence*, int) OSL_NONNULL_ARGS(1);
+void osl_dependence_dump(FILE*, const osl_dependence*) OSL_NONNULL_ARGS(1);
+char* osl_dependence_sprint(const osl_dependence*) OSL_WARN_UNUSED_RESULT;
+void osl_dependence_print(FILE*, const osl_dependence*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
-osl_dependence_t* osl_dependence_sread(char**) OSL_WARN_UNUSED_RESULT;
-osl_dependence_t* osl_dependence_psread(char**, int) OSL_WARN_UNUSED_RESULT;
+osl_dependence* osl_dependence_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_dependence* osl_dependence_psread(char**, int) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_dependence_t* osl_dependence_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_dependence_free(osl_dependence_t*);
+osl_dependence* osl_dependence_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_dependence_free(osl_dependence*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_dependence_t* osl_dependence_clone(const osl_dependence_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_dependence_equal(const osl_dependence_t*, const osl_dependence_t*);
-void osl_dependence_add(osl_dependence_t**, osl_dependence_t**,
-                        osl_dependence_t*);
-int osl_nb_dependences(const osl_dependence_t*);
+osl_dependence* osl_dependence_clone(const osl_dependence*) OSL_WARN_UNUSED_RESULT;
+bool osl_dependence_equal(const osl_dependence*, const osl_dependence*);
+void osl_dependence_add(osl_dependence**, osl_dependence**,
+                        osl_dependence*);
+int osl_nb_dependences(const osl_dependence*);
 osl_interface* osl_dependence_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
