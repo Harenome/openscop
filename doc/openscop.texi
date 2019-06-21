@@ -2596,8 +2596,7 @@ struct osl_arrays @{
   int *  id;        /* Array of nb_names identifiers */
   char** names;     /* Array of nb_names names */
 @};
-typedef struct osl_arrays  osl_arrays_t;
-typedef struct osl_arrays* osl_arrays_p;
+typedef struct osl_arrays osl_arrays;
 @end group
 @end example
 

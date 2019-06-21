@@ -209,7 +209,7 @@ void osl_generic_print_options_scoplib(FILE* const file,
 
   osl_generic* arrays = osl_generic_lookup(generic, OSL_URI_ARRAYS);
 
-  string = osl_arrays_sprint((osl_arrays_p)arrays);
+  string = osl_arrays_sprint((osl_arrays*)arrays);
   if (string != NULL) {
     fprintf(file, "<arrays>\n%s</arrays>\n", string);
     free(string);

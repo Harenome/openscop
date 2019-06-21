@@ -210,7 +210,7 @@ void osl_scop_print(FILE* const file, const osl_scop* scop) {
   osl_strings* parameters_backup = NULL;
   osl_strings* arrays_backup = NULL;
   osl_names* names;
-  osl_arrays_p arrays;
+  osl_arrays* arrays;
 
   if (scop == NULL) {
     fprintf(file, "# NULL scop\n");
@@ -303,7 +303,7 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop* scop) {
   osl_strings* parameters_backup = NULL;
   osl_strings* arrays_backup = NULL;
   osl_names* names;
-  osl_arrays_p arrays;
+  osl_arrays* arrays;
 
   if (scop == NULL) {
     fprintf(file, "# NULL scop\n");
