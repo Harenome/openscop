@@ -84,8 +84,9 @@ struct osl_vector {
 };
 typedef struct osl_vector osl_vector;
 
-typedef struct osl_vector osl_vector_t;
-typedef struct osl_vector* osl_vector_p;
+/* The following typedefs are deprecated. Use osl_vector. */
+typedef struct osl_vector osl_vector_t OSL_DEPRECATED;
+typedef struct osl_vector* osl_vector_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
