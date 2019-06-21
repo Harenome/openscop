@@ -74,7 +74,7 @@
 #include <osl/strings.h>
 #include <osl/util.h>
 
-static osl_names_t* osl_statement_names(const osl_statement*);
+static osl_names* osl_statement_names(const osl_statement*);
 static void osl_statement_dispatch(osl_statement*, osl_relation_list_t*);
 static osl_relation_p osl_relation_clone_one_safe(const osl_relation_t*);
 
@@ -166,7 +166,7 @@ void osl_statement_dump(FILE* const file, const osl_statement* statement) {
  * \param[in] statement The statement (list) we have to generate names for.
  * \return A set of generated names for the input statement dimensions.
  */
-osl_names_t* osl_statement_names(const osl_statement* statement) {
+osl_names* osl_statement_names(const osl_statement* statement) {
   int nb_parameters = OSL_UNDEFINED;
   int nb_iterators = OSL_UNDEFINED;
   int nb_scattdims = OSL_UNDEFINED;
@@ -189,14 +189,14 @@ osl_names_t* osl_statement_names(const osl_statement* statement) {
  * \param[in] names     The names of the constraint columns for comments.
  */
 void osl_statement_pprint(FILE* const file, const osl_statement* statement,
-                          const osl_names_t* input_names) {
+                          const osl_names* input_names) {
   size_t nb_relations;
   int number = 1;
   int iterators_backedup = 0;
   int nb_ext = 0;
   osl_body* body = NULL;
   osl_strings* iterators_backup = NULL;
-  osl_names_t* names = NULL;
+  osl_names* names = NULL;
 
   // Generate the dimension names if necessary and replace iterators with
   // statement iterators if possible.
@@ -278,13 +278,13 @@ void osl_statement_pprint(FILE* const file, const osl_statement* statement,
  */
 void osl_statement_pprint_scoplib(FILE* const file,
                                   const osl_statement* statement,
-                                  const osl_names_t* input_names) {
+                                  const osl_names* input_names) {
   int number = 1;
   int iterators_backedup = 0;
   osl_body* body = NULL;
   osl_strings* iterators_backup = NULL;
   int add_fakeiter;
-  osl_names_t* names = NULL;
+  osl_names* names = NULL;
 
   // Generate the dimension names if necessary and replace iterators with
   // statement iterators if possible.

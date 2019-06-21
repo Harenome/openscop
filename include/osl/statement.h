@@ -104,13 +104,13 @@ typedef struct osl_statement* osl_statement_p OSL_DEPRECATED;
 void osl_statement_idump(FILE*, const osl_statement*, int)
     OSL_NONNULL_ARGS(1);
 void osl_statement_dump(FILE*, const osl_statement*) OSL_NONNULL_ARGS(1);
-void osl_statement_pprint(FILE*, const osl_statement*, const osl_names_t*)
+void osl_statement_pprint(FILE*, const osl_statement*, const osl_names*)
     OSL_NONNULL_ARGS(1);
 void osl_statement_print(FILE*, const osl_statement*) OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
 void osl_statement_pprint_scoplib(FILE*, const osl_statement*,
-                                  const osl_names_t*) OSL_NONNULL_ARGS(1);
+                                  const osl_names*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                              Reading function                              *

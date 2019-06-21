@@ -126,20 +126,20 @@ void osl_relation_idump(FILE*, const osl_relation_t*, int) OSL_NONNULL_ARGS(1);
 void osl_relation_dump(FILE*, const osl_relation_t*) OSL_NONNULL_ARGS(1);
 char* osl_relation_expression(const osl_relation_t*, int row,
                               char** names) OSL_NONNULL;
-char* osl_relation_spprint_polylib(const osl_relation_t*, const osl_names_t*);
-char* osl_relation_spprint(const osl_relation_t*, const osl_names_t*);
-void osl_relation_pprint(FILE*, const osl_relation_t*, const osl_names_t*)
+char* osl_relation_spprint_polylib(const osl_relation_t*, const osl_names*);
+char* osl_relation_spprint(const osl_relation_t*, const osl_names*);
+void osl_relation_pprint(FILE*, const osl_relation_t*, const osl_names*)
     OSL_NONNULL_ARGS(1);
 char* osl_relation_sprint(const osl_relation_t*);
 void osl_relation_print(FILE*, const osl_relation_t*) OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
 char* osl_relation_spprint_polylib_scoplib(const osl_relation_t*,
-                                           const osl_names_t*, int, int);
-char* osl_relation_spprint_scoplib(const osl_relation_t*, const osl_names_t*,
+                                           const osl_names*, int, int);
+char* osl_relation_spprint_scoplib(const osl_relation_t*, const osl_names*,
                                    int, int);
 void osl_relation_pprint_scoplib(FILE*, const osl_relation_t*,
-                                 const osl_names_t*, int, int)
+                                 const osl_names*, int, int)
     OSL_NONNULL_ARGS(1);
 
 /******************************************************************************

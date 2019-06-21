@@ -72,7 +72,7 @@
 
 /**
  * osl_names_idump function:
- * this function displays an osl_names_t structure (*names) into a
+ * this function displays an osl_names structure (*names) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others
  * idump functions.
@@ -80,7 +80,7 @@
  * \param[in] names The names structure whose information has to be printed.
  * \param[in] level Number of spaces before printing, for each line.
  */
-void osl_names_idump(FILE* const file, const osl_names_t* names, int level) {
+void osl_names_idump(FILE* const file, const osl_names* names, int level) {
   int j;
 
   // Go to the right level.
@@ -88,7 +88,7 @@ void osl_names_idump(FILE* const file, const osl_names_t* names, int level) {
     fprintf(file, "|\t");
 
   if (names != NULL)
-    fprintf(file, "+-- osl_names_t\n");
+    fprintf(file, "+-- osl_names\n");
   else
     fprintf(file, "+-- NULL names\n");
 
@@ -114,12 +114,12 @@ void osl_names_idump(FILE* const file, const osl_names_t* names, int level) {
 
 /**
  * osl_names_dump function:
- * this function prints the content of an osl_names_t structure
+ * this function prints the content of an osl_names structure
  * (*names) into a file (file, possibly stdout).
  * \param[in] file  The file where the information has to be printed.
  * \param[in] names The names structure whose information has to be printed.
  */
-void osl_names_dump(FILE* const file, const osl_names_t* names) {
+void osl_names_dump(FILE* const file, const osl_names* names) {
   osl_names_idump(file, names, 0);
 }
 
@@ -133,16 +133,16 @@ void osl_names_dump(FILE* const file, const osl_names_t* names) {
 
 /**
  * osl_names_malloc function:
- * this function allocates the memory space for an osl_names_t
+ * this function allocates the memory space for an osl_names
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty names structure with fields set to
  *         default values.
  */
-osl_names_t* osl_names_malloc(void) {
-  osl_names_p names;
+osl_names* osl_names_malloc(void) {
+  osl_names* names;
 
-  OSL_malloc(names, osl_names_p, sizeof(osl_names_t));
+  OSL_malloc(names, osl_names*, sizeof(osl_names));
   names->parameters = NULL;
   names->iterators = NULL;
   names->scatt_dims = NULL;
@@ -154,13 +154,13 @@ osl_names_t* osl_names_malloc(void) {
 
 /**
  * osl_names_free function:
- * This function frees the allocated memory for an osl_names_t
+ * This function frees the allocated memory for an osl_names
  * structure. If the names are not character strings, it is the
  * responsibility of the user to free each array of elements (including
- * the array itself), this function will only free the osl_names_t shell.
+ * the array itself), this function will only free the osl_names shell.
  * \param[in,out] names The pointer to the names structure we want to free.
  */
-void osl_names_free(osl_names_t* names) {
+void osl_names_free(osl_names* names) {
   if (names != NULL) {
     osl_strings_free(names->parameters);
     osl_strings_free(names->iterators);
@@ -192,12 +192,12 @@ void osl_names_free(osl_names_t* names) {
  * \param[in] nb_arrays        Number of array names to generate.
  * \return A new names structure containing generated names.
  */
-osl_names_t* osl_names_generate(const char* parameter_prefix, int nb_parameters,
+osl_names* osl_names_generate(const char* parameter_prefix, int nb_parameters,
                                 const char* iterator_prefix, int nb_iterators,
                                 const char* scatt_dim_prefix, int nb_scatt_dims,
                                 const char* local_dim_prefix, int nb_local_dims,
                                 const char* array_prefix, int nb_arrays) {
-  osl_names_p names = osl_names_malloc();
+  osl_names* names = osl_names_malloc();
 
   names->parameters = osl_strings_generate(parameter_prefix, nb_parameters);
   names->iterators = osl_strings_generate(iterator_prefix, nb_iterators);
@@ -211,12 +211,12 @@ osl_names_t* osl_names_generate(const char* parameter_prefix, int nb_parameters,
 /**
  * osl_names_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_names_t data structure provided as parameter.
+ * osl_names data structure provided as parameter.
  * \param[in] names The pointer to the names structure we want to clone.
  * \return A pointer to the clone of the names structure provided as parameter.
  */
-osl_names_t* osl_names_clone(const osl_names_t* names) {
-  osl_names_p clone = NULL;
+osl_names* osl_names_clone(const osl_names* names) {
+  osl_names* clone = NULL;
 
   if (names != NULL) {
     clone = osl_names_malloc();

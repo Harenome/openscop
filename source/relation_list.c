@@ -151,7 +151,7 @@ void osl_relation_list_dump(FILE* const file,
  */
 void osl_relation_list_pprint_elts(FILE* const file,
                                    const osl_relation_list_t* list,
-                                   const osl_names_t* names) {
+                                   const osl_names* names) {
   size_t i;
   const osl_relation_list_t* head = list;
 
@@ -187,7 +187,7 @@ void osl_relation_list_pprint_elts(FILE* const file,
  * \param[in] add_fakeiter True of False
  */
 void osl_relation_list_pprint_access_array_scoplib(
-    FILE* const file, const osl_relation_list_t* list, const osl_names_t* names,
+    FILE* const file, const osl_relation_list_t* list, const osl_names* names,
     int add_fakeiter) {
   size_t i;
   int nb_rows_read = 0, nb_columns_read = 0;
@@ -286,7 +286,7 @@ void osl_relation_list_pprint_access_array_scoplib(
  */
 void osl_relation_list_pprint(FILE* const file,
                               const osl_relation_list_t* const list,
-                              const osl_names_t* const names) {
+                              const osl_names* const names) {
   size_t i;
 
   // Count the number of elements in the list with non-NULL content.

@@ -143,7 +143,7 @@ void osl_scop_register_extension(osl_scop_t*, osl_interface*);
 void osl_scop_get_attributes(const osl_scop_t*, int*, int*, int*, int*, int*);
 void osl_scop_normalize_scattering(osl_scop_t*);
 
-osl_names_t* osl_scop_names(const osl_scop_t* scop) OSL_WARN_UNUSED_RESULT;
+osl_names* osl_scop_names(const osl_scop_t* scop) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

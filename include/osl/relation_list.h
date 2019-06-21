@@ -91,16 +91,16 @@ void osl_relation_list_idump(FILE*, const osl_relation_list_t*, int)
 void osl_relation_list_dump(FILE*, const osl_relation_list_t*)
     OSL_NONNULL_ARGS(1);
 void osl_relation_list_pprint_elts(FILE*, const osl_relation_list_t*,
-                                   const osl_names_t*) OSL_NONNULL_ARGS(1);
+                                   const osl_names*) OSL_NONNULL_ARGS(1);
 void osl_relation_list_pprint(FILE*, const osl_relation_list_t*,
-                              const osl_names_t*) OSL_NONNULL_ARGS(1);
+                              const osl_names*) OSL_NONNULL_ARGS(1);
 void osl_relation_list_print(FILE*, const osl_relation_list_t*)
     OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
 void osl_relation_list_pprint_access_array_scoplib(FILE*,
                                                    const osl_relation_list_t*,
-                                                   const osl_names_t*, int)
+                                                   const osl_names*, int)
     OSL_NONNULL_ARGS(1);
 
 /******************************************************************************

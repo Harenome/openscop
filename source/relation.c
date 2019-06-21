@@ -76,7 +76,7 @@ static void osl_relation_print_type(FILE*, const osl_relation_t*);
 static char* osl_relation_expression_element(const osl_int, int, int*, int,
                                              const char*);
 
-static char** osl_relation_strings(const osl_relation_t*, const osl_names_t*);
+static char** osl_relation_strings(const osl_relation_t*, const osl_names*);
 static char* osl_relation_subexpression(const osl_relation_t*, int, int, int,
                                         int, char**);
 static int osl_relation_is_simple_output(const osl_relation_t*, int);
@@ -84,7 +84,7 @@ static char* osl_relation_sprint_comment(const osl_relation_t*, int, char**,
                                          char**);
 static char* osl_relation_column_string(const osl_relation_t*, char**);
 static char* osl_relation_column_string_scoplib(const osl_relation_t*, char**);
-static osl_names_t* osl_relation_names(const osl_relation_t*);
+static osl_names* osl_relation_names(const osl_relation_t*);
 static int osl_relation_read_type(FILE*, char**);
 static int osl_relation_check_attribute(int*, int);
 static int osl_relation_check_nb_columns(const osl_relation_t*, int, int, int);
@@ -332,14 +332,14 @@ char* osl_relation_expression_element(const osl_int val, int precision,
 /**
  * osl_relation_strings function:
  * this function creates a NULL-terminated array of strings from an
- * osl_names_t structure in such a way that the ith string is the "name"
+ * osl_names structure in such a way that the ith string is the "name"
  * corresponding to the ith column of the constraint matrix.
  * \param[in] relation The relation for which we need an array of names.
  * \param[in] names    The set of names for each element.
  * \return An array of strings with one string per constraint matrix column.
  */
 char** osl_relation_strings(const osl_relation_t* relation,
-                            const osl_names_t* names) {
+                            const osl_names* names) {
   char** strings;
   char temp[OSL_MAX_STRING];
   int i, offset;
@@ -742,7 +742,7 @@ char* osl_relation_column_string_scoplib(const osl_relation_t* relation,
  * \param[in] relation The relation we have to generate names for.
  * \return A set of generated names for the input relation dimensions.
  */
-osl_names_t* osl_relation_names(const osl_relation_t* relation) {
+osl_names* osl_relation_names(const osl_relation_t* relation) {
   int nb_parameters = OSL_UNDEFINED;
   int nb_iterators = OSL_UNDEFINED;
   int nb_scattdims = OSL_UNDEFINED;
@@ -784,7 +784,7 @@ int osl_relation_nb_components(const osl_relation_t* relation) {
  * \return A string containing the relation pretty-printing.
  */
 char* osl_relation_spprint_polylib(const osl_relation_t* relation,
-                                   const osl_names_t* names) {
+                                   const osl_names* names) {
   int i, j;
   int part, nb_parts;
   int generated_names = 0;
@@ -794,7 +794,7 @@ char* osl_relation_spprint_polylib(const osl_relation_t* relation,
   char** name_array = NULL;
   char* scolumn;
   char* comment;
-  osl_names_t* local_names = NULL;
+  osl_names* local_names = NULL;
 
   if (relation == NULL)
     return osl_util_strdup("# NULL relation\n");
@@ -886,7 +886,7 @@ char* osl_relation_spprint_polylib(const osl_relation_t* relation,
  * \return A string containing the relation pretty-printing.
  */
 char* osl_relation_spprint_polylib_scoplib(const osl_relation_t* relation,
-                                           const osl_names_t* names,
+                                           const osl_names* names,
                                            int print_nth_part,
                                            int add_fakeiter) {
   int i, j;
@@ -903,7 +903,7 @@ char* osl_relation_spprint_polylib_scoplib(const osl_relation_t* relation,
   char** name_array = NULL;
   char* scolumn;
   char* comment;
-  osl_names_t* local_names = NULL;
+  osl_names* local_names = NULL;
 
   if (relation == NULL)
     return osl_util_strdup("# NULL relation\n");
@@ -1136,7 +1136,7 @@ char* osl_relation_spprint_polylib_scoplib(const osl_relation_t* relation,
  * \return A string
  */
 char* osl_relation_spprint(const osl_relation_t* relation,
-                           const osl_names_t* names) {
+                           const osl_names* names) {
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
   char* temp;
@@ -1171,7 +1171,7 @@ char* osl_relation_spprint(const osl_relation_t* relation,
  * \return A string
  */
 char* osl_relation_spprint_scoplib(const osl_relation_t* relation,
-                                   const osl_names_t* names, int print_nth_part,
+                                   const osl_names* names, int print_nth_part,
                                    int add_fakeiter) {
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
@@ -1198,7 +1198,7 @@ char* osl_relation_spprint_scoplib(const osl_relation_t* relation,
  * \param[in] names    The names of the constraint columns for comments.
  */
 void osl_relation_pprint(FILE* const file, const osl_relation_t* const relation,
-                         const osl_names_t* const names) {
+                         const osl_names* const names) {
   char* string = osl_relation_spprint(relation, names);
   fprintf(file, "%s", string);
   free(string);
@@ -1216,7 +1216,7 @@ void osl_relation_pprint(FILE* const file, const osl_relation_t* const relation,
  */
 void osl_relation_pprint_scoplib(FILE* file,
                                  const osl_relation_t* const relation,
-                                 const osl_names_t* const names,
+                                 const osl_names* const names,
                                  int print_nth_part, int add_fakeiter) {
   char* string = osl_relation_spprint_scoplib(relation, names, print_nth_part,
                                               add_fakeiter);

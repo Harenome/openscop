@@ -183,7 +183,7 @@ void osl_scop_dump(FILE* const file, const osl_scop_t* const scop) {
  * \param[in] scop The scop (list) we have to generate names for.
  * \return A set of generated names for the input scop dimensions.
  */
-osl_names_t* osl_scop_names(const osl_scop_t* scop) {
+osl_names* osl_scop_names(const osl_scop_t* scop) {
   int nb_parameters = OSL_UNDEFINED;
   int nb_iterators = OSL_UNDEFINED;
   int nb_scattdims = OSL_UNDEFINED;
@@ -209,7 +209,7 @@ void osl_scop_print(FILE* const file, const osl_scop_t* scop) {
   int arrays_backedup = 0;
   osl_strings* parameters_backup = NULL;
   osl_strings* arrays_backup = NULL;
-  osl_names_p names;
+  osl_names* names;
   osl_arrays_p arrays;
 
   if (scop == NULL) {
@@ -302,7 +302,7 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop_t* scop) {
   int arrays_backedup = 0;
   osl_strings* parameters_backup = NULL;
   osl_strings* arrays_backup = NULL;
-  osl_names_p names;
+  osl_names* names;
   osl_arrays_p arrays;
 
   if (scop == NULL) {
