@@ -65,22 +65,22 @@
 
 static inline void osl_region_idump_indent(FILE* const file, int level);
 
-static void osl_region_text_init(osl_region_text_t* text);
-static void osl_region_text_clean(osl_region_text_t* text);
+static void osl_region_text_init(osl_region_text* text);
+static void osl_region_text_clean(osl_region_text* text);
 
-static osl_region_text_t osl_region_text_clone(const osl_region_text_t* source);
-static bool osl_region_text_equal(const osl_region_text_t* t1,
-                                  const osl_region_text_t* t2);
-static int osl_region_text_append(osl_region_text_t* text, int line_type,
+static osl_region_text osl_region_text_clone(const osl_region_text* source);
+static bool osl_region_text_equal(const osl_region_text* t1,
+                                  const osl_region_text* t2);
+static int osl_region_text_append(osl_region_text* text, int line_type,
                                   char* line);
-static void osl_region_text_idump(FILE* file, const osl_region_text_t* text,
+static void osl_region_text_idump(FILE* file, const osl_region_text* text,
                                   int level);
 
 /******************************************************************************
- * osl_region_text_t functions                                                *
+ * osl_region_text functions                                                *
  ******************************************************************************/
 
-int osl_region_text_append(osl_region_text_t* text, int line_type, char* line) {
+int osl_region_text_append(osl_region_text* text, int line_type, char* line) {
   const size_t count = text->count + 1;
 
   char** lines = realloc(text->lines, count * sizeof *lines);
@@ -101,7 +101,7 @@ int osl_region_text_append(osl_region_text_t* text, int line_type, char* line) {
   return 0;
 }
 
-void osl_region_text_idump(FILE* const file, const osl_region_text_t* text,
+void osl_region_text_idump(FILE* const file, const osl_region_text* text,
                            int level) {
   for (size_t i = 0; i < text->count; ++i) {
     osl_region_idump_indent(file, level);
@@ -110,8 +110,8 @@ void osl_region_text_idump(FILE* const file, const osl_region_text_t* text,
   }
 }
 
-osl_region_text_t osl_region_text_clone(const osl_region_text_t* source) {
-  osl_region_text_t destination = {
+osl_region_text osl_region_text_clone(const osl_region_text* source) {
+  osl_region_text destination = {
       .count = 0,
       .types = 0,
       .lines = 0,
@@ -123,13 +123,13 @@ osl_region_text_t osl_region_text_clone(const osl_region_text_t* source) {
   return destination;
 }
 
-void osl_region_text_init(osl_region_text_t* text) {
+void osl_region_text_init(osl_region_text* text) {
   text->count = 0;
   text->types = 0;
   text->lines = 0;
 }
 
-void osl_region_text_clean(osl_region_text_t* text) {
+void osl_region_text_clean(osl_region_text* text) {
   if (text->lines) {
     for (size_t i = 0; i < text->count; ++i) {
       if (text->lines[i])
@@ -142,8 +142,8 @@ void osl_region_text_clean(osl_region_text_t* text) {
   }
 }
 
-bool osl_region_text_equal(const osl_region_text_t* t1,
-                           const osl_region_text_t* t2) {
+bool osl_region_text_equal(const osl_region_text* t1,
+                           const osl_region_text* t2) {
   if (t1 == t2)
     return true;
 
@@ -161,22 +161,22 @@ bool osl_region_text_equal(const osl_region_text_t* t1,
   return equal;
 }
 
-void osl_region_append_prefix(osl_region_t* region, int prefix_type,
+void osl_region_append_prefix(osl_region* region, int prefix_type,
                               char* prefix) {
   osl_region_text_append(&region->prefix, prefix_type, prefix);
 }
 
-void osl_region_append_suffix(osl_region_t* region, int suffix_type,
+void osl_region_append_suffix(osl_region* region, int suffix_type,
                               char* suffix) {
   osl_region_text_append(&region->suffix, suffix_type, suffix);
 }
 
-void osl_region_append_prelude(osl_region_t* region, int prelude_type,
+void osl_region_append_prelude(osl_region* region, int prelude_type,
                                char* prelude) {
   osl_region_text_append(&region->prelude, prelude_type, prelude);
 }
 
-void osl_region_append_postlude(osl_region_t* region, int postlude_type,
+void osl_region_append_postlude(osl_region* region, int postlude_type,
                                 char* postlude) {
   osl_region_text_append(&region->postlude, postlude_type, postlude);
 }
@@ -191,11 +191,11 @@ void osl_region_idump_indent(FILE* const file, int level) {
   }
 }
 
-void osl_region_idump(FILE* const file, const osl_region_t* region, int level) {
+void osl_region_idump(FILE* const file, const osl_region* region, int level) {
   osl_region_idump_indent(file, level);
 
   if (region != NULL) {
-    fprintf(file, "+-- osl_region_t\n");
+    fprintf(file, "+-- osl_region\n");
   } else {
     fprintf(file, "+-- NULL region\n");
   }
@@ -205,7 +205,7 @@ void osl_region_idump(FILE* const file, const osl_region_t* region, int level) {
   while (region) {
     if (!first) {
       osl_region_idump_indent(file, level);
-      fprintf(file, "|   osl_region_t (node %zu)\n", count);
+      fprintf(file, "|   osl_region (node %zu)\n", count);
     } else {
       first = 0;
     }
@@ -231,11 +231,11 @@ void osl_region_idump(FILE* const file, const osl_region_t* region, int level) {
   osl_region_idump_indent(file, level);
   fprintf(file, "\n");
 }
-void osl_region_dump(FILE* const file, const osl_region_t* region) {
+void osl_region_dump(FILE* const file, const osl_region* region) {
   osl_region_idump(file, region, 0);
 }
 
-char* osl_region_sprint(const osl_region_t* region) {
+char* osl_region_sprint(const osl_region* region) {
   const size_t count = osl_region_count(region);
 
   char buffer[OSL_MAX_STRING];
@@ -295,7 +295,7 @@ char* osl_region_sprint(const osl_region_t* region) {
  * Reading functions                                                          *
  ******************************************************************************/
 
-osl_region_t* osl_region_sread(char** input) {
+osl_region* osl_region_sread(char** input) {
   if (!input) {
     OSL_debug("no region optional tag");
     return NULL;
@@ -305,8 +305,8 @@ osl_region_t* osl_region_sread(char** input) {
   if (!region_count)
     return NULL;
 
-  osl_region_t* const output = osl_region_malloc();
-  osl_region_t* current = output;
+  osl_region* const output = osl_region_malloc();
+  osl_region* current = output;
   for (int i = 0; i < region_count; ++i) {
     current->location = osl_util_read_int(NULL, input);
 
@@ -338,8 +338,8 @@ osl_region_t* osl_region_sread(char** input) {
  * Memory allocation/deallocation functions                                   *
  ******************************************************************************/
 
-osl_region_t* osl_region_malloc(void) {
-  osl_region_t* const region = malloc(sizeof *region);
+osl_region* osl_region_malloc(void) {
+  osl_region* const region = malloc(sizeof *region);
   if (!region) {
     fprintf(stderr, "[osl] Error: memory overflow (%s).\n", __func__);
     exit(1);
@@ -357,9 +357,9 @@ osl_region_t* osl_region_malloc(void) {
   return region;
 }
 
-void osl_region_free(osl_region_t* region) {
+void osl_region_free(osl_region* region) {
   while (region) {
-    osl_region_t* const tmp = region;
+    osl_region* const tmp = region;
 
     /* Free strings. */
     osl_region_text_clean(&region->prefix);
@@ -379,8 +379,8 @@ void osl_region_free(osl_region_t* region) {
  * Processing functions                            *
  ******************************************************************************/
 
-osl_region_t* osl_region_clone_one(const osl_region_t* source) {
-  osl_region_t* clone = osl_region_malloc();
+osl_region* osl_region_clone_one(const osl_region* source) {
+  osl_region* clone = osl_region_malloc();
 
   clone->location = source->location;
   clone->prefix = osl_region_text_clone(&source->prefix);
@@ -391,16 +391,16 @@ osl_region_t* osl_region_clone_one(const osl_region_t* source) {
   return clone;
 }
 
-osl_region_t* osl_region_clone(const osl_region_t* source) {
+osl_region* osl_region_clone(const osl_region* source) {
   if (!source)
     return NULL;
 
   /* Clone the first region. */
-  osl_region_t* const clone = osl_region_clone_one(source);
-  osl_region_t* last = clone;
+  osl_region* const clone = osl_region_clone_one(source);
+  osl_region* last = clone;
 
   /* Clone the remaining regions. */
-  const osl_region_t* current = source->next;
+  const osl_region* current = source->next;
   while (current) {
     last->next = osl_region_clone_one(current);
     last = last->next;
@@ -410,7 +410,7 @@ osl_region_t* osl_region_clone(const osl_region_t* source) {
   return clone;
 }
 
-bool osl_region_equal_one(const osl_region_t* r1, const osl_region_t* r2) {
+bool osl_region_equal_one(const osl_region* r1, const osl_region* r2) {
   if (r1 == r2)
     return 1;
 
@@ -427,7 +427,7 @@ bool osl_region_equal_one(const osl_region_t* r1, const osl_region_t* r2) {
   return equal;
 }
 
-bool osl_region_equal(const osl_region_t* r1, const osl_region_t* r2) {
+bool osl_region_equal(const osl_region* r1, const osl_region* r2) {
   bool equal = osl_region_equal_one(r1, r2);
 
   if (equal)
@@ -436,9 +436,9 @@ bool osl_region_equal(const osl_region_t* r1, const osl_region_t* r2) {
     return equal;
 }
 
-size_t osl_region_count(const osl_region_t* region) {
+size_t osl_region_count(const osl_region* region) {
   size_t count = 0;
-  for (const osl_region_t* current = region; current; current = current->next)
+  for (const osl_region* current = region; current; current = current->next)
     ++count;
 
   return count;

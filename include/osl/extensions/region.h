@@ -90,7 +90,7 @@ struct osl_region_text {
   char** lines;
   size_t count;
 };
-typedef struct osl_region_text osl_region_text_t;
+typedef struct osl_region_text osl_region_text;
 
 /**
  * \brief Regions
@@ -110,60 +110,60 @@ struct osl_region {
   /** Location of the region. */
   int location;
 
-  osl_region_text_t prefix;
-  osl_region_text_t suffix;
-  osl_region_text_t prelude;
-  osl_region_text_t postlude;
+  osl_region_text prefix;
+  osl_region_text suffix;
+  osl_region_text prelude;
+  osl_region_text postlude;
 
   struct osl_region* next;
 };
-typedef struct osl_region osl_region_t;
+typedef struct osl_region osl_region;
 
 /******************************************************************************
  * Structure display functions                                                *
  ******************************************************************************/
 
-void osl_region_idump(FILE* file, const osl_region_t* region, int level)
+void osl_region_idump(FILE* file, const osl_region* region, int level)
     OSL_NONNULL_ARGS(1);
-void osl_region_dump(FILE* file, const osl_region_t* region)
+void osl_region_dump(FILE* file, const osl_region* region)
     OSL_NONNULL_ARGS(1);
-char* osl_region_sprint(const osl_region_t* region);
+char* osl_region_sprint(const osl_region* region);
 
 /******************************************************************************
  * Reading functions                                                          *
  ******************************************************************************/
 
-osl_region_t* osl_region_sread(char** input) OSL_WARN_UNUSED_RESULT;
+osl_region* osl_region_sread(char** input) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  * Memory allocation/deallocation functions                                   *
  ******************************************************************************/
 
-osl_region_t* osl_region_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_region_free(osl_region_t* region);
+osl_region* osl_region_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_region_free(osl_region* region);
 
 /******************************************************************************
  * Processing functions                                                       *
  ******************************************************************************/
 
-osl_region_t* osl_region_clone_one(const osl_region_t* region)
+osl_region* osl_region_clone_one(const osl_region* region)
     OSL_WARN_UNUSED_RESULT;
-osl_region_t* osl_region_clone(const osl_region_t* region)
+osl_region* osl_region_clone(const osl_region* region)
     OSL_WARN_UNUSED_RESULT;
 
-bool osl_region_equal_one(const osl_region_t* a1, const osl_region_t* a2);
-bool osl_region_equal(const osl_region_t* a1, const osl_region_t* a2);
-size_t osl_region_count(const osl_region_t* ll);
+bool osl_region_equal_one(const osl_region* a1, const osl_region* a2);
+bool osl_region_equal(const osl_region* a1, const osl_region* a2);
+size_t osl_region_count(const osl_region* ll);
 
 osl_interface* osl_region_interface(void) OSL_WARN_UNUSED_RESULT;
 
-void osl_region_append_prefix(osl_region_t* region, int prefix_type,
+void osl_region_append_prefix(osl_region* region, int prefix_type,
                               char* prefix);
-void osl_region_append_suffix(osl_region_t* region, int suffix_type,
+void osl_region_append_suffix(osl_region* region, int suffix_type,
                               char* suffix);
-void osl_region_append_prelude(osl_region_t* region, int prelude_type,
+void osl_region_append_prelude(osl_region* region, int prelude_type,
                                char* prelude);
-void osl_region_append_postlude(osl_region_t* region, int postlude_type,
+void osl_region_append_postlude(osl_region* region, int postlude_type,
                                 char* postlude);
 
 #if defined(__cplusplus)
