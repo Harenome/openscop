@@ -81,12 +81,14 @@ struct osl_strings {
 };
 typedef struct osl_strings osl_strings;
 
-typedef struct osl_strings osl_strings_t;
-typedef struct osl_strings* osl_strings_p;
-typedef struct osl_strings const osl_const_strings_t;
-typedef struct osl_strings* const osl_strings_const_p;
-typedef struct osl_strings const* osl_const_strings_p;
-typedef struct osl_strings const* const osl_const_strings_const_p;
+/* The following typedefs are deprecated. Use osl_strings. */
+typedef struct osl_strings osl_strings_t OSL_DEPRECATED;
+typedef struct osl_strings* osl_strings_p OSL_DEPRECATED;
+typedef struct osl_strings const osl_const_strings_t OSL_DEPRECATED;
+typedef struct osl_strings* const osl_strings_const_p OSL_DEPRECATED;
+typedef struct osl_strings const* osl_const_strings_p OSL_DEPRECATED;
+typedef struct osl_strings const* const osl_const_strings_const_p
+    OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
