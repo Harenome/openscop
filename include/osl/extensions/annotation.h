@@ -86,7 +86,7 @@ struct osl_annotation_text {
   char** lines;
   size_t count;
 };
-typedef struct osl_annotation_text osl_annotation_text_t;
+typedef struct osl_annotation_text osl_annotation_text;
 
 /**
  * \brief Annotations
@@ -95,49 +95,48 @@ typedef struct osl_annotation_text osl_annotation_text_t;
  * with bit masks.
  */
 struct osl_annotation {
-  osl_annotation_text_t prefix;
-  osl_annotation_text_t suffix;
+  osl_annotation_text prefix;
+  osl_annotation_text suffix;
 };
-typedef struct osl_annotation osl_annotation_t;
+typedef struct osl_annotation osl_annotation;
 
 /******************************************************************************
  * Structure display functions                                                *
  ******************************************************************************/
 
-void osl_annotation_idump(FILE* file, const osl_annotation_t* annotation,
+void osl_annotation_idump(FILE* file, const osl_annotation* annotation,
                           int level) OSL_NONNULL_ARGS(1);
-void osl_annotation_dump(FILE* file, const osl_annotation_t* annotation)
+void osl_annotation_dump(FILE* file, const osl_annotation* annotation)
     OSL_NONNULL_ARGS(1);
-char* osl_annotation_sprint(const osl_annotation_t* annotation);
+char* osl_annotation_sprint(const osl_annotation* annotation);
 
 /******************************************************************************
  * Reading functions                                                          *
  ******************************************************************************/
 
-osl_annotation_t* osl_annotation_sread(char** input) OSL_WARN_UNUSED_RESULT;
+osl_annotation* osl_annotation_sread(char** input) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  * Memory allocation/deallocation functions                                   *
  ******************************************************************************/
 
-osl_annotation_t* osl_annotation_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_annotation_free(osl_annotation_t* annotation);
+osl_annotation* osl_annotation_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_annotation_free(osl_annotation* annotation);
 
 /******************************************************************************
  * Processing functions                                                       *
  ******************************************************************************/
 
-osl_annotation_t* osl_annotation_clone(const osl_annotation_t* annotation)
+osl_annotation* osl_annotation_clone(const osl_annotation* annotation)
     OSL_WARN_UNUSED_RESULT;
 
-bool osl_annotation_equal(const osl_annotation_t* a1,
-                          const osl_annotation_t* a2);
+bool osl_annotation_equal(const osl_annotation* a1, const osl_annotation* a2);
 
 osl_interface* osl_annotation_interface(void) OSL_WARN_UNUSED_RESULT;
 
-void osl_annotation_append_prefix(osl_annotation_t* annotation, int prefix_type,
+void osl_annotation_append_prefix(osl_annotation* annotation, int prefix_type,
                                   char* prefix);
-void osl_annotation_append_suffix(osl_annotation_t* annotation, int suffix_type,
+void osl_annotation_append_suffix(osl_annotation* annotation, int suffix_type,
                                   char* suffix);
 
 #if defined(__cplusplus)

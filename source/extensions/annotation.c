@@ -65,23 +65,23 @@
 
 static inline void osl_annotation_idump_indent(FILE* const file, int level);
 
-static void osl_annotation_text_init(osl_annotation_text_t* text);
-static void osl_annotation_text_clean(osl_annotation_text_t* text);
+static void osl_annotation_text_init(osl_annotation_text* text);
+static void osl_annotation_text_clean(osl_annotation_text* text);
 
-static osl_annotation_text_t osl_annotation_text_clone(
-    const osl_annotation_text_t* source);
-static bool osl_annotation_text_equal(const osl_annotation_text_t* t1,
-                                      const osl_annotation_text_t* t2);
-static int osl_annotation_text_append(osl_annotation_text_t* text,
+static osl_annotation_text osl_annotation_text_clone(
+    const osl_annotation_text* source);
+static bool osl_annotation_text_equal(const osl_annotation_text* t1,
+                                      const osl_annotation_text* t2);
+static int osl_annotation_text_append(osl_annotation_text* text,
                                       int line_type, char* line);
 static void osl_annotation_text_idump(FILE* file,
-                                      const osl_annotation_text_t* text,
+                                      const osl_annotation_text* text,
                                       int level);
 /******************************************************************************
- * osl_annotation_text_t functions                                            *
+ * osl_annotation_text functions                                            *
  ******************************************************************************/
 
-int osl_annotation_text_append(osl_annotation_text_t* text, int line_type,
+int osl_annotation_text_append(osl_annotation_text* text, int line_type,
                                char* line) {
   const size_t count = text->count + 1;
 
@@ -104,7 +104,7 @@ int osl_annotation_text_append(osl_annotation_text_t* text, int line_type,
 }
 
 void osl_annotation_text_idump(FILE* const file,
-                               const osl_annotation_text_t* text, int level) {
+                               const osl_annotation_text* text, int level) {
   for (size_t i = 0; i < text->count; ++i) {
     osl_annotation_idump_indent(file, level);
     fprintf(file, "+--type %zu: %d\n", i, text->types[i]);
@@ -112,9 +112,9 @@ void osl_annotation_text_idump(FILE* const file,
   }
 }
 
-osl_annotation_text_t osl_annotation_text_clone(
-    const osl_annotation_text_t* source) {
-  osl_annotation_text_t destination = {
+osl_annotation_text osl_annotation_text_clone(
+    const osl_annotation_text* source) {
+  osl_annotation_text destination = {
       .count = 0,
       .types = 0,
       .lines = 0,
@@ -126,13 +126,13 @@ osl_annotation_text_t osl_annotation_text_clone(
   return destination;
 }
 
-void osl_annotation_text_init(osl_annotation_text_t* text) {
+void osl_annotation_text_init(osl_annotation_text* text) {
   text->count = 0;
   text->types = 0;
   text->lines = 0;
 }
 
-void osl_annotation_text_clean(osl_annotation_text_t* text) {
+void osl_annotation_text_clean(osl_annotation_text* text) {
   if (text->lines) {
     for (size_t i = 0; i < text->count; ++i) {
       if (text->lines[i])
@@ -145,8 +145,8 @@ void osl_annotation_text_clean(osl_annotation_text_t* text) {
   }
 }
 
-bool osl_annotation_text_equal(const osl_annotation_text_t* t1,
-                               const osl_annotation_text_t* t2) {
+bool osl_annotation_text_equal(const osl_annotation_text* t1,
+                               const osl_annotation_text* t2) {
   if (t1 == t2)
     return true;
 
@@ -164,12 +164,12 @@ bool osl_annotation_text_equal(const osl_annotation_text_t* t1,
   return equal;
 }
 
-void osl_annotation_append_prefix(osl_annotation_t* annotation, int prefix_type,
+void osl_annotation_append_prefix(osl_annotation* annotation, int prefix_type,
                                   char* prefix) {
   osl_annotation_text_append(&annotation->prefix, prefix_type, prefix);
 }
 
-void osl_annotation_append_suffix(osl_annotation_t* annotation, int suffix_type,
+void osl_annotation_append_suffix(osl_annotation* annotation, int suffix_type,
                                   char* suffix) {
   osl_annotation_text_append(&annotation->suffix, suffix_type, suffix);
 }
@@ -184,12 +184,12 @@ void osl_annotation_idump_indent(FILE* const file, int level) {
   }
 }
 
-void osl_annotation_idump(FILE* const file, const osl_annotation_t* annotation,
+void osl_annotation_idump(FILE* const file, const osl_annotation* annotation,
                           int level) {
   osl_annotation_idump_indent(file, level);
 
   if (annotation != NULL) {
-    fprintf(file, "+-- osl_annotation_t\n");
+    fprintf(file, "+-- osl_annotation\n");
   } else {
     fprintf(file, "+-- NULL annotation\n");
   }
@@ -205,11 +205,11 @@ void osl_annotation_idump(FILE* const file, const osl_annotation_t* annotation,
   osl_annotation_idump_indent(file, level);
   fprintf(file, "\n");
 }
-void osl_annotation_dump(FILE* const file, const osl_annotation_t* annotation) {
+void osl_annotation_dump(FILE* const file, const osl_annotation* annotation) {
   osl_annotation_idump(file, annotation, 0);
 }
 
-char* osl_annotation_sprint(const osl_annotation_t* annotation) {
+char* osl_annotation_sprint(const osl_annotation* annotation) {
   char buffer[OSL_MAX_STRING];
   char* string = NULL;
   size_t high_water_mark = OSL_MAX_STRING;
@@ -249,13 +249,13 @@ char* osl_annotation_sprint(const osl_annotation_t* annotation) {
  * Reading functions                                                          *
  ******************************************************************************/
 
-osl_annotation_t* osl_annotation_sread(char** input) {
+osl_annotation* osl_annotation_sread(char** input) {
   if (!input) {
     OSL_debug("no annotation optional tag");
     return NULL;
   }
 
-  osl_annotation_t* const output = osl_annotation_malloc();
+  osl_annotation* const output = osl_annotation_malloc();
 
 #define osl_annotation_sread_text(field)                           \
   do {                                                             \
@@ -277,8 +277,8 @@ osl_annotation_t* osl_annotation_sread(char** input) {
  * Memory allocation/deallocation functions                                   *
  ******************************************************************************/
 
-osl_annotation_t* osl_annotation_malloc(void) {
-  osl_annotation_t* const annotation = malloc(sizeof *annotation);
+osl_annotation* osl_annotation_malloc(void) {
+  osl_annotation* const annotation = malloc(sizeof *annotation);
   if (!annotation) {
     fprintf(stderr, "[osl] Error: memory overflow (%s).\n", __func__);
     exit(1);
@@ -290,7 +290,7 @@ osl_annotation_t* osl_annotation_malloc(void) {
   return annotation;
 }
 
-void osl_annotation_free(osl_annotation_t* annotation) {
+void osl_annotation_free(osl_annotation* annotation) {
   osl_annotation_text_clean(&annotation->prefix);
   osl_annotation_text_clean(&annotation->suffix);
   free(annotation);
@@ -300,8 +300,8 @@ void osl_annotation_free(osl_annotation_t* annotation) {
  * Processing functions                                                      *
  *****************************************************************************/
 
-osl_annotation_t* osl_annotation_clone(const osl_annotation_t* const source) {
-  osl_annotation_t* const clone = osl_annotation_malloc();
+osl_annotation* osl_annotation_clone(const osl_annotation* const source) {
+  osl_annotation* const clone = osl_annotation_malloc();
 
   clone->prefix = osl_annotation_text_clone(&source->prefix);
   clone->suffix = osl_annotation_text_clone(&source->suffix);
@@ -309,8 +309,8 @@ osl_annotation_t* osl_annotation_clone(const osl_annotation_t* const source) {
   return clone;
 }
 
-bool osl_annotation_equal(const osl_annotation_t* const r1,
-                          const osl_annotation_t* const r2) {
+bool osl_annotation_equal(const osl_annotation* const r1,
+                          const osl_annotation* const r2) {
   if (r1 == r2)
     return 1;
 
