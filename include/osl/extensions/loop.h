@@ -98,8 +98,9 @@ struct osl_loop {
 };
 typedef struct osl_loop osl_loop;
 
-typedef struct osl_loop osl_loop_t;
-typedef struct osl_loop* osl_loop_p;
+/* The following typedefs are deprecated. Use osl_loop. */
+typedef struct osl_loop osl_loop_t OSL_DEPRECATED;
+typedef struct osl_loop* osl_loop_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
