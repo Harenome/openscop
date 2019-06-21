@@ -68,6 +68,8 @@
 #include <gmp.h>
 #endif
 
+#include <osl/attributes.h>
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -86,12 +88,13 @@ union osl_int {
 };
 typedef union osl_int osl_int;
 
-typedef union osl_int osl_int_t;
-typedef union osl_int* osl_int_p;
-typedef union osl_int const osl_const_int_t;
-typedef union osl_int* const osl_int_const_p;
-typedef union osl_int const* osl_const_int_p;
-typedef union osl_int const* const osl_const_int_const_p;
+/* The following typedefs are deprecated. Use osl_int. */
+typedef union osl_int osl_int_t OSL_DEPRECATED;
+typedef union osl_int* osl_int_p OSL_DEPRECATED;
+typedef union osl_int const osl_const_int_t OSL_DEPRECATED;
+typedef union osl_int* const osl_int_const_p OSL_DEPRECATED;
+typedef union osl_int const* osl_const_int_p OSL_DEPRECATED;
+typedef union osl_int const* const osl_const_int_const_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                                Basic Functions                             *
