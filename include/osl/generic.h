@@ -81,12 +81,13 @@ struct osl_generic {
 };
 typedef struct osl_generic osl_generic;
 
-typedef struct osl_generic osl_generic_t;
-typedef struct osl_generic* osl_generic_p;
-typedef struct osl_generic const osl_const_generic_t;
-typedef struct osl_generic* const osl_generic_const_p;
-typedef struct osl_generic const* osl_const_generic_p;
-typedef struct osl_generic const* const osl_const_generic_const_p;
+/* The following typedefs are deprecated. Use osl_generic. */
+typedef struct osl_generic osl_generic_t OSL_DEPRECATED;
+typedef struct osl_generic* osl_generic_p OSL_DEPRECATED;
+typedef struct osl_generic const osl_const_generic_t OSL_DEPRECATED;
+typedef struct osl_generic* const osl_generic_const_p OSL_DEPRECATED;
+typedef struct osl_generic const* osl_const_generic_p OSL_DEPRECATED;
+typedef struct osl_generic const* const osl_const_generic_const_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
