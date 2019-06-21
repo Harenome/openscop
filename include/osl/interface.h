@@ -96,8 +96,9 @@ struct osl_interface {
 };
 typedef struct osl_interface osl_interface;
 
-typedef struct osl_interface osl_interface_t;
-typedef struct osl_interface* osl_interface_p;
+/* The following typedefs are deprecated. Use osl_interface. */
+typedef struct osl_interface osl_interface_t OSL_DEPRECATED;
+typedef struct osl_interface* osl_interface_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
