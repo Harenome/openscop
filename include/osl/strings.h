@@ -123,7 +123,7 @@ size_t osl_strings_find(const osl_strings*, char const* const) OSL_NONNULL;
 bool osl_strings_equal(const osl_strings*, const osl_strings*);
 size_t osl_strings_size(const osl_strings*);
 osl_strings* osl_strings_encapsulate(char*) OSL_WARN_UNUSED_RESULT;
-osl_interface_t* osl_strings_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_strings_interface(void) OSL_WARN_UNUSED_RESULT;
 osl_strings* osl_strings_generate(const char*,
                                   int) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
 void osl_strings_add_strings(osl_strings**, const osl_strings*,

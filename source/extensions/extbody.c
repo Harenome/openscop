@@ -352,8 +352,8 @@ bool osl_extbody_equal(const osl_extbody_t* const e1,
  * extbody extension and returns it.
  * \return An interface structure for the extbody extension.
  */
-osl_interface_t* osl_extbody_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_extbody_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_EXTBODY);
   interface->idump = (osl_idump_f)osl_extbody_idump;

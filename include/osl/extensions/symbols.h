@@ -127,7 +127,7 @@ osl_symbols_t* osl_symbols_lookup(osl_symbols_t*,
 osl_symbols_t* osl_symbols_remove(osl_symbols_t**,
                                   osl_symbols_t*) OSL_WARN_UNUSED_RESULT;
 int osl_symbols_get_nb_symbols(const osl_symbols_t*);
-osl_interface_t* osl_symbols_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_symbols_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

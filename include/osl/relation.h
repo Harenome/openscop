@@ -214,7 +214,7 @@ void osl_relation_get_attributes(const osl_relation_t*, int*, int*, int*, int*,
                                  int*);
 osl_relation_t* osl_relation_extend_output(const osl_relation_t*,
                                            int) OSL_WARN_UNUSED_RESULT;
-osl_interface_t* osl_relation_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_relation_interface(void) OSL_WARN_UNUSED_RESULT;
 void osl_relation_set_precision(int const, osl_relation_t*);
 void osl_relation_set_same_precision(osl_relation_t*, osl_relation_t*);
 

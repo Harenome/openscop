@@ -445,8 +445,8 @@ size_t osl_arrays_get_index_from_name(const osl_arrays_t* const arrays,
  * extension and returns it).
  * \return An interface structure for the arrays extension.
  */
-osl_interface_t* osl_arrays_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_arrays_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_ARRAYS);
   interface->idump = (osl_idump_f)osl_arrays_idump;

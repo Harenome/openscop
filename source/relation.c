@@ -2881,8 +2881,8 @@ osl_relation_t* osl_relation_extend_output(const osl_relation_t* relation,
  * and returns it.
  * \return An interface structure for the relation structure.
  */
-osl_interface_t* osl_relation_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_relation_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_RELATION);
   interface->idump = (osl_idump_f)osl_relation_idump;

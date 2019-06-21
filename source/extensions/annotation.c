@@ -324,8 +324,8 @@ bool osl_annotation_equal(const osl_annotation_t* const r1,
   return equal;
 }
 
-osl_interface_t* osl_annotation_interface(void) {
-  osl_interface_t* const interface = osl_interface_malloc();
+osl_interface* osl_annotation_interface(void) {
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_ANNOTATION);
 

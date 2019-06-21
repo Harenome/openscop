@@ -407,7 +407,7 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop_t* scop) {
  * \param[in] precision The precision of the relation elements.
  * \return A pointer to the scop structure that has been read.
  */
-osl_scop_t* osl_scop_pread(FILE* const file, osl_interface_t* const registry,
+osl_scop_t* osl_scop_pread(FILE* const file, osl_interface* const registry,
                            int precision) {
   osl_scop_p list = NULL, current = NULL, scop;
   osl_statement_p stmt = NULL;
@@ -510,7 +510,7 @@ osl_scop_t* osl_scop_pread(FILE* const file, osl_interface_t* const registry,
  */
 osl_scop_t* osl_scop_read(FILE* foo) {
   int precision = osl_util_get_precision();
-  osl_interface_p registry = osl_interface_get_default_registry();
+  osl_interface* registry = osl_interface_get_default_registry();
   osl_scop_p scop = osl_scop_pread(foo, registry, precision);
 
   osl_interface_free(registry);
@@ -876,7 +876,7 @@ int osl_scop_get_nb_parameters(const osl_scop_t* scop) {
  * \param scop      The scop for which an extension has to be registered.
  * \param interface The extension interface to register within the scop.
  */
-void osl_scop_register_extension(osl_scop_t* scop, osl_interface_t* interface) {
+void osl_scop_register_extension(osl_scop_t* scop, osl_interface* interface) {
   osl_generic_p textual, new;
   char* extension_string;
 

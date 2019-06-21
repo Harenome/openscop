@@ -1948,7 +1948,7 @@ A[i+j] += B[i] * C[j];
 * osl_int::
 * osl_relation_t::
 * osl_relation_list_t::
-* osl_interface_t::
+* osl_interface::
 * osl_generic_t::
 * osl_strings::
 * osl_body_t::
@@ -2077,8 +2077,8 @@ the next element of the list.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_interface_t
-@subsection osl_interface_t
+@node osl_interface
+@subsection osl_interface
 
 @example
 @group
@@ -2101,12 +2101,11 @@ struct osl_interface @{
   osl_equal_f  equal;         /* Pointer to the equal function */
   struct osl_interface* next; /* Next interface in the list */
 @};
-typedef struct osl_interface  osl_interface_t;
-typedef struct osl_interface* osl_interface_p;
+typedef struct osl_interface  osl_interface;
 @end group
 @end example
 
-@noindent The @code{osl_interface_t} structure represents a
+@noindent The @code{osl_interface} structure represents a
 node in a @code{NULL}-terminated list of interfaces. Each node stores the
 @emph{interface} of a generic OpenScop object, i.e., its unique name
 (@code{URI}) and the function pointers to all the base functions it has
@@ -2124,7 +2123,7 @@ and the section dedicated to writing extensions
 @group
 struct osl_generic @{
   void* data;                 /* Pointer to some data */
-  osl_interface_p interface;  /* Interface to work with the data */
+  osl_interface* interface;   /* Interface to work with the data */
   struct osl_generic* next;   /* Pointer to the next generic */
 @};
 typedef struct osl_generic  osl_generic_t;
@@ -2228,7 +2227,7 @@ struct osl_scop @{
   osl_relation_p context;     /* Constraints on the parameters */
   osl_generic_p parameters;   /* Information about parameters */
   osl_statement_p statement;  /* Statement list */
-  osl_interface_p registry;   /* Registered extension interfaces */
+  osl_interface* registry;    /* Registered extension interfaces */
   osl_generic_p extension;    /* Extension list */
   void* usr;                  /* A user-defined field */
   struct osl_scop* next;      /* Next scop in the list */
@@ -2280,7 +2279,7 @@ specification but to the OpenScop Library implementation:
 |    |    
 |    +-- osl_generic_t
 |    |    |    
-|    |    +-- osl_interface_t: URI = strings
+|    |    +-- osl_interface: URI = strings
 |    |    |    
 |    |    +-- osl_strings: N
 |    |    |    
@@ -2313,7 +2312,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    
 |    |    +-- osl_generic_t
 |    |    |    |    
-|    |    |    +-- osl_interface_t: URI = body
+|    |    |    +-- osl_interface: URI = body
 |    |    |    |    
 |    |    |    +-- osl_strings: i j
 |    |    |    |    
@@ -2380,7 +2379,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    
 |    |    +-- osl_generic_t
 |    |    |    |    
-|    |    |    +-- osl_interface_t: URI = body
+|    |    |    +-- osl_interface: URI = body
 |    |    |    |    
 |    |    |    +-- osl_strings: i j k
 |    |    |    |    
@@ -3597,7 +3596,7 @@ Now let us consider two scenarios.
 
 First scenario, the extension is external and is
 not planned to be integrated to the OpenScop Library. In this case you are
-all set. Simply generate an @code{osl_interface_t} for your
+all set. Simply generate an @code{osl_interface} for your
 extension and have a look at the function
 @code{osl_scop_register_extension()} which is devoted to register
 a new extension interface to an existing @code{osl_scop_t}.

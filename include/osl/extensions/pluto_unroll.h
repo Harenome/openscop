@@ -119,7 +119,7 @@ bool osl_pluto_unroll_equal_one(const osl_pluto_unroll_t*,
 bool osl_pluto_unroll_equal(const osl_pluto_unroll_t*,
                             const osl_pluto_unroll_t*);
 osl_strings* osl_pluto_unroll_to_strings(const osl_pluto_unroll_t*);
-osl_interface_t* osl_pluto_unroll_interface(void);
+osl_interface* osl_pluto_unroll_interface(void);
 
 #if defined(__cplusplus)
 }

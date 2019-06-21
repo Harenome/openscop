@@ -302,8 +302,8 @@ bool osl_textual_equal(const osl_textual_t* f1, const osl_textual_t* f2) {
  * extension and returns it).
  * \return An interface structure for the textual extension.
  */
-osl_interface_t* osl_textual_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_textual_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_TEXTUAL);
   interface->idump = (osl_idump_f)osl_textual_idump;

@@ -343,8 +343,8 @@ bool osl_coordinates_equal(const osl_coordinates_t* const c1,
  * extension and returns it).
  * \return An interface structure for the coordinates extension.
  */
-osl_interface_t* osl_coordinates_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_coordinates_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_COORDINATES);
   interface->idump = (osl_idump_f)osl_coordinates_idump;

@@ -721,8 +721,8 @@ osl_irregular_p osl_irregular_add_predicates(
  * extension and returns it).
  * \return An interface structure for the irregular extension.
  */
-osl_interface_t* osl_irregular_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_irregular_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_IRREGULAR);
   interface->idump = (osl_idump_f)osl_irregular_idump;

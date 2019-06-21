@@ -76,7 +76,7 @@ extern "C" {
  */
 struct osl_generic {
   void* data;                /**< Pointer to the data. */
-  osl_interface_p interface; /**< Interface to work with the data. */
+  osl_interface* interface; /**< Interface to work with the data. */
   struct osl_generic* next;  /**< Pointer to the next generic. */
 };
 typedef struct osl_generic osl_generic_t;
@@ -100,12 +100,12 @@ void osl_generic_print_options_scoplib(FILE*, const osl_generic_t*)
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
-osl_generic_t* osl_generic_sread(char**, osl_interface_t*) OSL_NONNULL_ARGS(1);
-osl_generic_t* osl_generic_sread_one(char**, osl_interface_t*)
+osl_generic_t* osl_generic_sread(char**, osl_interface*) OSL_NONNULL_ARGS(1);
+osl_generic_t* osl_generic_sread_one(char**, osl_interface*)
     OSL_NONNULL_ARGS(1);
-osl_generic_t* osl_generic_read_one(FILE*, osl_interface_t*)
+osl_generic_t* osl_generic_read_one(FILE*, osl_interface*)
     OSL_NONNULL_ARGS(1);
-osl_generic_t* osl_generic_read(FILE*, osl_interface_t*) OSL_NONNULL_ARGS(1);
+osl_generic_t* osl_generic_read(FILE*, osl_interface*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
@@ -128,7 +128,7 @@ bool osl_generic_equal(const osl_generic_t*, const osl_generic_t*);
 int osl_generic_has_URI(const osl_generic_t*, char const* const);
 void* osl_generic_lookup(const osl_generic_t*, char const* const);
 osl_generic_t* osl_generic_shell(void*,
-                                 osl_interface_t*) OSL_WARN_UNUSED_RESULT;
+                                 osl_interface*) OSL_WARN_UNUSED_RESULT;
 int osl_generic_count(const osl_generic_t*);
 
 #if defined(__cplusplus)

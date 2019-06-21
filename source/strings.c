@@ -430,8 +430,8 @@ osl_strings* osl_strings_encapsulate(char* string) {
  * structure and returns it).
  * \return An interface structure for the strings structure.
  */
-osl_interface_t* osl_strings_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_strings_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_STRINGS);
   interface->idump = (osl_idump_f)osl_strings_idump;

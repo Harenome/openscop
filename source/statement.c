@@ -434,7 +434,7 @@ void osl_statement_dispatch(osl_statement_t* stmt, osl_relation_list_t* list) {
  * \return A pointer to the statement structure that has been read.
  */
 osl_statement_t* osl_statement_pread(FILE* const file,
-                                     osl_interface_t* registry, int precision) {
+                                     osl_interface* registry, int precision) {
   osl_statement_p stmt = osl_statement_malloc();
   osl_relation_list_p list;
   osl_generic_p new = NULL;
@@ -468,7 +468,7 @@ osl_statement_t* osl_statement_pread(FILE* const file,
  */
 osl_statement_t* osl_statement_read(FILE* const foo) {
   int precision = osl_util_get_precision();
-  osl_interface_p registry = osl_interface_get_default_registry();
+  osl_interface* registry = osl_interface_get_default_registry();
   osl_statement_p statement = osl_statement_pread(foo, registry, precision);
 
   osl_interface_free(registry);

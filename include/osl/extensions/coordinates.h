@@ -118,7 +118,7 @@ void osl_coordinates_free(osl_coordinates_t*);
 osl_coordinates_t* osl_coordinates_clone(const osl_coordinates_t*)
     OSL_WARN_UNUSED_RESULT;
 bool osl_coordinates_equal(const osl_coordinates_t*, const osl_coordinates_t*);
-osl_interface_t* osl_coordinates_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_coordinates_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

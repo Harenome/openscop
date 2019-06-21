@@ -155,7 +155,7 @@ bool osl_region_equal_one(const osl_region_t* a1, const osl_region_t* a2);
 bool osl_region_equal(const osl_region_t* a1, const osl_region_t* a2);
 size_t osl_region_count(const osl_region_t* ll);
 
-osl_interface_t* osl_region_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_region_interface(void) OSL_WARN_UNUSED_RESULT;
 
 void osl_region_append_prefix(osl_region_t* region, int prefix_type,
                               char* prefix);

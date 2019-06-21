@@ -619,8 +619,8 @@ int osl_nb_dependences(const osl_dependence_t* deps) {
  * extension and returns it).
  * \return An interface structure for the dependence extension.
  */
-osl_interface_t* osl_dependence_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_dependence_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_DEPENDENCE);
   interface->idump = (osl_idump_f)osl_dependence_idump;

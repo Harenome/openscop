@@ -113,7 +113,7 @@ void osl_statement_pprint_scoplib(FILE*, const osl_statement_t*,
  *                              Reading function                              *
  ******************************************************************************/
 
-osl_statement_t* osl_statement_pread(FILE*, osl_interface_t*, int);
+osl_statement_t* osl_statement_pread(FILE*, osl_interface*, int);
 osl_statement_t* osl_statement_read(FILE*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************

@@ -93,7 +93,7 @@ struct osl_scop {
   osl_relation_p context;    /**< Constraints on the SCoP parameters */
   osl_generic_p parameters;  /**< NULL-terminated array of parameters */
   osl_statement_p statement; /**< Statement list of the SCoP */
-  osl_interface_p registry;  /**< Registered extensions interfaces */
+  osl_interface* registry;  /**< Registered extensions interfaces */
   osl_generic_p extension;   /**< List of extensions */
   void* usr;                 /**< A user-defined field, not touched
                                   AT ALL by the OpenScop Library */
@@ -117,7 +117,7 @@ void osl_scop_print_scoplib(FILE*, const osl_scop_t*) OSL_NONNULL_ARGS(1);
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_scop_t* osl_scop_pread(FILE*, osl_interface_t*, int);
+osl_scop_t* osl_scop_pread(FILE*, osl_interface*, int);
 osl_scop_t* osl_scop_read(FILE*);
 
 /******************************************************************************
@@ -139,7 +139,7 @@ bool osl_scop_equal(const osl_scop_t*, const osl_scop_t*);
 int osl_scop_integrity_check(const osl_scop_t*);
 int osl_scop_check_compatible_scoplib(const osl_scop_t*);
 int osl_scop_get_nb_parameters(const osl_scop_t*);
-void osl_scop_register_extension(osl_scop_t*, osl_interface_t*);
+void osl_scop_register_extension(osl_scop_t*, osl_interface*);
 void osl_scop_get_attributes(const osl_scop_t*, int*, int*, int*, int*, int*);
 void osl_scop_normalize_scattering(osl_scop_t*);
 

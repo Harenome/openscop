@@ -360,8 +360,8 @@ bool osl_body_equal(const osl_body_t* const b1, const osl_body_t* const b2) {
  * structure and returns it).
  * \return An interface structure for the body structure.
  */
-osl_interface_t* osl_body_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_body_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_BODY);
   interface->idump = (osl_idump_f)osl_body_idump;

@@ -140,7 +140,7 @@ osl_irregular_t* osl_irregular_add_exit(const osl_irregular_t*, char**, int,
 osl_irregular_t* osl_irregular_add_predicates(const osl_irregular_t*,
                                               const int*,
                                               int) OSL_WARN_UNUSED_RESULT;
-osl_interface_t* osl_irregular_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_irregular_interface(void) OSL_WARN_UNUSED_RESULT;
 #if defined(__cplusplus)
 }
 #endif

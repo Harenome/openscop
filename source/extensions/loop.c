@@ -564,8 +564,8 @@ bool osl_loop_equal(const osl_loop_t* a1, const osl_loop_t* a2) {
  *
  * \return  An interface structure for the loop extension.
  */
-osl_interface_p osl_loop_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_loop_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_LOOP);
   interface->idump = (osl_idump_f)osl_loop_idump;

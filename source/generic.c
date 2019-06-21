@@ -232,7 +232,7 @@ void osl_generic_print_options_scoplib(FILE* const file,
  * \return A pointer to the generic information list that has been read.
  */
 osl_generic_t* osl_generic_sread(char** const input,
-                                 osl_interface_t* const registry) {
+                                 osl_interface* const registry) {
   osl_generic_p generic = NULL, new;
 
   while (**input != '\0') {
@@ -255,11 +255,11 @@ osl_generic_t* osl_generic_sread(char** const input,
  * \return A pointer to the generic structure that has been read.
  */
 osl_generic_t* osl_generic_sread_one(char** const input,
-                                     osl_interface_t* const registry) {
+                                     osl_interface* const registry) {
   char* tag;
   char *content, *temp;
   osl_generic_p generic = NULL;
-  osl_interface_p interface;
+  osl_interface* interface;
 
   tag = osl_util_read_tag(NULL, input);
   if ((tag == NULL) || (strlen(tag) < 1) || (tag[0] == '/')) {
@@ -297,11 +297,11 @@ osl_generic_t* osl_generic_sread_one(char** const input,
  * \return A pointer to the generic that has been read.
  */
 osl_generic_t* osl_generic_read_one(FILE* const file,
-                                    osl_interface_t* const registry) {
+                                    osl_interface* const registry) {
   char* tag;
   char *content, *temp;
   osl_generic_p generic = NULL;
-  osl_interface_p interface;
+  osl_interface* interface;
 
   tag = osl_util_read_tag(file, NULL);
   if ((tag == NULL) || (strlen(tag) < 1) || (tag[0] == '/')) {
@@ -337,7 +337,7 @@ osl_generic_t* osl_generic_read_one(FILE* const file,
  * \return A pointer to the generic information list that has been read.
  */
 osl_generic_t* osl_generic_read(FILE* const file,
-                                osl_interface_t* const registry) {
+                                osl_interface* const registry) {
   char *generic_string, *temp;
   osl_generic_p generic_list;
 
@@ -526,7 +526,7 @@ osl_generic_t* osl_generic_clone(const osl_generic_t* const generic) {
  */
 osl_generic_t* osl_generic_nclone(const osl_generic_t* generic, int n) {
   osl_generic_p clone = NULL, new;
-  osl_interface_p interface;
+  osl_interface* interface;
   void* x;
 
   if (n < 0) {
@@ -670,7 +670,7 @@ void* osl_generic_lookup(const osl_generic_t* x, char const* const URI) {
  * \return A new generic structure containing the data and interface.
  */
 osl_generic_t* osl_generic_shell(void* const data,
-                                 osl_interface_t* const interface) {
+                                 osl_interface* const interface) {
   osl_generic_p generic = NULL;
 
   if ((data == NULL) || (interface == NULL))

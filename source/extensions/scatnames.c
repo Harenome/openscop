@@ -254,8 +254,8 @@ bool osl_scatnames_equal(const osl_scatnames_t* const s1,
  * extension and returns it).
  * \return An interface structure for the scatnames extension.
  */
-osl_interface_t* osl_scatnames_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_scatnames_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_SCATNAMES);
   interface->idump = (osl_idump_f)osl_scatnames_idump;

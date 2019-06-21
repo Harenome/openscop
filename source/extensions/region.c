@@ -444,8 +444,8 @@ size_t osl_region_count(const osl_region_t* region) {
   return count;
 }
 
-osl_interface_t* osl_region_interface(void) {
-  osl_interface_t* const interface = osl_interface_malloc();
+osl_interface* osl_region_interface(void) {
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_REGION);
 

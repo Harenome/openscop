@@ -319,7 +319,7 @@ osl_symbols_t* osl_symbols_sread(char** input) {
   char* type;
   osl_symbols_p symbols;
   osl_symbols_p head;
-  osl_interface_p registry;
+  osl_interface* registry;
 
   if (*input == NULL) {
     OSL_debug("no symbols optional tag");
@@ -545,8 +545,8 @@ int osl_symbols_get_nb_symbols(const osl_symbols_t* symbols) {
  * extension and returns it).
  * \return An interface structure for the symbols extension.
  */
-osl_interface_t* osl_symbols_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_symbols_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_SYMBOLS);
   interface->idump = (osl_idump_f)osl_symbols_idump;

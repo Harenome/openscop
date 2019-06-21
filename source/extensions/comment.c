@@ -282,8 +282,8 @@ bool osl_comment_equal(const osl_comment_t* const c1,
  * extension and returns it).
  * \return An interface structure for the comment extension.
  */
-osl_interface_t* osl_comment_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_comment_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_COMMENT);
   interface->idump = (osl_idump_f)osl_comment_idump;

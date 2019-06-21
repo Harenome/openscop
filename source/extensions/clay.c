@@ -285,8 +285,8 @@ bool osl_clay_equal(const osl_clay_t* const c1, const osl_clay_t* const c2) {
  * extension and returns it).
  * \return An interface structure for the clay extension.
  */
-osl_interface_t* osl_clay_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_clay_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_CLAY);
   interface->idump = (osl_idump_f)osl_clay_idump;

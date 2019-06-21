@@ -110,7 +110,7 @@ void osl_textual_free(osl_textual_t*);
 
 osl_textual_t* osl_textual_clone(const osl_textual_t*) OSL_WARN_UNUSED_RESULT;
 bool osl_textual_equal(const osl_textual_t*, const osl_textual_t*);
-osl_interface_t* osl_textual_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_textual_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

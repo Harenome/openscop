@@ -108,7 +108,7 @@ void osl_null_free(osl_null_t*);
  ******************************************************************************/
 osl_null_t* osl_null_clone(const osl_null_t*) OSL_WARN_UNUSED_RESULT;
 bool osl_null_equal(const osl_null_t*, const osl_null_t*);
-osl_interface_t* osl_null_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_null_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

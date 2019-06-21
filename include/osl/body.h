@@ -119,7 +119,7 @@ void osl_body_free(osl_body_t*);
  ******************************************************************************/
 osl_body_t* osl_body_clone(const osl_body_t*) OSL_WARN_UNUSED_RESULT;
 bool osl_body_equal(const osl_body_t*, const osl_body_t*);
-osl_interface_t* osl_body_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_body_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

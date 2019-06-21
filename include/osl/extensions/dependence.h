@@ -203,7 +203,7 @@ bool osl_dependence_equal(const osl_dependence_t*, const osl_dependence_t*);
 void osl_dependence_add(osl_dependence_t**, osl_dependence_t**,
                         osl_dependence_t*);
 int osl_nb_dependences(const osl_dependence_t*);
-osl_interface_t* osl_dependence_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_dependence_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

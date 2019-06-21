@@ -418,8 +418,8 @@ bool osl_pluto_unroll_equal(const osl_pluto_unroll_t* a,
  *
  * \return an interface structure for the pluto_unroll extension.
  */
-osl_interface_t* osl_pluto_unroll_interface(void) {
-  osl_interface_p interface = osl_interface_malloc();
+osl_interface* osl_pluto_unroll_interface(void) {
+  osl_interface* interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_PLUTO_UNROLL);
   interface->idump = (osl_idump_f)osl_pluto_unroll_idump;

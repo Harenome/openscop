@@ -133,7 +133,7 @@ osl_annotation_t* osl_annotation_clone(const osl_annotation_t* annotation)
 bool osl_annotation_equal(const osl_annotation_t* a1,
                           const osl_annotation_t* a2);
 
-osl_interface_t* osl_annotation_interface(void) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_annotation_interface(void) OSL_WARN_UNUSED_RESULT;
 
 void osl_annotation_append_prefix(osl_annotation_t* annotation, int prefix_type,
                                   char* prefix);
