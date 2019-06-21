@@ -86,12 +86,13 @@ struct osl_extbody {
 };
 typedef struct osl_extbody osl_extbody;
 
-typedef struct osl_extbody osl_extbody_t;
-typedef struct osl_extbody* osl_extbody_p;
-typedef struct osl_extbody const osl_const_extbody_t;
-typedef struct osl_extbody* const osl_extbody_const_p;
-typedef struct osl_extbody const* osl_const_extbody_p;
-typedef struct osl_extbody const* const osl_const_extbody_const_p;
+/* The following typedefs are deprecated. Use osl_extbody. */
+typedef struct osl_extbody osl_extbody_t OSL_DEPRECATED;
+typedef struct osl_extbody* osl_extbody_p OSL_DEPRECATED;
+typedef struct osl_extbody const osl_const_extbody_t OSL_DEPRECATED;
+typedef struct osl_extbody* const osl_extbody_const_p OSL_DEPRECATED;
+typedef struct osl_extbody const* osl_const_extbody_p OSL_DEPRECATED;
+typedef struct osl_extbody const* const osl_const_extbody_const_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
