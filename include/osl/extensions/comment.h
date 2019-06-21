@@ -72,12 +72,14 @@ extern "C" {
 #define OSL_URI_COMMENT "comment"
 
 /**
- * The osl_comment_t structure stores a comment extention to the core
+ * The osl_comment structure stores a comment extention to the core
  * OpenScop representation. It is simply a 0-terminated string.
  */
 struct osl_comment {
   char* comment; /**< A comment message as a 0-terminated string. */
 };
+typedef struct osl_comment osl_comment;
+
 typedef struct osl_comment osl_comment_t;
 typedef struct osl_comment* osl_comment_p;
 
@@ -85,29 +87,29 @@ typedef struct osl_comment* osl_comment_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_comment_idump(FILE*, const osl_comment_t*, int) OSL_NONNULL_ARGS(1);
-void osl_comment_dump(FILE*, const osl_comment_t*) OSL_NONNULL_ARGS(1);
-char* osl_comment_sprint(const osl_comment_t*) OSL_WARN_UNUSED_RESULT;
+void osl_comment_idump(FILE*, const osl_comment*, int) OSL_NONNULL_ARGS(1);
+void osl_comment_dump(FILE*, const osl_comment*) OSL_NONNULL_ARGS(1);
+char* osl_comment_sprint(const osl_comment*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_comment_t* osl_comment_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_comment* osl_comment_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_comment_t* osl_comment_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_comment_free(osl_comment_t*);
+osl_comment* osl_comment_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_comment_free(osl_comment*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_comment_t* osl_comment_clone(const osl_comment_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_comment_equal(const osl_comment_t*, const osl_comment_t*);
+osl_comment* osl_comment_clone(const osl_comment*) OSL_WARN_UNUSED_RESULT;
+bool osl_comment_equal(const osl_comment*, const osl_comment*);
 osl_interface* osl_comment_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)

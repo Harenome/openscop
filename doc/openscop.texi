@@ -2481,8 +2481,7 @@ This is a comment string.
 struct osl_comment @{
   char* comment;  /* Comment message as a 0-terminated string */
 @};
-typedef struct osl_comment  osl_comment_t;
-typedef struct osl_comment* osl_comment_p;
+typedef struct osl_comment osl_comment;
 @end group
 @end example
 

@@ -74,7 +74,7 @@
 
 /**
  * osl_comment_idump function:
- * this function displays an osl_comment_t structure (*comment) into a
+ * this function displays an osl_comment structure (*comment) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others
  * idump functions.
@@ -82,7 +82,7 @@
  * \param[in] comment The comment structure to print.
  * \param[in] level   Number of spaces before printing, for each line.
  */
-void osl_comment_idump(FILE* const file, const osl_comment_t* const comment,
+void osl_comment_idump(FILE* const file, const osl_comment* const comment,
                        int level) {
   int j;
   size_t l;
@@ -93,7 +93,7 @@ void osl_comment_idump(FILE* const file, const osl_comment_t* const comment,
     fprintf(file, "|\t");
 
   if (comment != NULL)
-    fprintf(file, "+-- osl_comment_t\n");
+    fprintf(file, "+-- osl_comment\n");
   else
     fprintf(file, "+-- NULL comment\n");
 
@@ -119,23 +119,23 @@ void osl_comment_idump(FILE* const file, const osl_comment_t* const comment,
 
 /**
  * osl_comment_dump function:
- * this function prints the content of an osl_comment_t structure
+ * this function prints the content of an osl_comment structure
  * (*comment) into a file (file, possibly stdout).
  * \param[in] file    The file where the information has to be printed.
  * \param[in] comment The comment structure to print.
  */
-void osl_comment_dump(FILE* const file, const osl_comment_t* const comment) {
+void osl_comment_dump(FILE* const file, const osl_comment* const comment) {
   osl_comment_idump(file, comment, 0);
 }
 
 /**
  * osl_comment_sprint function:
- * this function prints the content of an osl_comment_t structure
+ * this function prints the content of an osl_comment structure
  * (*comment) into a string (returned) in the OpenScop textual format.
  * \param[in] comment The comment structure to print.
  * \return A string containing the OpenScop dump of the comment structure.
  */
-char* osl_comment_sprint(const osl_comment_t* const comment) {
+char* osl_comment_sprint(const osl_comment* const comment) {
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
   char buffer[OSL_MAX_STRING];
@@ -169,8 +169,8 @@ char* osl_comment_sprint(const osl_comment_t* const comment) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the comment structure that has been read.
  */
-osl_comment_t* osl_comment_sread(char** input) {
-  osl_comment_p comment;
+osl_comment* osl_comment_sread(char** input) {
+  osl_comment* comment;
 
   if (*input == NULL) {
     OSL_debug("no comment optional tag");
@@ -196,16 +196,16 @@ osl_comment_t* osl_comment_sread(char** input) {
 
 /**
  * osl_comment_malloc function:
- * this function allocates the memory space for an osl_comment_t
+ * this function allocates the memory space for an osl_comment
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty comment structure with fields set to
  *         default values.
  */
-osl_comment_t* osl_comment_malloc(void) {
-  osl_comment_p comment;
+osl_comment* osl_comment_malloc(void) {
+  osl_comment* comment;
 
-  OSL_malloc(comment, osl_comment_p, sizeof(osl_comment_t));
+  OSL_malloc(comment, osl_comment*, sizeof(osl_comment));
   comment->comment = NULL;
 
   return comment;
@@ -213,11 +213,11 @@ osl_comment_t* osl_comment_malloc(void) {
 
 /**
  * osl_comment_free function:
- * this function frees the allocated memory for an osl_comment_t
+ * this function frees the allocated memory for an osl_comment
  * structure.
  * \param[in,out] comment The pointer to the comment structure to free.
  */
-void osl_comment_free(osl_comment_t* comment) {
+void osl_comment_free(osl_comment* comment) {
   if (comment != NULL) {
     if (comment->comment != NULL)
       free(comment->comment);
@@ -232,12 +232,12 @@ void osl_comment_free(osl_comment_t* comment) {
 /**
  * osl_comment_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_comment_t data structure.
+ * osl_comment data structure.
  * \param[in] comment The pointer to the comment structure to clone.
  * \return A pointer to the clone of the comment structure.
  */
-osl_comment_t* osl_comment_clone(const osl_comment_t* const comment) {
-  osl_comment_p clone;
+osl_comment* osl_comment_clone(const osl_comment* const comment) {
+  osl_comment* clone;
 
   if (comment == NULL)
     return NULL;
@@ -256,8 +256,8 @@ osl_comment_t* osl_comment_clone(const osl_comment_t* const comment) {
  * \param[in] c2  The second comment structure.
  * \return 1 if c1 and c2 are the same (content-wise), 0 otherwise.
  */
-bool osl_comment_equal(const osl_comment_t* const c1,
-                       const osl_comment_t* const c2) {
+bool osl_comment_equal(const osl_comment* const c1,
+                       const osl_comment* const c2) {
   if (c1 == c2)
     return 1;
 
