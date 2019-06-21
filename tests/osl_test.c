@@ -77,11 +77,11 @@
 #define TEST_SUFFIX ".scop"  // Suffix of OpenScop files
 
 /// Check if a scop without unions corresponds to the one with unions.
-static int test_unions(osl_scop_p scop) {
+static int test_unions(osl_scop* scop) {
   osl_statement* stmt;
   osl_statement* nounion_stmt;
-  osl_scop_p nounion_scop = osl_scop_remove_unions(scop);
-  osl_scop_p nounion_scop_first = nounion_scop;
+  osl_scop* nounion_scop = osl_scop_remove_unions(scop);
+  osl_scop* nounion_scop_first = nounion_scop;
   osl_relation* domain;
   osl_relation* scattering;
   int result = 1;
@@ -144,9 +144,9 @@ static int test_file(char* input_name, int verbose) {
   int unions  = 0;
   FILE* input_file;
   FILE* output_file;
-  osl_scop_p input_scop;
-  osl_scop_p output_scop;
-  osl_scop_p cloned_scop;
+  osl_scop* input_scop;
+  osl_scop* output_scop;
+  osl_scop* cloned_scop;
 
   printf("\nTesting file %s... \n", input_name); 
     

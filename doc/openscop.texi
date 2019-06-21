@@ -1953,7 +1953,7 @@ A[i+j] += B[i] * C[j];
 * osl_strings::
 * osl_body::
 * osl_statement::
-* osl_scop_t::
+* osl_scop::
 @end menu
 
 The OpenScop specification offers a small set of C data structures devoted to
@@ -2212,8 +2212,8 @@ totally managed by the user.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_scop_t
-@subsection osl_scop_t
+@node osl_scop
+@subsection osl_scop
 @example
 @group
 struct osl_scop @{
@@ -2227,12 +2227,11 @@ struct osl_scop @{
   void* usr;                  /* A user-defined field */
   struct osl_scop* next;      /* Next scop in the list */
 @};
-typedef struct osl_scop  osl_scop_t;
-typedef struct osl_scop* osl_scop_p;
+typedef struct osl_scop osl_scop;
 @end group
 @end example
 
-@noindent @code{osl_scop_t} represents a node in a
+@noindent @code{osl_scop} represents a node in a
 @code{NULL}-terminated list of scops. It stores the useful informations
 of a static control part of a program to process it within a polyhedral
 framework. To prepare OpenScop specification evolution, the @code{version}
@@ -2262,7 +2261,7 @@ specification but to the OpenScop Library implementation:
 
 @c @smallexample
 @example
-+-- osl_scop_t
++-- osl_scop
 |    |    
 |    Version: 1
 |    |    
@@ -3268,7 +3267,7 @@ input and dumps the content of the data structures to the standard output.
 # include <osl/osl.h>
 
 int main() @{
-  osl_scop_p scop;
+  osl_scop* scop;
 
   // Read the OpenScop file.
   scop = osl_scop_read(stdin);
@@ -3594,7 +3593,7 @@ not planned to be integrated to the OpenScop Library. In this case you are
 all set. Simply generate an @code{osl_interface} for your
 extension and have a look at the function
 @code{osl_scop_register_extension()} which is devoted to register
-a new extension interface to an existing @code{osl_scop_t}.
+a new extension interface to an existing @code{osl_scop}.
 
 Second scenario, the extension will integrate the set of default
 OpenScop Library extensions (the best solution to share it to other
