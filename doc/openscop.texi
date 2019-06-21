@@ -2716,8 +2716,7 @@ unroll([3], 4);
 struct osl_clay @{
   char* script;  /* Clay script as a 0-terminated string */
 @};
-typedef struct osl_clay  osl_clay_t;
-typedef struct osl_clay* osl_clay_p;
+typedef struct osl_clay  osl_clay;
 @end group
 @end example
 

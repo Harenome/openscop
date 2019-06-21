@@ -74,7 +74,7 @@
 
 /**
  * osl_clay_idump function:
- * this function displays an osl_clay_t structure (*clay) into a
+ * this function displays an osl_clay structure (*clay) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others
  * idump functions.
@@ -82,7 +82,7 @@
  * \param[in] clay  The clay structure to print.
  * \param[in] level Number of spaces before printing, for each line.
  */
-void osl_clay_idump(FILE* const file, const osl_clay_t* const clay, int level) {
+void osl_clay_idump(FILE* const file, const osl_clay* const clay, int level) {
   int j;
   size_t l;
   char* tmp;
@@ -92,7 +92,7 @@ void osl_clay_idump(FILE* const file, const osl_clay_t* const clay, int level) {
     fprintf(file, "|\t");
 
   if (clay != NULL)
-    fprintf(file, "+-- osl_clay_t\n");
+    fprintf(file, "+-- osl_clay\n");
   else
     fprintf(file, "+-- NULL clay\n");
 
@@ -118,23 +118,23 @@ void osl_clay_idump(FILE* const file, const osl_clay_t* const clay, int level) {
 
 /**
  * osl_clay_dump function:
- * this function prints the content of an osl_clay_t structure
+ * this function prints the content of an osl_clay structure
  * (*clay) into a file (file, possibly stdout).
  * \param[in] file The file where the information has to be printed.
  * \param[in] clay The clay structure to print.
  */
-void osl_clay_dump(FILE* const file, const osl_clay_t* const clay) {
+void osl_clay_dump(FILE* const file, const osl_clay* const clay) {
   osl_clay_idump(file, clay, 0);
 }
 
 /**
  * osl_clay_sprint function:
- * this function prints the content of an osl_clay_t structure
+ * this function prints the content of an osl_clay structure
  * (*clay) into a string (returned) in the OpenScop textual format.
  * \param[in] clay The clay structure to print.
  * \return A string containing the OpenScop dump of the clay structure.
  */
-char* osl_clay_sprint(const osl_clay_t* const clay) {
+char* osl_clay_sprint(const osl_clay* const clay) {
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
   char buffer[OSL_MAX_STRING];
@@ -168,8 +168,8 @@ char* osl_clay_sprint(const osl_clay_t* const clay) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the clay structure that has been read.
  */
-osl_clay_t* osl_clay_sread(char** input) {
-  osl_clay_p clay;
+osl_clay* osl_clay_sread(char** input) {
+  osl_clay* clay;
   char* script;
 
   if (*input == NULL) {
@@ -202,16 +202,16 @@ osl_clay_t* osl_clay_sread(char** input) {
 
 /**
  * osl_clay_malloc function:
- * this function allocates the memory space for an osl_clay_t
+ * this function allocates the memory space for an osl_clay
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty clay structure with fields set to
  *         default values.
  */
-osl_clay_t* osl_clay_malloc(void) {
-  osl_clay_p clay;
+osl_clay* osl_clay_malloc(void) {
+  osl_clay* clay;
 
-  OSL_malloc(clay, osl_clay_p, sizeof(osl_clay_t));
+  OSL_malloc(clay, osl_clay*, sizeof(osl_clay));
   clay->script = NULL;
 
   return clay;
@@ -219,11 +219,11 @@ osl_clay_t* osl_clay_malloc(void) {
 
 /**
  * osl_clay_free function:
- * this function frees the allocated memory for an osl_clay_t
+ * this function frees the allocated memory for an osl_clay
  * structure.
  * \param[in,out] clay The pointer to the clay structure to free.
  */
-void osl_clay_free(osl_clay_t* clay) {
+void osl_clay_free(osl_clay* clay) {
   if (clay != NULL) {
     if (clay->script != NULL)
       free(clay->script);
@@ -238,12 +238,12 @@ void osl_clay_free(osl_clay_t* clay) {
 /**
  * osl_clay_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_clay_t data structure.
+ * osl_clay data structure.
  * \param[in] clay The pointer to the clay structure to clone.
  * \return A pointer to the clone of the clay structure.
  */
-osl_clay_t* osl_clay_clone(const osl_clay_t* const clay) {
-  osl_clay_p clone;
+osl_clay* osl_clay_clone(const osl_clay* const clay) {
+  osl_clay* clone;
 
   if (clay == NULL)
     return NULL;
@@ -262,7 +262,7 @@ osl_clay_t* osl_clay_clone(const osl_clay_t* const clay) {
  * \param[in] c2  The second clay structure.
  * \return 1 if c1 and c2 are the same (content-wise), 0 otherwise.
  */
-bool osl_clay_equal(const osl_clay_t* const c1, const osl_clay_t* const c2) {
+bool osl_clay_equal(const osl_clay* const c1, const osl_clay* const c2) {
   if (c1 == c2)
     return 1;
 

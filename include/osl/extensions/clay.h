@@ -73,12 +73,14 @@ extern "C" {
 #define OSL_URI_CLAY "clay"
 
 /**
- * The osl_clay_t structure stores a clay extention to the core
+ * The osl_clay structure stores a clay extention to the core
  * OpenScop representation. It is simply a 0-terminated string.
  */
 struct osl_clay {
   char* script; /**< Clay script as a 0-terminated string. */
 };
+typedef struct osl_clay osl_clay;
+
 typedef struct osl_clay osl_clay_t;
 typedef struct osl_clay* osl_clay_p;
 
@@ -86,29 +88,29 @@ typedef struct osl_clay* osl_clay_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_clay_idump(FILE*, const osl_clay_t*, int) OSL_NONNULL_ARGS(1);
-void osl_clay_dump(FILE*, const osl_clay_t*) OSL_NONNULL_ARGS(1);
-char* osl_clay_sprint(const osl_clay_t*) OSL_WARN_UNUSED_RESULT;
+void osl_clay_idump(FILE*, const osl_clay*, int) OSL_NONNULL_ARGS(1);
+void osl_clay_dump(FILE*, const osl_clay*) OSL_NONNULL_ARGS(1);
+char* osl_clay_sprint(const osl_clay*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_clay_t* osl_clay_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_clay* osl_clay_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_clay_t* osl_clay_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_clay_free(osl_clay_t*);
+osl_clay* osl_clay_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_clay_free(osl_clay*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_clay_t* osl_clay_clone(const osl_clay_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_clay_equal(const osl_clay_t*, const osl_clay_t*);
+osl_clay* osl_clay_clone(const osl_clay*) OSL_WARN_UNUSED_RESULT;
+bool osl_clay_equal(const osl_clay*, const osl_clay*);
 osl_interface* osl_clay_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
