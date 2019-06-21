@@ -81,8 +81,9 @@ struct osl_clay {
 };
 typedef struct osl_clay osl_clay;
 
-typedef struct osl_clay osl_clay_t;
-typedef struct osl_clay* osl_clay_p;
+/* The following typedefs are deprecated. Use osl_clay. */
+typedef struct osl_clay osl_clay_t OSL_DEPRECATED;
+typedef struct osl_clay* osl_clay_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
