@@ -75,7 +75,7 @@
 
 /**
  * osl_symbols_idump function:
- * this function displays an osl_symbols_t structure (*symbols) into a
+ * this function displays an osl_symbols structure (*symbols) into a
  * file (file, possibly stdout) in a way that trends to be understandable. It
  * includes an indentation level (level) in order to work with others
  * idump functions.
@@ -83,7 +83,7 @@
  * \param[in] symbols The symbols structure to print.
  * \param[in] level   Number of spaces before printing, for each line.
  */
-void osl_symbols_idump(FILE* const file, const osl_symbols_t* symbols,
+void osl_symbols_idump(FILE* const file, const osl_symbols* symbols,
                        int level) {
   int i, j, first = 1, number = 1;
 
@@ -92,7 +92,7 @@ void osl_symbols_idump(FILE* const file, const osl_symbols_t* symbols,
     fprintf(file, "|\t");
 
   if (symbols != NULL)
-    fprintf(file, "+-- osl_symbols_t\n");
+    fprintf(file, "+-- osl_symbols\n");
   else
     fprintf(file, "+-- NULL symbols\n");
 
@@ -197,23 +197,23 @@ void osl_symbols_idump(FILE* const file, const osl_symbols_t* symbols,
 
 /**
  * osl_symbols_dump function:
- * this function prints the content of an osl_symbols_t structure
+ * this function prints the content of an osl_symbols structure
  * (*symbols) into a file (file, possibly stdout).
  * \param[in] file    The file where the information has to be printed.
  * \param[in] symbols The symbols structure to print.
  */
-void osl_symbols_dump(FILE* const file, const osl_symbols_t* symbols) {
+void osl_symbols_dump(FILE* const file, const osl_symbols* symbols) {
   osl_symbols_idump(file, symbols, 0);
 }
 
 /**
  * osl_symbols_sprint function:
- * this function prints the content of an osl_symbols_t structure
+ * this function prints the content of an osl_symbols structure
  * (*symbols) into a string (returned) in the OpenScop textual format.
  * \param[in] symbols The symbols structure to print.
  * \return A string containing the OpenScop dump of the symbols structure.
  */
-char* osl_symbols_sprint(const osl_symbols_t* symbols) {
+char* osl_symbols_sprint(const osl_symbols* symbols) {
   int i = 1;
   size_t high_water_mark = OSL_MAX_STRING;
   char *string = NULL, *temp;
@@ -314,11 +314,11 @@ char* osl_symbols_sprint(const osl_symbols_t* symbols) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the symbols structure that has been read.
  */
-osl_symbols_t* osl_symbols_sread(char** input) {
+osl_symbols* osl_symbols_sread(char** input) {
   int nb_symbols;
   char* type;
-  osl_symbols_p symbols;
-  osl_symbols_p head;
+  osl_symbols* symbols;
+  osl_symbols* head;
   osl_interface* registry;
 
   if (*input == NULL) {
@@ -390,16 +390,16 @@ osl_symbols_t* osl_symbols_sread(char** input) {
 
 /**
  * osl_symbols_malloc function:
- * this function allocates the memory space for an osl_symbols_t
+ * this function allocates the memory space for an osl_symbols
  * structure and sets its fields with default values. Then it returns a
  * pointer to the allocated space.
  * \return A pointer to an empty symbols structure with fields set to
  *         default values.
  */
-osl_symbols_t* osl_symbols_malloc(void) {
-  osl_symbols_p symbols;
+osl_symbols* osl_symbols_malloc(void) {
+  osl_symbols* symbols;
 
-  OSL_malloc(symbols, osl_symbols_p, sizeof(osl_symbols_t));
+  OSL_malloc(symbols, osl_symbols*, sizeof(osl_symbols));
   symbols->type = OSL_UNDEFINED;
   symbols->generated = OSL_UNDEFINED;
   symbols->nb_dims = OSL_UNDEFINED;
@@ -414,12 +414,12 @@ osl_symbols_t* osl_symbols_malloc(void) {
 
 /**
  * osl_symbols_free function:
- * this function frees the allocated memory for an osl_symbols_t
+ * this function frees the allocated memory for an osl_symbols
  * structure.
  * \param[in,out] symbols The pointer to the symbols structure to free.
  */
-void osl_symbols_free(osl_symbols_t* symbols) {
-  osl_symbols_p tmp;
+void osl_symbols_free(osl_symbols* symbols) {
+  osl_symbols* tmp;
 
   while (symbols != NULL) {
     tmp = symbols->next;
@@ -443,7 +443,7 @@ void osl_symbols_free(osl_symbols_t* symbols) {
  * \param[in,out] location  Address of the first element of the symbols list.
  * \param[in]     symbols   The symbols to add to the list.
  */
-void osl_symbols_add(osl_symbols_t** location, osl_symbols_t* symbols) {
+void osl_symbols_add(osl_symbols** location, osl_symbols* symbols) {
   while (*location != NULL)
     location = &((*location)->next);
 
@@ -453,13 +453,14 @@ void osl_symbols_add(osl_symbols_t** location, osl_symbols_t* symbols) {
 /**
  * osl_symbols_nclone function:
  * This function builds and returns a "hard copy" (not a pointer copy) of the
- * n first elements of an osl_symbols_t list.
+ * n first elements of an osl_symbols list.
  * \param symbols The pointer to the symbols structure we want to clone.
  * \param n       The number of nodes we want to copy (-1 for infinity).
  * \return The clone of the n first nodes of the symbols list.
  */
-osl_symbols_t* osl_symbols_nclone(const osl_symbols_t* symbols, int n) {
-  osl_symbols_p clone = NULL, new;
+osl_symbols* osl_symbols_nclone(const osl_symbols* symbols, int n) {
+  osl_symbols* clone = NULL;
+  osl_symbols* new;
   int i = 0;
 
   while ((symbols != NULL) && ((n == -1) || (i < n))) {
@@ -483,11 +484,11 @@ osl_symbols_t* osl_symbols_nclone(const osl_symbols_t* symbols, int n) {
 /**
  * osl_symbols_clone function:
  * this function builds and returns a "hard copy" (not a pointer copy) of an
- * osl_symbols_t data structure.
+ * osl_symbols data structure.
  * \param[in] symbols The pointer to the symbols structure to clone.
  * \return A pointer to the clone of the symbols structure.
  */
-osl_symbols_t* osl_symbols_clone(const osl_symbols_t* const symbols) {
+osl_symbols* osl_symbols_clone(const osl_symbols* const symbols) {
   return osl_symbols_nclone(symbols, -1);
 }
 
@@ -499,7 +500,7 @@ osl_symbols_t* osl_symbols_clone(const osl_symbols_t* const symbols) {
  * \param[in] c2  The second symbols structure.
  * \return 1 if c1 and c2 are the same (content-wise), 0 otherwise.
  */
-bool osl_symbols_equal(const osl_symbols_t* c1, const osl_symbols_t* c2) {
+bool osl_symbols_equal(const osl_symbols* c1, const osl_symbols* c2) {
   if (c1 == c2)
     return 1;
 
@@ -529,7 +530,7 @@ bool osl_symbols_equal(const osl_symbols_t* c1, const osl_symbols_t* c2) {
  * \param symbols The head of the symbol list.
  * \return The number of symbols in the symbol list.
  */
-int osl_symbols_get_nb_symbols(const osl_symbols_t* symbols) {
+int osl_symbols_get_nb_symbols(const osl_symbols* symbols) {
   int nb_symbols = 0;
 
   while (symbols != NULL) {

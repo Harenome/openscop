@@ -75,7 +75,7 @@ extern "C" {
 #define OSL_URI_SYMBOLS "symbols"
 
 /**
- * The osl_symbols_t structure stores information regarding the symbols.
+ * The osl_symbols structure stores information regarding the symbols.
  */
 struct osl_symbols {
   int type;                 /**< Symbol type (variable, iterator...) */
@@ -89,6 +89,8 @@ struct osl_symbols {
   void* usr; /**< A user defined field */
   struct osl_symbols* next;
 };
+typedef struct osl_symbols osl_symbols;
+
 typedef struct osl_symbols osl_symbols_t;
 typedef struct osl_symbols* osl_symbols_p;
 
@@ -96,37 +98,37 @@ typedef struct osl_symbols* osl_symbols_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_symbols_idump(FILE*, const osl_symbols_t*, int) OSL_NONNULL_ARGS(1);
-void osl_symbols_dump(FILE*, const osl_symbols_t*) OSL_NONNULL_ARGS(1);
-char* osl_symbols_sprint(const osl_symbols_t*) OSL_WARN_UNUSED_RESULT;
+void osl_symbols_idump(FILE*, const osl_symbols*, int) OSL_NONNULL_ARGS(1);
+void osl_symbols_dump(FILE*, const osl_symbols*) OSL_NONNULL_ARGS(1);
+char* osl_symbols_sprint(const osl_symbols*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_symbols_t* osl_symbols_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_symbols* osl_symbols_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_symbols_t* osl_symbols_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_symbols_free(osl_symbols_t*);
+osl_symbols* osl_symbols_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_symbols_free(osl_symbols*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-void osl_symbols_add(osl_symbols_t**, osl_symbols_t*);
-osl_symbols_t* osl_symbols_nclone(const osl_symbols_t*,
+void osl_symbols_add(osl_symbols**, osl_symbols*);
+osl_symbols* osl_symbols_nclone(const osl_symbols*,
                                   int) OSL_WARN_UNUSED_RESULT;
-osl_symbols_t* osl_symbols_clone(const osl_symbols_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_symbols_equal(const osl_symbols_t*, const osl_symbols_t*);
-osl_symbols_t* osl_symbols_lookup(osl_symbols_t*,
+osl_symbols* osl_symbols_clone(const osl_symbols*) OSL_WARN_UNUSED_RESULT;
+bool osl_symbols_equal(const osl_symbols*, const osl_symbols*);
+osl_symbols* osl_symbols_lookup(osl_symbols*,
                                   osl_generic*) OSL_WARN_UNUSED_RESULT;
-osl_symbols_t* osl_symbols_remove(osl_symbols_t**,
-                                  osl_symbols_t*) OSL_WARN_UNUSED_RESULT;
-int osl_symbols_get_nb_symbols(const osl_symbols_t*);
+osl_symbols* osl_symbols_remove(osl_symbols**,
+                                  osl_symbols*) OSL_WARN_UNUSED_RESULT;
+int osl_symbols_get_nb_symbols(const osl_symbols*);
 osl_interface* osl_symbols_interface(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
