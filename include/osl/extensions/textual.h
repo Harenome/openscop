@@ -82,8 +82,9 @@ struct osl_textual {
 };
 typedef struct osl_textual osl_textual;
 
-typedef struct osl_textual osl_textual_t;
-typedef struct osl_textual* osl_textual_p;
+/* The following typedefs are deprecated. Use osl_textual. */
+typedef struct osl_textual osl_textual_t OSL_DEPRECATED;
+typedef struct osl_textual* osl_textual_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
