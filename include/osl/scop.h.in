@@ -92,7 +92,7 @@ struct osl_scop {
   char* language;            /**< Target language (backend) */
   osl_relation_p context;    /**< Constraints on the SCoP parameters */
   osl_generic_p parameters;  /**< NULL-terminated array of parameters */
-  osl_statement_p statement; /**< Statement list of the SCoP */
+  osl_statement* statement; /**< Statement list of the SCoP */
   osl_interface* registry;  /**< Registered extensions interfaces */
   osl_generic_p extension;   /**< List of extensions */
   void* usr;                 /**< A user-defined field, not touched

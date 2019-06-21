@@ -165,8 +165,8 @@ struct osl_dependence {
   osl_relation_p ref_source_access_ptr; /**< Pointer to the source access. */
   osl_relation_p ref_target_access_ptr; /**< Pointer to the target access. */
 
-  osl_statement_p stmt_source_ptr; /**< Pointer to source statement. */
-  osl_statement_p stmt_target_ptr; /**< Pointer to target statement. */
+  osl_statement* stmt_source_ptr; /**< Pointer to source statement. */
+  osl_statement* stmt_target_ptr; /**< Pointer to target statement. */
 };
 
 typedef struct osl_dependence osl_dependence_t;

@@ -91,7 +91,7 @@
 void osl_dependence_idump(FILE* const file, const osl_dependence_t* dependence,
                           int level) {
   int j, first = 1;
-  osl_statement_p tmp;
+  osl_statement* tmp;
 
   if (dependence != NULL) { /* Go to the right level. */
     for (j = 0; j < level; j++)

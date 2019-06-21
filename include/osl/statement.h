@@ -77,7 +77,7 @@ extern "C" {
 #endif
 
 /**
- * The osl_statement_t structure stores a list of statement. Each node
+ * The osl_statement structure stores a list of statement. Each node
  * contains the useful informations for a given statement to process it
  * within a polyhedral framework. The order in the list may matter for naming
  * conventions (e.g. "S1" for the first statement in the list).
@@ -91,6 +91,8 @@ struct osl_statement {
                                    AT ALL by the OpenScop Library. */
   struct osl_statement* next; /**< Next statement in the linked list */
 };
+typedef struct osl_statement osl_statement;
+
 typedef struct osl_statement osl_statement_t;
 typedef struct osl_statement* osl_statement_p;
 
@@ -98,50 +100,50 @@ typedef struct osl_statement* osl_statement_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_statement_idump(FILE*, const osl_statement_t*, int)
+void osl_statement_idump(FILE*, const osl_statement*, int)
     OSL_NONNULL_ARGS(1);
-void osl_statement_dump(FILE*, const osl_statement_t*) OSL_NONNULL_ARGS(1);
-void osl_statement_pprint(FILE*, const osl_statement_t*, const osl_names_t*)
+void osl_statement_dump(FILE*, const osl_statement*) OSL_NONNULL_ARGS(1);
+void osl_statement_pprint(FILE*, const osl_statement*, const osl_names_t*)
     OSL_NONNULL_ARGS(1);
-void osl_statement_print(FILE*, const osl_statement_t*) OSL_NONNULL_ARGS(1);
+void osl_statement_print(FILE*, const osl_statement*) OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
-void osl_statement_pprint_scoplib(FILE*, const osl_statement_t*,
+void osl_statement_pprint_scoplib(FILE*, const osl_statement*,
                                   const osl_names_t*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                              Reading function                              *
  ******************************************************************************/
 
-osl_statement_t* osl_statement_pread(FILE*, osl_interface*, int);
-osl_statement_t* osl_statement_read(FILE*) OSL_NONNULL_ARGS(1);
+osl_statement* osl_statement_pread(FILE*, osl_interface*, int);
+osl_statement* osl_statement_read(FILE*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                   Memory allocation/deallocation function                  *
  ******************************************************************************/
 
-osl_statement_t* osl_statement_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_statement_free(osl_statement_t*);
+osl_statement* osl_statement_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_statement_free(osl_statement*);
 
 /******************************************************************************
  *                           Processing functions                             *
  ******************************************************************************/
 
-void osl_statement_add(osl_statement_t**, osl_statement_t*);
-void osl_statement_compact(osl_statement_p, int);
-int osl_statement_number(const osl_statement_t*);
-osl_statement_t* osl_statement_nclone(const osl_statement_t*,
+void osl_statement_add(osl_statement**, osl_statement*);
+void osl_statement_compact(osl_statement*, int);
+int osl_statement_number(const osl_statement*);
+osl_statement* osl_statement_nclone(const osl_statement*,
                                       int) OSL_WARN_UNUSED_RESULT;
-osl_statement_t* osl_statement_clone(const osl_statement_t*)
+osl_statement* osl_statement_clone(const osl_statement*)
     OSL_WARN_UNUSED_RESULT;
-osl_statement_t* osl_statement_remove_unions(const osl_statement_t*)
+osl_statement* osl_statement_remove_unions(const osl_statement*)
     OSL_WARN_UNUSED_RESULT;
-int osl_statement_equal(const osl_statement_t*, const osl_statement_t*);
-int osl_statement_integrity_check(const osl_statement_t*, int);
-int osl_statement_get_nb_iterators(const osl_statement_t*);
-void osl_statement_get_attributes(const osl_statement_t*, int*, int*, int*,
+int osl_statement_equal(const osl_statement*, const osl_statement*);
+int osl_statement_integrity_check(const osl_statement*, int);
+int osl_statement_get_nb_iterators(const osl_statement*);
+void osl_statement_get_attributes(const osl_statement*, int*, int*, int*,
                                   int*, int*);
-osl_body_t* osl_statement_get_body(const osl_statement_t*);
+osl_body_t* osl_statement_get_body(const osl_statement*);
 #if defined(__cplusplus)
 }
 #endif

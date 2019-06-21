@@ -78,7 +78,8 @@
 
 /// Check if a scop without unions corresponds to the one with unions.
 static int test_unions(osl_scop_p scop) {
-  osl_statement_p stmt, nounion_stmt;
+  osl_statement* stmt;
+  osl_statement* nounion_stmt;
   osl_scop_p nounion_scop = osl_scop_remove_unions(scop);
   osl_scop_p nounion_scop_first = nounion_scop;
   osl_relation_p domain, scattering;

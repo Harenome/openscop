@@ -1952,7 +1952,7 @@ A[i+j] += B[i] * C[j];
 * osl_generic_t::
 * osl_strings::
 * osl_body_t::
-* osl_statement_t::
+* osl_statement::
 * osl_scop_t::
 @end menu
 
@@ -2181,8 +2181,8 @@ substitutions inside the expression.
 
 @c ---------------------------------------------------------------------------
 
-@node osl_statement_t
-@subsection osl_statement_t
+@node osl_statement
+@subsection osl_statement
 
 @example
 @group
@@ -2194,12 +2194,11 @@ struct osl_statement @{
   void* usr;                  /* A user-defined field */
   struct osl_statement* next; /* Next statement in the list */
 @};
-typedef struct osl_statement  osl_statement_t;
-typedef struct osl_statement* osl_statement_p;
+typedef struct osl_statement  osl_statement;
 @end group
 @end example
 
-@noindent The @code{osl_statement_t} structure represents a node
+@noindent The @code{osl_statement} structure represents a node
 in a @code{NULL}-terminated linked list of statements. Each node contains the
 useful information for a given statement to process it within a polyhedral
 framework. The order in the list may matter for naming conventions
@@ -2226,7 +2225,7 @@ struct osl_scop @{
   char* language;             /* Target language */
   osl_relation_p context;     /* Constraints on the parameters */
   osl_generic_p parameters;   /* Information about parameters */
-  osl_statement_p statement;  /* Statement list */
+  osl_statement* statement;  /* Statement list */
   osl_interface* registry;    /* Registered extension interfaces */
   osl_generic_p extension;    /* Extension list */
   void* usr;                  /* A user-defined field */
@@ -2284,7 +2283,7 @@ specification but to the OpenScop Library implementation:
 |    |    +-- osl_strings: N
 |    |    |    
 |    |    
-|    +-- osl_statement_t (S1)
+|    +-- osl_statement (S1)
 |    |    |    
 |    |    +-- osl_relation_t (DOMAIN, 32 bits)
 |    |    |    4 5 2 0 0 1
@@ -2320,7 +2319,7 @@ specification but to the OpenScop Library implementation:
 |    |    |    |    
 |    |    |    
 |    |    V
-|    |  osl_statement_t (S2)
+|    |  osl_statement (S2)
 |    |    |    
 |    |    +-- osl_relation_t (DOMAIN, 32 bits)
 |    |    |    6 6 3 0 0 1

@@ -410,8 +410,8 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop_t* scop) {
 osl_scop_t* osl_scop_pread(FILE* const file, osl_interface* const registry,
                            int precision) {
   osl_scop_p list = NULL, current = NULL, scop;
-  osl_statement_p stmt = NULL;
-  osl_statement_p prev = NULL;
+  osl_statement* stmt = NULL;
+  osl_statement* prev = NULL;
   osl_strings* language;
   int nb_statements;
   char* tmp;
@@ -606,7 +606,7 @@ size_t osl_scop_number(const osl_scop_t* scop) {
 /**
  * osl_scop_clone function:
  * This functions builds and returns a "hard copy" (not a pointer copy)
- * of a osl_statement_t data structure provided as parameter.
+ * of a osl_statement data structure provided as parameter.
  * Note that the usr field is not touched by this function.
  * \param scop The pointer to the scop we want to clone.
  * \return A pointer to the full clone of the scop provided as parameter.
@@ -649,7 +649,9 @@ osl_scop_t* osl_scop_clone(const osl_scop_t* scop) {
  * \returns  An identical SCoP without unions of relations.
  */
 osl_scop_t* osl_scop_remove_unions(const osl_scop_t* scop) {
-  osl_statement_p statement, new_statement, scop_statement_ptr;
+  osl_statement* statement;
+  osl_statement* new_statement;
+  osl_statement* scop_statement_ptr;
   osl_scop_p new_scop, scop_ptr, result = NULL;
 
   for (; scop != NULL; scop = scop->next) {
@@ -805,7 +807,7 @@ int osl_scop_check_compatible_scoplib(const osl_scop_t* scop) {
     return 1;
 
   osl_relation_p domain;
-  osl_statement_p statement;
+  osl_statement* statement;
   osl_relation_p scattering;
   int precision = scop->statement->scattering->precision;
   int i, j;
@@ -946,7 +948,7 @@ void osl_scop_get_attributes(const osl_scop_t* scop, int* nb_parameters,
  */
 void osl_scop_normalize_scattering(osl_scop_t* scop) {
   int max_scattering_dims = 0;
-  osl_statement_p statement;
+  osl_statement* statement;
   osl_relation_p extended;
 
   if ((scop != NULL) && (scop->statement != NULL)) {
