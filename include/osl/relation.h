@@ -117,8 +117,9 @@ struct osl_relation {
 };
 typedef struct osl_relation osl_relation;
 
-typedef struct osl_relation osl_relation_t;
-typedef struct osl_relation* osl_relation_p;
+/* The following typedefs are deprecated. Use osl_relation. */
+typedef struct osl_relation osl_relation_t OSL_DEPRECATED;
+typedef struct osl_relation* osl_relation_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
