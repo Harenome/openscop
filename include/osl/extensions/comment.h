@@ -80,8 +80,9 @@ struct osl_comment {
 };
 typedef struct osl_comment osl_comment;
 
-typedef struct osl_comment osl_comment_t;
-typedef struct osl_comment* osl_comment_p;
+/* The following typedefs are deprecated. Use osl_comment. */
+typedef struct osl_comment osl_comment_t OSL_DEPRECATED;
+typedef struct osl_comment* osl_comment_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
