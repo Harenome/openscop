@@ -81,7 +81,7 @@ extern "C" {
 #define OSL_LOOP_DIRECTIVE_USER 8
 
 /**
- * The osl_loop_t structure stores information about loops in the program
+ * The osl_loop structure stores information about loops in the program
  * in the extension part of the OpenScop representation. Containing the
  * information about the statements in the loop, its iterator and openmp
  * directives, it serves to communicate such information among different
@@ -96,6 +96,8 @@ struct osl_loop {
   char* user;         /**< \brief \0 terminated user string */
   struct osl_loop* next;
 };
+typedef struct osl_loop osl_loop;
+
 typedef struct osl_loop osl_loop_t;
 typedef struct osl_loop* osl_loop_p;
 
@@ -103,36 +105,36 @@ typedef struct osl_loop* osl_loop_p;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_loop_idump(FILE*, const osl_loop_t*, int) OSL_NONNULL_ARGS(1);
-void osl_loop_dump(FILE*, const osl_loop_t*) OSL_NONNULL_ARGS(1);
-char* osl_loop_sprint(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
+void osl_loop_idump(FILE*, const osl_loop*, int) OSL_NONNULL_ARGS(1);
+void osl_loop_dump(FILE*, const osl_loop*) OSL_NONNULL_ARGS(1);
+char* osl_loop_sprint(const osl_loop*) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_loop_t* osl_loop_sread(char**) OSL_WARN_UNUSED_RESULT;
+osl_loop* osl_loop_sread(char**) OSL_WARN_UNUSED_RESULT;
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 
-osl_loop_t* osl_loop_malloc(void) OSL_WARN_UNUSED_RESULT;
-void osl_loop_free(osl_loop_t*);
+osl_loop* osl_loop_malloc(void) OSL_WARN_UNUSED_RESULT;
+void osl_loop_free(osl_loop*);
 
 /******************************************************************************
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_loop_t* osl_loop_clone_one(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
-osl_loop_t* osl_loop_clone(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
-bool osl_loop_equal_one(const osl_loop_t*, const osl_loop_t*);
-bool osl_loop_equal(const osl_loop_t*, const osl_loop_t*);
-osl_strings* osl_loop_to_strings(const osl_loop_t*) OSL_WARN_UNUSED_RESULT;
+osl_loop* osl_loop_clone_one(const osl_loop*) OSL_WARN_UNUSED_RESULT;
+osl_loop* osl_loop_clone(const osl_loop*) OSL_WARN_UNUSED_RESULT;
+bool osl_loop_equal_one(const osl_loop*, const osl_loop*);
+bool osl_loop_equal(const osl_loop*, const osl_loop*);
+osl_strings* osl_loop_to_strings(const osl_loop*) OSL_WARN_UNUSED_RESULT;
 osl_interface* osl_loop_interface(void) OSL_WARN_UNUSED_RESULT;
 
-void osl_loop_add(osl_loop_t*, osl_loop_t**);
-int osl_loop_count(const osl_loop_t*);
+void osl_loop_add(osl_loop*, osl_loop**);
+int osl_loop_count(const osl_loop*);
 
 #if defined(__cplusplus)
 }
