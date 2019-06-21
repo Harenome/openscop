@@ -101,8 +101,9 @@ struct osl_scop {
 };
 typedef struct osl_scop osl_scop;
 
-typedef struct osl_scop osl_scop_t;
-typedef struct osl_scop* osl_scop_p;
+/* The following typedefs are deprecated. Use osl_scop. */
+typedef struct osl_scop osl_scop_t OSL_DEPRECATED;
+typedef struct osl_scop* osl_scop_p OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
