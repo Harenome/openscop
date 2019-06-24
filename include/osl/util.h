@@ -61,6 +61,7 @@
 #ifndef OSL_UTIL_H
 #define OSL_UTIL_H
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #if defined(__cplusplus)
@@ -84,7 +85,7 @@ char* osl_util_tag_content(const char*, const char*);
 void osl_util_safe_strcat(char**, const char*, size_t*);
 char* osl_util_strdup(char const*);
 int osl_util_get_precision(void);
-void osl_util_print_provided(FILE*, int, const char*);
+void osl_util_print_provided(FILE*, bool, const char*);
 char* osl_util_identifier_substitution(const char*, char**);
 
 #if defined(__cplusplus)

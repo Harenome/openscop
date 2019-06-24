@@ -59,6 +59,7 @@
  ******************************************************************************/
 
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -84,14 +85,14 @@
  *                 that contains useful information.
  * \return The address of the first useful digit in str.
  */
-char* osl_util_skip_blank_and_comments(FILE* file, char* str) {
+char* osl_util_skip_blank_and_comments(FILE* const file, char* const str) {
   char* start;
 
   do {
     start = fgets(str, OSL_MAX_STRING, file);
-    while ((start != NULL) && isspace(*start) && (*start != '\n'))
+    while (start && isspace(*start) && (*start != '\n'))
       start++;
-  } while (start != NULL && (*start == '#' || *start == '\n'));
+  } while (start && (*start == '#' || *start == '\n'));
 
   return start;
 }
@@ -129,17 +130,16 @@ void osl_util_sskip_blank_and_comments(char** str) {
  *                     after the int in the input string.
  * \return The int that has been read.
  */
-int osl_util_read_int(FILE* file, char** str) {
-  char s[OSL_MAX_STRING], *start;
-  int res;
-  int i = 0;
-
-  if ((file != NULL && str != NULL) || (file == NULL && str == NULL))
+int osl_util_read_int(FILE* const file, char** str) {
+  if ((file && str) || (!file && !str))
     OSL_error("one and only one of the two parameters can be non-NULL");
 
-  if (file != NULL) {
+  char s[OSL_MAX_STRING];
+  int res;
+
+  if (file) {
     // Parse from a file.
-    start = osl_util_skip_blank_and_comments(file, s);
+    char* const start = osl_util_skip_blank_and_comments(file, s);
     if (sscanf(start, " %d", &res) != 1)
       OSL_error("an int was expected");
   } else {
@@ -148,6 +148,7 @@ int osl_util_read_int(FILE* file, char** str) {
     osl_util_sskip_blank_and_comments(str);
 
     // Build the chain to analyze.
+    size_t i = 0;
     while (**str && !isspace(**str) && **str != '\n' && **str != '#')
       s[i++] = *((*str)++);
     s[i] = '\0';
@@ -168,18 +169,17 @@ int osl_util_read_int(FILE* file, char** str) {
  *                     after the string in the input string.
  * \return The string that has been read.
  */
-char* osl_util_read_string(FILE* file, char** str) {
-  char s[OSL_MAX_STRING], *start;
-  char* res;
-  int i = 0;
-
-  if ((file != NULL && str != NULL) || (file == NULL && str == NULL))
+char* osl_util_read_string(FILE* const file, char** str) {
+  if ((file && str) || (!file && !str))
     OSL_error("one and only one of the two parameters can be non-NULL");
+
+  char s[OSL_MAX_STRING];
+  char* res;
 
   OSL_malloc(res, char*, OSL_MAX_STRING * sizeof(char));
   if (file != NULL) {
     // Parse from a file.
-    start = osl_util_skip_blank_and_comments(file, s);
+    char* const start = osl_util_skip_blank_and_comments(file, s);
     if (sscanf(start, " %s", res) != 1)
       OSL_error("a string was expected");
   } else {
@@ -188,6 +188,7 @@ char* osl_util_read_string(FILE* file, char** str) {
     osl_util_sskip_blank_and_comments(str);
 
     // Build the chain to analyze.
+    size_t i = 0;
     while (**str && !isspace(**str) && **str != '\n' && **str != '#')
       s[i++] = *((*str)++);
     s[i] = '\0';
@@ -211,18 +212,18 @@ char* osl_util_read_string(FILE* file, char** str) {
  *                     after the line in the input string.
  * \return The line that has been read.
  */
-char* osl_util_read_line(FILE* file, char** str) {
-  char s[OSL_MAX_STRING], *start;
-  char* res;
-  int i = 0;
-
-  if ((file != NULL && str != NULL) || (file == NULL && str == NULL))
+char* osl_util_read_line(FILE* const file, char** str) {
+  if ((file && str) || (!file && !str))
     OSL_error("one and only one of the two parameters can be non-NULL");
 
+  char s[OSL_MAX_STRING];
+  char* res;
+  size_t i = 0;
+
   OSL_malloc(res, char*, OSL_MAX_STRING * sizeof(char));
-  if (file != NULL) {
+  if (file) {
     // Parse from a file.
-    start = osl_util_skip_blank_and_comments(file, s);
+    char* start = osl_util_skip_blank_and_comments(file, s);
     while (*start && *start != '\n' && *start != '#' && i < OSL_MAX_STRING)
       res[i++] = *start++;
   } else {
@@ -251,16 +252,18 @@ char* osl_util_read_line(FILE* file, char** str) {
  *                     after the tag in the input string.
  * \return The tag name that has been read.
  */
-char* osl_util_read_tag(FILE* file, char** str) {
-  char s[OSL_MAX_STRING], *start;
+char* osl_util_read_tag(FILE* const file, char** str) {
+  /* 'start' must be declared here. */
+  char* start;
+  char s[OSL_MAX_STRING];
   char* res;
-  int i = 0;
+  size_t i = 0;
 
-  if ((file != NULL && str != NULL) || (file == NULL && str == NULL))
+  if ((file && str) || (!file && !str))
     OSL_error("one and only one of the two parameters can be non-NULL");
 
   // Skip blank/commented lines.
-  if (file != NULL) {
+  if (file) {
     start = osl_util_skip_blank_and_comments(file, s);
     str = &start;
   } else {
@@ -268,7 +271,7 @@ char* osl_util_read_tag(FILE* file, char** str) {
   }
 
   // If the end of the input has been reached, return NULL.
-  if (((file != NULL) && (feof(file))) || ((str != NULL) && (**str == '\0')))
+  if ((file && (feof(file))) || (str && (**str == '\0')))
     return NULL;
 
   // Pass the starting '<'.
@@ -312,27 +315,28 @@ char* osl_util_read_tag(FILE* file, char** str) {
  * \param[in]     flag The flag which, when reached, stops the reading.
  * \return The string that has been read.
  */
-char* osl_util_read_uptoflag(FILE* file, char** str, const char* flag) {
+char* osl_util_read_uptoflag(FILE* const file, char** str,
+                             const char* const flag) {
+  if ((file && str) || (!file && !str))
+    OSL_error("one and only one of the two parameters can be non-NULL");
+
+  const size_t lenflag = strlen(flag);
+  const size_t lenstr = str ? strlen(*str) : 0;
+
   size_t high_water_mark = OSL_MAX_STRING;
   size_t nb_chars = 0;
-  size_t lenflag = strlen(flag), lenstr;
-  int flag_found = 0;
+  bool flag_found = false;
   char* res;
-
-  if ((file != NULL && str != NULL) || (file == NULL && str == NULL))
-    OSL_error("one and only one of the two parameters can be non-NULL");
 
   OSL_malloc(res, char*, high_water_mark * sizeof(char));
 
   // Copy everything to the res string.
-  lenstr = str != NULL ? strlen(*str) : 0;
-  while (((str != NULL) && (nb_chars != lenstr)) ||
-         ((file != NULL) && (!feof(file)))) {
-    res[nb_chars++] = (str != NULL) ? *((*str)++) : (char)fgetc(file);
+  while ((str && (nb_chars != lenstr)) || (file && (!feof(file)))) {
+    res[nb_chars++] = str ? *((*str)++) : (char)fgetc(file);
 
     if ((nb_chars >= lenflag) &&
         (!strncmp(&res[nb_chars - lenflag], flag, lenflag))) {
-      flag_found = 1;
+      flag_found = true;
       break;
     }
 
@@ -368,7 +372,8 @@ char* osl_util_read_uptoflag(FILE* file, char** str, const char* flag) {
  * \param[in]     name The name of the tag to the file reading.
  * \return The string that has been read from the file.
  */
-char* osl_util_read_uptotag(FILE* file, char** str, const char* name) {
+char* osl_util_read_uptotag(FILE* const file, char** str,
+                            const char* const name) {
   char tag[strlen(name) + 3];
 
   sprintf(tag, "<%s>", name);
@@ -388,7 +393,8 @@ char* osl_util_read_uptotag(FILE* file, char** str, const char* name) {
  * \param[in]     name The name of the end tag to the file reading.
  * \return The string that has been read from the file.
  */
-char* osl_util_read_uptoendtag(FILE* file, char** str, const char* name) {
+char* osl_util_read_uptoendtag(FILE* const file, char** str,
+                               const char* const name) {
   char endtag[strlen(name) + 4];
 
   sprintf(endtag, "</%s>", name);
@@ -404,22 +410,18 @@ char* osl_util_read_uptoendtag(FILE* file, char** str, const char* name) {
  * \param[in] name   The name of the tag we are looking for.
  * \return The string between '\<name\>' and '\</name\>' in 'str'.
  */
-char* osl_util_tag_content(const char* str, const char* name) {
-  int i;
-  const char* start;
-  const char* stop;
-  char tag[strlen(name) + 3];
-  char endtag[strlen(name) + 4];
-  size_t size = 0;
-  size_t lentag;
+char* osl_util_tag_content(const char* const str, const char* const name) {
+  const size_t name_length = strlen(name);
+  char tag[name_length + 3];
+  char endtag[name_length + 4];
   char* res = NULL;
 
   sprintf(tag, "<%s>", name);
   sprintf(endtag, "</%s>", name);
 
   if (str) {
-    start = str;
-    lentag = strlen(tag);
+    const char* start = str;
+    size_t lentag = strlen(tag);
     for (; start && *start && strncmp(start, tag, lentag); ++start)
       continue;
 
@@ -427,8 +429,10 @@ char* osl_util_tag_content(const char* str, const char* name) {
     if (!*start)
       return NULL;
     start += lentag;
-    stop = start;
+    const char* stop = start;
     lentag = strlen(endtag);
+
+    size_t size = 0;
     for (size = 0; *stop && strncmp(stop, endtag, lentag); ++stop, ++size)
       continue;
 
@@ -438,6 +442,7 @@ char* osl_util_tag_content(const char* str, const char* name) {
     OSL_malloc(res, char*, (size + 1) * sizeof(char));
 
     // Copy the chain between the two tags.
+    size_t i = 0;
     for (++start, i = 0; start != stop; ++start, ++i)
       res[i] = *start;
     res[i] = '\0';
@@ -456,7 +461,8 @@ char* osl_util_tag_content(const char* str, const char* name) {
  * \param[in]     src string to concatenate to dst.
  * \param[in,out] hwm pointer to the size of the *dst buffer (may be updated).
  */
-void osl_util_safe_strcat(char** dst, const char* src, size_t* hwm) {
+void osl_util_safe_strcat(char** dst, const char* const src,
+                          size_t* const hwm) {
   while ((strlen(*dst) + strlen(src)) >= *hwm) {
     *hwm += OSL_MAX_STRING;
     OSL_realloc(*dst, char*, *hwm * sizeof(char));
@@ -492,14 +498,12 @@ char* osl_util_strdup(char const* str) {
  */
 int osl_util_get_precision(void) {
   int precision = OSL_PRECISION_DP;
-  char* precision_env;
-
 #ifdef OSL_GMP_IS_HERE
   precision = OSL_PRECISION_MP;
 #endif
 
-  precision_env = getenv(OSL_PRECISION_ENV);
-  if (precision_env != NULL) {
+  char* const precision_env = getenv(OSL_PRECISION_ENV);
+  if (precision_env) {
     if (!strcmp(precision_env, OSL_PRECISION_ENV_SP))
       precision = OSL_PRECISION_SP;
     else if (!strcmp(precision_env, OSL_PRECISION_ENV_DP))
@@ -528,7 +532,8 @@ int osl_util_get_precision(void) {
  * \param[in] provided The provided boolean to print.
  * \param[in] title    A string to use as a title for the provided booblean.
  */
-void osl_util_print_provided(FILE* file, int provided, const char* title) {
+void osl_util_print_provided(FILE* const file, const bool provided,
+                             const char* const title) {
   if (provided) {
     fprintf(file, "# %s provided\n", title);
     fprintf(file, "1\n");
@@ -547,10 +552,11 @@ void osl_util_print_provided(FILE* file, int provided, const char* title) {
  * \param[in] index      The position in the expression where to look.
  * \return 1 if the identifier is found at the position in the expression.
  */
-static int osl_util_identifier_is_here(const char* expression,
-                                       const char* identifier, size_t index) {
-  size_t identifier_len = strlen(identifier);
-  size_t expression_len = strlen(expression);
+static int osl_util_identifier_is_here(const char* const expression,
+                                       const char* const identifier,
+                                       const size_t index) {
+  const size_t identifier_len = strlen(identifier);
+  const size_t expression_len = strlen(expression);
 
   // If there is no space enough to find the identifier: no.
   if (identifier_len + index > expression_len)
@@ -596,15 +602,14 @@ static int osl_util_identifier_is_here(const char* expression,
  * \param[in] index      The position of the identifier in the expression.
  * \return 1 if the identifier is isolated, 0 if unsure.
  */
-static int osl_util_lazy_isolated_identifier(const char* expression,
-                                             const char* identifier,
-                                             size_t index) {
-  size_t look;
-  size_t expression_len = strlen(expression);
-  size_t identifier_len = strlen(identifier);
+static int osl_util_lazy_isolated_identifier(const char* const expression,
+                                             const char* const identifier,
+                                             const size_t index) {
+  const size_t expression_len = strlen(expression);
+  const size_t identifier_len = strlen(identifier);
 
   // If the first non-space character before is not in [\[(,\+=]: no.
-  look = index - 1;
+  size_t look = index - 1;
   while (look < index) {
     if (isspace(expression[look]))
       look--;
@@ -649,10 +654,8 @@ static int osl_util_lazy_isolated_identifier(const char* expression,
  * \param[in] identifiers NULL-terminated array of identifiers.
  * \return A new string where the ith identifier is replaced by \@i\@.
  */
-char* osl_util_identifier_substitution(const char* expression,
+char* osl_util_identifier_substitution(const char* const expression,
                                        char** identifiers) {
-  size_t index;
-  int j, found;
   size_t high_water_mark = OSL_MAX_STRING;
   char buffer[OSL_MAX_STRING];
   char* string;
@@ -660,20 +663,20 @@ char* osl_util_identifier_substitution(const char* expression,
   OSL_malloc(string, char*, high_water_mark * sizeof(char));
   string[0] = '\0';
 
-  index = 0;
+  size_t index = 0;
   while (index < strlen(expression)) {
-    j = 0;
-    found = 0;
-    while (identifiers[j] != NULL) {
+    size_t j = 0;
+    bool found = false;
+    while (identifiers[j]) {
       if (osl_util_identifier_is_here(expression, identifiers[j], index)) {
         if (osl_util_lazy_isolated_identifier(expression, identifiers[j],
                                               index))
-          sprintf(buffer, "@%d@", j);
+          sprintf(buffer, "@%zu@", j);
         else
-          sprintf(buffer, "(@%d@)", j);
+          sprintf(buffer, "(@%zu@)", j);
         osl_util_safe_strcat(&string, buffer, &high_water_mark);
         index += strlen(identifiers[j]);
-        found = 1;
+        found = true;
         break;
       }
       j++;
