@@ -80,21 +80,17 @@
  * \param[in] names The names structure whose information has to be printed.
  * \param[in] level Number of spaces before printing, for each line.
  */
-void osl_names_idump(FILE* const file, const osl_names* names, int level) {
-  int j;
-
+void osl_names_idump(FILE* const file, const osl_names* const names,
+                     int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (names != NULL)
+  if (names) {
     fprintf(file, "+-- osl_names\n");
-  else
-    fprintf(file, "+-- NULL names\n");
 
-  if (names != NULL) {
     // A blank line.
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
@@ -104,10 +100,12 @@ void osl_names_idump(FILE* const file, const osl_names* names, int level) {
     osl_strings_idump(file, names->scatt_dims, level + 1);
     osl_strings_idump(file, names->local_dims, level + 1);
     osl_strings_idump(file, names->arrays, level + 1);
+  } else {
+    fprintf(file, "+-- NULL names\n");
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -119,7 +117,7 @@ void osl_names_idump(FILE* const file, const osl_names* names, int level) {
  * \param[in] file  The file where the information has to be printed.
  * \param[in] names The names structure whose information has to be printed.
  */
-void osl_names_dump(FILE* const file, const osl_names* names) {
+void osl_names_dump(FILE* const file, const osl_names* const names) {
   osl_names_idump(file, names, 0);
 }
 
@@ -160,8 +158,8 @@ osl_names* osl_names_malloc(void) {
  * the array itself), this function will only free the osl_names shell.
  * \param[in,out] names The pointer to the names structure we want to free.
  */
-void osl_names_free(osl_names* names) {
-  if (names != NULL) {
+void osl_names_free(osl_names* const names) {
+  if (names) {
     osl_strings_free(names->parameters);
     osl_strings_free(names->iterators);
     osl_strings_free(names->scatt_dims);
@@ -192,12 +190,13 @@ void osl_names_free(osl_names* names) {
  * \param[in] nb_arrays        Number of array names to generate.
  * \return A new names structure containing generated names.
  */
-osl_names* osl_names_generate(const char* parameter_prefix, int nb_parameters,
-                                const char* iterator_prefix, int nb_iterators,
-                                const char* scatt_dim_prefix, int nb_scatt_dims,
-                                const char* local_dim_prefix, int nb_local_dims,
-                                const char* array_prefix, int nb_arrays) {
-  osl_names* names = osl_names_malloc();
+osl_names* osl_names_generate(
+    const char* const parameter_prefix, int nb_parameters,
+    const char* const iterator_prefix, int nb_iterators,
+    const char* const scatt_dim_prefix, int nb_scatt_dims,
+    const char* const local_dim_prefix, int nb_local_dims,
+    const char* const array_prefix, int nb_arrays) {
+  osl_names* const names = osl_names_malloc();
 
   names->parameters = osl_strings_generate(parameter_prefix, nb_parameters);
   names->iterators = osl_strings_generate(iterator_prefix, nb_iterators);
@@ -215,16 +214,16 @@ osl_names* osl_names_generate(const char* parameter_prefix, int nb_parameters,
  * \param[in] names The pointer to the names structure we want to clone.
  * \return A pointer to the clone of the names structure provided as parameter.
  */
-osl_names* osl_names_clone(const osl_names* names) {
-  osl_names* clone = NULL;
+osl_names* osl_names_clone(const osl_names* const names) {
+  if (!names)
+    return NULL;
 
-  if (names != NULL) {
-    clone = osl_names_malloc();
-    clone->parameters = osl_strings_clone(names->parameters);
-    clone->iterators = osl_strings_clone(names->iterators);
-    clone->scatt_dims = osl_strings_clone(names->scatt_dims);
-    clone->local_dims = osl_strings_clone(names->local_dims);
-    clone->arrays = osl_strings_clone(names->arrays);
-  }
+  osl_names* const clone = osl_names_malloc();
+  clone->parameters = osl_strings_clone(names->parameters);
+  clone->iterators = osl_strings_clone(names->iterators);
+  clone->scatt_dims = osl_strings_clone(names->scatt_dims);
+  clone->local_dims = osl_strings_clone(names->local_dims);
+  clone->arrays = osl_strings_clone(names->arrays);
+
   return clone;
 }
