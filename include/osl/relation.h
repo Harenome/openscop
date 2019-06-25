@@ -61,6 +61,7 @@
 #ifndef OSL_RELATION_H
 #define OSL_RELATION_H
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #include <osl/attributes.h>
@@ -109,8 +110,8 @@ struct osl_relation {
   int nb_local_dims;         /**< Number of local (existentially
                                   quantified) dimensions */
   int nb_parameters;         /**< Number of parameters */
-  osl_int** m;             /**< An array of pointers to the beginning
-                                  of each row of the relation matrix */
+  osl_int** m;               /**< An array of pointers to the beginning
+                                    of each row of the relation matrix */
   void* usr;                 /**< User-managed field, untouched by osl */
   struct osl_relation* next; /**< Pointer to the next relation in the
                                   union of relations (NULL if none) */
@@ -138,22 +139,20 @@ void osl_relation_print(FILE*, const osl_relation*) OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
 char* osl_relation_spprint_polylib_scoplib(const osl_relation*,
-                                           const osl_names*, int, int);
-char* osl_relation_spprint_scoplib(const osl_relation*, const osl_names*,
-                                   int, int);
-void osl_relation_pprint_scoplib(FILE*, const osl_relation*,
-                                 const osl_names*, int, int)
-    OSL_NONNULL_ARGS(1);
+                                           const osl_names*, bool, bool);
+char* osl_relation_spprint_scoplib(const osl_relation*, const osl_names*, bool,
+                                   bool);
+void osl_relation_pprint_scoplib(FILE*, const osl_relation*, const osl_names*,
+                                 bool, bool) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                               Reading function                             *
  ******************************************************************************/
 
-osl_relation* osl_relation_pread(FILE*,
-                                   int) OSL_NONNULL OSL_WARN_UNUSED_RESULT;
+osl_relation* osl_relation_pread(FILE*, int) OSL_NONNULL OSL_WARN_UNUSED_RESULT;
 osl_relation* osl_relation_read(FILE*) OSL_NONNULL OSL_WARN_UNUSED_RESULT;
 osl_relation* osl_relation_psread(char**,
-                                    int) OSL_NONNULL OSL_WARN_UNUSED_RESULT;
+                                  int) OSL_NONNULL OSL_WARN_UNUSED_RESULT;
 osl_relation* osl_relation_psread_polylib(char**, int)
     OSL_NONNULL OSL_WARN_UNUSED_RESULT;
 osl_relation* osl_relation_sread(char**) OSL_NONNULL OSL_WARN_UNUSED_RESULT;
@@ -176,15 +175,14 @@ void osl_relation_free(osl_relation*);
 
 int osl_relation_nb_components(const osl_relation*);
 osl_relation* osl_relation_nclone(const osl_relation*,
-                                    int) OSL_WARN_UNUSED_RESULT;
+                                  int) OSL_WARN_UNUSED_RESULT;
 osl_relation* osl_relation_clone_nconstraints(const osl_relation*,
-                                                int) OSL_WARN_UNUSED_RESULT;
-osl_relation* osl_relation_clone(const osl_relation*)
-    OSL_WARN_UNUSED_RESULT;
+                                              int) OSL_WARN_UNUSED_RESULT;
+osl_relation* osl_relation_clone(const osl_relation*) OSL_WARN_UNUSED_RESULT;
 void osl_relation_add(osl_relation**, osl_relation*);
 void osl_relation_remove_part(osl_relation**, osl_relation*);
 osl_relation* osl_relation_union(osl_relation*,
-                                   osl_relation*) OSL_WARN_UNUSED_RESULT;
+                                 osl_relation*) OSL_WARN_UNUSED_RESULT;
 void osl_relation_replace_vector(osl_relation*, const osl_vector*, int);
 void osl_relation_insert_vector(osl_relation*, const osl_vector*, int);
 osl_relation* osl_relation_concat_vector(osl_relation*, const osl_vector*)
@@ -195,10 +193,8 @@ void osl_relation_add_vector(osl_relation*, const osl_vector*, int);
 void osl_relation_sub_vector(osl_relation*, const osl_vector*, int);
 osl_relation* osl_relation_from_vector(const osl_vector*)
     OSL_WARN_UNUSED_RESULT;
-void osl_relation_replace_constraints(osl_relation*, const osl_relation*,
-                                      int);
-void osl_relation_insert_constraints(osl_relation*, const osl_relation*,
-                                     int);
+void osl_relation_replace_constraints(osl_relation*, const osl_relation*, int);
+void osl_relation_insert_constraints(osl_relation*, const osl_relation*, int);
 void osl_relation_swap_constraints(osl_relation*, int, int);
 void osl_relation_remove_row(osl_relation*, int);
 void osl_relation_remove_column(osl_relation*, int);
@@ -207,16 +203,16 @@ osl_relation* osl_relation_concat_constraints(
     const osl_relation*, const osl_relation*) OSL_WARN_UNUSED_RESULT;
 bool osl_relation_part_equal(const osl_relation*, const osl_relation*);
 bool osl_relation_equal(const osl_relation*, const osl_relation*);
-int osl_relation_integrity_check(const osl_relation*, int, int, int, int);
+bool osl_relation_integrity_check(const osl_relation*, int, int, int, int);
 void osl_relation_set_attributes_one(osl_relation*, int, int, int, int);
 void osl_relation_set_attributes(osl_relation*, int, int, int, int);
 void osl_relation_set_type(osl_relation*, int);
 int osl_relation_get_array_id(const osl_relation*);
-int osl_relation_is_access(const osl_relation*);
+bool osl_relation_is_access(const osl_relation*);
 void osl_relation_get_attributes(const osl_relation*, int*, int*, int*, int*,
                                  int*);
 osl_relation* osl_relation_extend_output(const osl_relation*,
-                                           int) OSL_WARN_UNUSED_RESULT;
+                                         int) OSL_WARN_UNUSED_RESULT;
 osl_interface* osl_relation_interface(void) OSL_WARN_UNUSED_RESULT;
 void osl_relation_set_precision(int const, osl_relation*);
 void osl_relation_set_same_precision(osl_relation*, osl_relation*);
