@@ -103,8 +103,7 @@ typedef struct osl_interface* osl_interface_p OSL_DEPRECATED;
 /******************************************************************************
  *                          Structure display function                        *
  ******************************************************************************/
-void osl_interface_idump(FILE*, const osl_interface*, int)
-    OSL_NONNULL_ARGS(1);
+void osl_interface_idump(FILE*, const osl_interface*, int) OSL_NONNULL_ARGS(1);
 void osl_interface_dump(FILE*, const osl_interface*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
@@ -123,13 +122,11 @@ void osl_interface_free(osl_interface*);
  ******************************************************************************/
 int osl_interface_number(const osl_interface*);
 osl_interface* osl_interface_nclone(const osl_interface*,
-                                      int) OSL_WARN_UNUSED_RESULT;
-osl_interface* osl_interface_clone(const osl_interface*)
-    OSL_WARN_UNUSED_RESULT;
+                                    int) OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_interface_clone(const osl_interface*) OSL_WARN_UNUSED_RESULT;
 bool osl_interface_equal(const osl_interface*, const osl_interface*);
 osl_interface* osl_interface_lookup(osl_interface*, const char*);
-osl_interface* osl_interface_get_default_registry(void)
-    OSL_WARN_UNUSED_RESULT;
+osl_interface* osl_interface_get_default_registry(void) OSL_WARN_UNUSED_RESULT;
 
 #if defined(__cplusplus)
 }

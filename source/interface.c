@@ -97,46 +97,46 @@
  * \param level     Number of spaces before printing, for each line.
  */
 void osl_interface_idump(FILE* const file, const osl_interface* interface,
-                         int level) {
-  int j, first = 1;
-
+                         const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (interface != NULL)
+  if (interface)
     fprintf(file, "+-- osl_interface: URI = %s\n", interface->URI);
   else
     fprintf(file, "+-- NULL interface\n");
 
-  while (interface != NULL) {
+  bool first = true;
+  while (interface) {
     if (!first) {
       // Go to the right level.
-      for (j = 0; j < level; j++)
+      for (int j = 0; j < level; j++)
         fprintf(file, "|\t");
 
-      if (interface->URI != NULL)
+      if (interface->URI)
         fprintf(file, "|   osl_interface: URI = %s\n", interface->URI);
       else
         fprintf(file, "|   osl_interface: URI = (NULL)\n");
-    } else
-      first = 0;
+    } else {
+      first = false;
+    }
 
     interface = interface->next;
 
     // Next line.
-    if (interface != NULL) {
-      for (j = 0; j <= level + 1; j++)
+    if (interface) {
+      for (int j = 0; j <= level + 1; j++)
         fprintf(file, "|\t");
       fprintf(file, "\n");
-      for (j = 0; j <= level; j++)
+      for (int j = 0; j <= level; j++)
         fprintf(file, "|\t");
       fprintf(file, "V\n");
     }
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -170,23 +170,21 @@ void osl_interface_dump(FILE* const file,
  * \param interface The interface to add to the list.
  */
 void osl_interface_add(osl_interface** list, osl_interface* interface) {
-  osl_interface* tmp = *list;
-  osl_interface* check_interface;
-
-  if (interface != NULL) {
+  if (interface) {
     // First, check that the interface list is OK.
-    check_interface = interface;
-    while (check_interface != NULL) {
-      if (check_interface->URI == NULL)
+    osl_interface* check_interface = interface;
+    while (check_interface) {
+      if (!check_interface->URI)
         OSL_error("no URI in an interface to add to a list");
 
-      if (osl_interface_lookup(*list, check_interface->URI) != NULL)
+      if (osl_interface_lookup(*list, check_interface->URI))
         OSL_error("only one interface with a given URI is allowed");
       check_interface = check_interface->next;
     }
 
-    if (*list != NULL) {
-      while (tmp->next != NULL)
+    if (*list) {
+      osl_interface* tmp = *list;
+      while (tmp->next)
         tmp = tmp->next;
       tmp->next = interface;
     } else {
@@ -227,16 +225,12 @@ osl_interface* osl_interface_malloc(void) {
  * \param[in] interface The pointer to the interface we want to free.
  */
 void osl_interface_free(osl_interface* interface) {
-  osl_interface* tmp;
-  int i = 0;
-
-  while (interface != NULL) {
-    tmp = interface->next;
-    if (interface->URI != NULL)
+  while (interface) {
+    osl_interface* const tmp = interface->next;
+    if (interface->URI)
       free(interface->URI);
     free(interface);
     interface = tmp;
-    i++;
   }
 }
 
@@ -254,7 +248,7 @@ void osl_interface_free(osl_interface* interface) {
 int osl_interface_number(const osl_interface* interface) {
   int number = 0;
 
-  while (interface != NULL) {
+  while (interface) {
     number++;
     interface = interface->next;
   }
@@ -269,12 +263,13 @@ int osl_interface_number(const osl_interface* interface) {
  * \param n         The number of nodes we want to copy (-1 for infinity).
  * \return The clone of the n first nodes of the interface list.
  */
-osl_interface* osl_interface_nclone(const osl_interface* interface, int n) {
+osl_interface* osl_interface_nclone(const osl_interface* interface,
+                                    const int n) {
   osl_interface* clone = NULL;
   osl_interface* new;
   int i = 0;
 
-  while ((interface != NULL) && ((n == -1) || (i < n))) {
+  while (interface && ((n == -1) || (i < n))) {
     new = osl_interface_malloc();
     OSL_strdup(new->URI, interface->URI);
     new->idump = interface->idump;
@@ -317,8 +312,7 @@ bool osl_interface_equal(const osl_interface* const interface1,
   if (interface1 == interface2)
     return 1;
 
-  if (((interface1 == NULL) && (interface2 != NULL)) ||
-      ((interface1 != NULL) && (interface2 == NULL)))
+  if ((!interface1 && interface2) || (interface1 && !interface2))
     return 0;
 
   if (strcmp(interface1->URI, interface2->URI) ||
@@ -344,11 +338,11 @@ bool osl_interface_equal(const osl_interface* const interface1,
  * \return The first interface of the requested URI in the list.
  */
 osl_interface* osl_interface_lookup(osl_interface* list, const char* URI) {
-  if (URI == NULL) {
+  if (!URI) {
     OSL_warning("lookup for a NULL URI");
   } else {
-    while (list != NULL) {
-      if ((list->URI != NULL) && (!strcmp(list->URI, URI)))
+    while (list) {
+      if (list->URI && (!strcmp(list->URI, URI)))
         return list;
 
       list = list->next;
