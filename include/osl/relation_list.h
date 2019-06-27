@@ -75,7 +75,7 @@ extern "C" {
  * linked) list of relations.
  */
 struct osl_relation_list {
-  osl_relation* elt;             /**< An element of the list. */
+  osl_relation* elt;              /**< An element of the list. */
   struct osl_relation_list* next; /**< Pointer to the next element
                                        of the list.*/
 };
@@ -95,15 +95,15 @@ void osl_relation_list_dump(FILE*, const osl_relation_list*)
     OSL_NONNULL_ARGS(1);
 void osl_relation_list_pprint_elts(FILE*, const osl_relation_list*,
                                    const osl_names*) OSL_NONNULL_ARGS(1);
-void osl_relation_list_pprint(FILE*, const osl_relation_list*,
-                              const osl_names*) OSL_NONNULL_ARGS(1);
+void osl_relation_list_pprint(FILE*, const osl_relation_list*, const osl_names*)
+    OSL_NONNULL_ARGS(1);
 void osl_relation_list_print(FILE*, const osl_relation_list*)
     OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
 void osl_relation_list_pprint_access_array_scoplib(FILE*,
                                                    const osl_relation_list*,
-                                                   const osl_names*, int)
+                                                   const osl_names*, bool)
     OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
@@ -130,9 +130,8 @@ osl_relation_list* osl_relation_list_node(const osl_relation*)
     OSL_WARN_UNUSED_RESULT;
 osl_relation_list* osl_relation_list_clone(const osl_relation_list*)
     OSL_WARN_UNUSED_RESULT;
-osl_relation_list* osl_relation_list_concat(const osl_relation_list*,
-                                              const osl_relation_list*)
-    OSL_WARN_UNUSED_RESULT;
+osl_relation_list* osl_relation_list_concat(
+    const osl_relation_list*, const osl_relation_list*) OSL_WARN_UNUSED_RESULT;
 void osl_relation_list_add(osl_relation_list**, osl_relation_list*);
 void osl_relation_list_push(osl_relation_list**, osl_relation_list*);
 osl_relation_list* osl_relation_list_pop(osl_relation_list**)
@@ -140,13 +139,13 @@ osl_relation_list* osl_relation_list_pop(osl_relation_list**)
 void osl_relation_list_dup(osl_relation_list**);
 void osl_relation_list_drop(osl_relation_list**);
 void osl_relation_list_destroy(osl_relation_list**);
-int osl_relation_list_equal(const osl_relation_list*,
-                            const osl_relation_list*);
-int osl_relation_list_integrity_check(const osl_relation_list*, int, int, int,
-                                      int);
+bool osl_relation_list_equal(const osl_relation_list*,
+                             const osl_relation_list*);
+bool osl_relation_list_integrity_check(const osl_relation_list*, int, int, int,
+                                       int);
 void osl_relation_list_set_type(osl_relation_list*, int);
 osl_relation_list* osl_relation_list_filter(const osl_relation_list*,
-                                              int) OSL_WARN_UNUSED_RESULT;
+                                            int) OSL_WARN_UNUSED_RESULT;
 size_t osl_relation_list_count(const osl_relation_list*);
 void osl_relation_list_get_attributes(const osl_relation_list*, int*, int*,
                                       int*, int*, int*);
