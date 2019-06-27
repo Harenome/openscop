@@ -61,6 +61,7 @@
 #ifndef OSL_VECTOR_H
 #define OSL_VECTOR_H
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #include <osl/attributes.h>
@@ -80,7 +81,7 @@ extern "C" {
 struct osl_vector {
   int precision; /**< Precision of the integer elements. */
   int size;      /**< Number of vector entries */
-  osl_int* v;  /**< An array of integer values */
+  osl_int* v;    /**< An array of integer values */
 };
 typedef struct osl_vector osl_vector;
 
@@ -108,17 +109,17 @@ void osl_vector_free(osl_vector*);
  ******************************************************************************/
 
 osl_vector* osl_vector_add_scalar(const osl_vector*,
-                                    int) OSL_WARN_UNUSED_RESULT;
+                                  int) OSL_WARN_UNUSED_RESULT;
 osl_vector* osl_vector_mul_scalar(const osl_vector*,
-                                    int) OSL_WARN_UNUSED_RESULT;
+                                  int) OSL_WARN_UNUSED_RESULT;
 osl_vector* osl_vector_add(const osl_vector*,
-                             const osl_vector*) OSL_WARN_UNUSED_RESULT;
+                           const osl_vector*) OSL_WARN_UNUSED_RESULT;
 osl_vector* osl_vector_sub(const osl_vector*,
-                             const osl_vector*) OSL_WARN_UNUSED_RESULT;
+                           const osl_vector*) OSL_WARN_UNUSED_RESULT;
 void osl_vector_tag_inequality(osl_vector*);
 void osl_vector_tag_equality(osl_vector*);
-int osl_vector_equal(const osl_vector*, const osl_vector*);
-int osl_vector_is_scalar(const osl_vector*);
+bool osl_vector_equal(const osl_vector*, const osl_vector*);
+bool osl_vector_is_scalar(const osl_vector*);
 
 #if defined(__cplusplus)
 }
