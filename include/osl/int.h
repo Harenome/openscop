@@ -61,6 +61,7 @@
 #ifndef OSL_INT_H
 #define OSL_INT_H
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -100,7 +101,7 @@ typedef union osl_int const* const osl_const_int_const_p OSL_DEPRECATED;
  *                                Basic Functions                             *
  ******************************************************************************/
 
-int osl_int_is_precision_supported(int);
+bool osl_int_is_precision_supported(int);
 void osl_int_dump_precision(FILE*, int);
 void osl_int_init(int, osl_int*);
 osl_int* osl_int_malloc(int);
@@ -131,10 +132,8 @@ void osl_int_sub(int, osl_int*, const osl_int, const osl_int);
 void osl_int_mul(int, osl_int*, const osl_int, const osl_int);
 void osl_int_mul_si(int, osl_int*, const osl_int, int);
 void osl_int_div_exact(int const, osl_int*, const osl_int, const osl_int);
-void osl_int_floor_div_q(int const, osl_int*, const osl_int,
-                         const osl_int);
-void osl_int_floor_div_r(int const, osl_int*, const osl_int,
-                         const osl_int);
+void osl_int_floor_div_q(int const, osl_int*, const osl_int, const osl_int);
+void osl_int_floor_div_r(int const, osl_int*, const osl_int, const osl_int);
 void osl_int_floor_div_q_r(int const, osl_int*, osl_int*, const osl_int,
                            const osl_int);
 void osl_int_mod(int const, osl_int*, const osl_int, const osl_int);
@@ -149,18 +148,18 @@ size_t osl_int_size_in_base_10(int const, const osl_int);
  *                            Conditional Operations                          *
  ******************************************************************************/
 
-int osl_int_eq(int, const osl_int, const osl_int);
-int osl_int_ne(int, const osl_int, const osl_int);
-int osl_int_lt(int, const osl_int, const osl_int);
-int osl_int_le(int, const osl_int, const osl_int);
-int osl_int_gt(int, const osl_int, const osl_int);
-int osl_int_ge(int, const osl_int, const osl_int);
-int osl_int_pos(int, const osl_int);
-int osl_int_neg(int, const osl_int);
-int osl_int_zero(int, const osl_int);
-int osl_int_one(int, const osl_int);
-int osl_int_mone(int, const osl_int);
-int osl_int_divisible(int, const osl_int, const osl_int);
+bool osl_int_eq(int, const osl_int, const osl_int);
+bool osl_int_ne(int, const osl_int, const osl_int);
+bool osl_int_lt(int, const osl_int, const osl_int);
+bool osl_int_le(int, const osl_int, const osl_int);
+bool osl_int_gt(int, const osl_int, const osl_int);
+bool osl_int_ge(int, const osl_int, const osl_int);
+bool osl_int_pos(int, const osl_int);
+bool osl_int_neg(int, const osl_int);
+bool osl_int_zero(int, const osl_int);
+bool osl_int_one(int, const osl_int);
+bool osl_int_mone(int, const osl_int);
+bool osl_int_divisible(int, const osl_int, const osl_int);
 
 /******************************************************************************
  *                            Processing functions                            *
