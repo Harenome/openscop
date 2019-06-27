@@ -58,8 +58,11 @@
  *                                                                            *
  ******************************************************************************/
 
-#ifndef OSL_generic_H
-#define OSL_generic_H
+#ifndef OSL_GENERIC_H
+#define OSL_GENERIC_H
+
+#include <stdbool.h>
+#include <stdio.h>
 
 #include <osl/attributes.h>
 #include <osl/interface.h>
@@ -75,9 +78,9 @@ extern "C" {
  * A generic is a also a node of a NULL-terminated linked list of generics.
  */
 struct osl_generic {
-  void* data;                /**< Pointer to the data. */
+  void* data;               /**< Pointer to the data. */
   osl_interface* interface; /**< Interface to work with the data. */
-  struct osl_generic* next;  /**< Pointer to the next generic. */
+  struct osl_generic* next; /**< Pointer to the next generic. */
 };
 typedef struct osl_generic osl_generic;
 
@@ -87,7 +90,8 @@ typedef struct osl_generic* osl_generic_p OSL_DEPRECATED;
 typedef struct osl_generic const osl_const_generic_t OSL_DEPRECATED;
 typedef struct osl_generic* const osl_generic_const_p OSL_DEPRECATED;
 typedef struct osl_generic const* osl_const_generic_p OSL_DEPRECATED;
-typedef struct osl_generic const* const osl_const_generic_const_p OSL_DEPRECATED;
+typedef struct osl_generic const* const osl_const_generic_const_p
+    OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *
@@ -104,18 +108,15 @@ void osl_generic_print_options_scoplib(FILE*, const osl_generic*)
  *                               Reading function                             *
  ******************************************************************************/
 osl_generic* osl_generic_sread(char**, osl_interface*) OSL_NONNULL_ARGS(1);
-osl_generic* osl_generic_sread_one(char**, osl_interface*)
-    OSL_NONNULL_ARGS(1);
-osl_generic* osl_generic_read_one(FILE*, osl_interface*)
-    OSL_NONNULL_ARGS(1);
+osl_generic* osl_generic_sread_one(char**, osl_interface*) OSL_NONNULL_ARGS(1);
+osl_generic* osl_generic_read_one(FILE*, osl_interface*) OSL_NONNULL_ARGS(1);
 osl_generic* osl_generic_read(FILE*, osl_interface*) OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                    Memory allocation/deallocation function                 *
  ******************************************************************************/
 void osl_generic_add(osl_generic**, osl_generic*) OSL_NONNULL_ARGS(1);
-void osl_generic_remove_node(osl_generic**, osl_generic*)
-    OSL_NONNULL_ARGS(1);
+void osl_generic_remove_node(osl_generic**, osl_generic*) OSL_NONNULL_ARGS(1);
 void osl_generic_remove(osl_generic**, const char*) OSL_NONNULL_ARGS(1);
 osl_generic* osl_generic_malloc(void) OSL_WARN_UNUSED_RESULT;
 void osl_generic_free(osl_generic*);
@@ -125,13 +126,11 @@ void osl_generic_free(osl_generic*);
  ******************************************************************************/
 int osl_generic_number(const osl_generic*);
 osl_generic* osl_generic_clone(const osl_generic*) OSL_WARN_UNUSED_RESULT;
-osl_generic* osl_generic_nclone(const osl_generic*,
-                                  int) OSL_WARN_UNUSED_RESULT;
+osl_generic* osl_generic_nclone(const osl_generic*, int) OSL_WARN_UNUSED_RESULT;
 bool osl_generic_equal(const osl_generic*, const osl_generic*);
-int osl_generic_has_URI(const osl_generic*, char const* const);
+bool osl_generic_has_URI(const osl_generic*, char const* const);
 void* osl_generic_lookup(const osl_generic*, char const* const);
-osl_generic* osl_generic_shell(void*,
-                                 osl_interface*) OSL_WARN_UNUSED_RESULT;
+osl_generic* osl_generic_shell(void*, osl_interface*) OSL_WARN_UNUSED_RESULT;
 int osl_generic_count(const osl_generic*);
 
 #if defined(__cplusplus)
