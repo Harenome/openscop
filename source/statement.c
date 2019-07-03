@@ -93,29 +93,31 @@ static osl_relation* osl_relation_clone_one_safe(const osl_relation*);
  * \param[in] level     Number of spaces before printing, for each line.
  */
 void osl_statement_idump(FILE* const file, const osl_statement* statement,
-                         int level) {
-  int j, first = 1, number = 1;
+                         const int level) {
+  int number = 1;
 
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (statement != NULL)
+  if (statement)
     fprintf(file, "+-- osl_statement (S%d)\n", number);
   else
     fprintf(file, "+-- NULL statement\n");
 
-  while (statement != NULL) {
+  bool first = true;
+  while (statement) {
     if (!first) {
       // Go to the right level.
-      for (j = 0; j < level; j++)
+      for (int j = 0; j < level; j++)
         fprintf(file, "|\t");
       fprintf(file, "|   osl_statement (S%d)\n", number);
-    } else
-      first = 0;
+    } else {
+      first = false;
+    }
 
     // A blank line.
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
@@ -135,15 +137,15 @@ void osl_statement_idump(FILE* const file, const osl_statement* statement,
     number++;
 
     // Next line.
-    if (statement != NULL) {
-      for (j = 0; j <= level; j++)
+    if (statement) {
+      for (int j = 0; j <= level; j++)
         fprintf(file, "|\t");
       fprintf(file, "V\n");
     }
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -155,7 +157,8 @@ void osl_statement_idump(FILE* const file, const osl_statement* statement,
  * \param[in] file      The file where the information has to be printed.
  * \param[in] statement The statement whose information has to be printed.
  */
-void osl_statement_dump(FILE* const file, const osl_statement* statement) {
+void osl_statement_dump(FILE* const file,
+                        const osl_statement* const statement) {
   osl_statement_idump(file, statement, 0);
 }
 
@@ -166,7 +169,7 @@ void osl_statement_dump(FILE* const file, const osl_statement* statement) {
  * \param[in] statement The statement (list) we have to generate names for.
  * \return A set of generated names for the input statement dimensions.
  */
-osl_names* osl_statement_names(const osl_statement* statement) {
+osl_names* osl_statement_names(const osl_statement* const statement) {
   int nb_parameters = OSL_UNDEFINED;
   int nb_iterators = OSL_UNDEFINED;
   int nb_scattdims = OSL_UNDEFINED;
@@ -189,42 +192,35 @@ osl_names* osl_statement_names(const osl_statement* statement) {
  * \param[in] names     The names of the constraint columns for comments.
  */
 void osl_statement_pprint(FILE* const file, const osl_statement* statement,
-                          const osl_names* input_names) {
-  size_t nb_relations;
-  int number = 1;
-  int iterators_backedup = 0;
-  int nb_ext = 0;
-  osl_body* body = NULL;
-  osl_strings* iterators_backup = NULL;
-  osl_names* names = NULL;
-
+                          const osl_names* const input_names) {
   // Generate the dimension names if necessary and replace iterators with
   // statement iterators if possible.
-  if (input_names == NULL) {
-    names = osl_statement_names(statement);
-  } else {
-    names = osl_names_clone(input_names);
-  }
+  osl_names* const names = input_names ? osl_names_clone(input_names)
+                                       : osl_statement_names(statement);
 
-  while (statement != NULL) {
+  int number = 1;
+  while (statement) {
+    bool iterators_backedup = false;
+    osl_strings* iterators_backup = NULL;
+
     // If possible, replace iterator names with statement iterator names.
-    body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
-    if (body && body->iterators != NULL) {
-      iterators_backedup = 1;
+    osl_body* const body =
+        osl_generic_lookup(statement->extension, OSL_URI_BODY);
+    if (body && body->iterators) {
+      iterators_backedup = true;
       iterators_backup = names->iterators;
       names->iterators = body->iterators;
     }
-
-    nb_relations = 0;
 
     fprintf(file, "# =============================================== ");
     fprintf(file, "Statement %d\n", number);
 
     fprintf(file, "# Number of relations describing the statement:\n");
 
-    if (statement->domain != NULL)
+    size_t nb_relations = 0;
+    if (statement->domain)
       nb_relations++;
-    if (statement->scattering != NULL)
+    if (statement->scattering)
       nb_relations++;
     nb_relations += osl_relation_list_count(statement->access);
 
@@ -248,7 +244,7 @@ void osl_statement_pprint(FILE* const file, const osl_statement* statement,
     fprintf(file, "# ---------------------------------------------- ");
     fprintf(file, "%2d.4 Statement Extensions\n", number);
     fprintf(file, "# Number of Statement Extensions\n");
-    nb_ext = osl_generic_number(statement->extension);
+    int nb_ext = osl_generic_number(statement->extension);
     fprintf(file, "%d\n", nb_ext);
     if (nb_ext > 0)
       osl_generic_print(file, statement->extension);
@@ -257,7 +253,7 @@ void osl_statement_pprint(FILE* const file, const osl_statement* statement,
 
     // If necessary, switch back iterator names.
     if (iterators_backedup) {
-      iterators_backedup = 0;
+      iterators_backedup = false;
       names->iterators = iterators_backup;
     }
 
@@ -278,32 +274,27 @@ void osl_statement_pprint(FILE* const file, const osl_statement* statement,
  */
 void osl_statement_pprint_scoplib(FILE* const file,
                                   const osl_statement* statement,
-                                  const osl_names* input_names) {
-  int number = 1;
-  int iterators_backedup = 0;
-  osl_body* body = NULL;
-  osl_strings* iterators_backup = NULL;
-  int add_fakeiter;
-  osl_names* names = NULL;
-
+                                  const osl_names* const input_names) {
   // Generate the dimension names if necessary and replace iterators with
   // statement iterators if possible.
-  if (input_names == NULL) {
-    names = osl_statement_names(statement);
-  } else {
-    names = osl_names_clone(input_names);
-  }
+  osl_names* const names = input_names ? osl_names_clone(input_names)
+                                       : osl_statement_names(statement);
 
-  while (statement != NULL) {
+  int number = 1;
+  while (statement) {
+    bool iterators_backedup = false;
+    osl_strings* iterators_backup = NULL;
+
     // If possible, replace iterator names with statement iterator names.
-    body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
-    if (body && body->iterators != NULL) {
-      iterators_backedup = 1;
+    osl_body* const body =
+        osl_generic_lookup(statement->extension, OSL_URI_BODY);
+    if (body && body->iterators) {
+      iterators_backedup = true;
       iterators_backup = names->iterators;
       names->iterators = body->iterators;
     }
 
-    add_fakeiter =
+    bool add_fakeiter =
         statement->domain->nb_rows == 0 && statement->scattering->nb_rows == 1;
 
     fprintf(file, "# =============================================== ");
@@ -333,10 +324,9 @@ void osl_statement_pprint_scoplib(FILE* const file,
 
     fprintf(file, "# ---------------------------------------------- ");
     fprintf(file, "%2d.4 Body\n", number);
-    if (body != NULL) {
+    if (body) {
       fprintf(file, "# Statement body is provided\n1\n");
       osl_body_print_scoplib(file, body);
-      body = NULL;  // re-initialize for next statement
     } else {
       fprintf(file, "# Statement body is not provided\n0\n");
     }
@@ -345,7 +335,7 @@ void osl_statement_pprint_scoplib(FILE* const file,
 
     // If necessary, switch back iterator names.
     if (iterators_backedup) {
-      iterators_backedup = 0;
+      iterators_backedup = false;
       names->iterators = iterators_backup;
     }
 
@@ -363,7 +353,8 @@ void osl_statement_pprint_scoplib(FILE* const file,
  * \param[in] file      The file where the information has to be printed.
  * \param[in] statement The statement whose information has to be printed.
  */
-void osl_statement_print(FILE* const file, const osl_statement* statement) {
+void osl_statement_print(FILE* const file,
+                         const osl_statement* const statement) {
   osl_statement_pprint(file, statement, NULL);
 }
 
@@ -380,18 +371,16 @@ void osl_statement_print(FILE* const file, const osl_statement* statement) {
  * \param[in,out] stmt The statement where to dispatch the relations.
  * \param[in,out] list The "brute" relation list to sort and dispatch (freed).
  */
-void osl_statement_dispatch(osl_statement* stmt, osl_relation_list* list) {
-  osl_relation_list* domain_list;
-  osl_relation_list* scattering_list;
-  size_t nb_domains, nb_scattering, nb_accesses;
-
+void osl_statement_dispatch(osl_statement* const stmt,
+                            osl_relation_list* const list) {
   // Domain.
-  domain_list = osl_relation_list_filter(list, OSL_TYPE_DOMAIN);
-  nb_domains = osl_relation_list_count(domain_list);
+  osl_relation_list* const domain_list =
+      osl_relation_list_filter(list, OSL_TYPE_DOMAIN);
+  const size_t nb_domains = osl_relation_list_count(domain_list);
   if (nb_domains > 1)
     OSL_error("more than one domain for a statement");
 
-  if (domain_list != NULL) {
+  if (domain_list) {
     stmt->domain = domain_list->elt;
     domain_list->elt = NULL;
     osl_relation_list_free(domain_list);
@@ -400,12 +389,13 @@ void osl_statement_dispatch(osl_statement* stmt, osl_relation_list* list) {
   }
 
   // Scattering.
-  scattering_list = osl_relation_list_filter(list, OSL_TYPE_SCATTERING);
-  nb_scattering = osl_relation_list_count(scattering_list);
+  osl_relation_list* const scattering_list =
+      osl_relation_list_filter(list, OSL_TYPE_SCATTERING);
+  const size_t nb_scattering = osl_relation_list_count(scattering_list);
   if (nb_scattering > 1)
     OSL_error("more than one scattering relation for a statement");
 
-  if (scattering_list != NULL) {
+  if (scattering_list) {
     stmt->scattering = scattering_list->elt;
     scattering_list->elt = NULL;
     osl_relation_list_free(scattering_list);
@@ -415,7 +405,7 @@ void osl_statement_dispatch(osl_statement* stmt, osl_relation_list* list) {
 
   // Access.
   stmt->access = osl_relation_list_filter(list, OSL_TYPE_ACCESS);
-  nb_accesses = osl_relation_list_count(stmt->access);
+  const size_t nb_accesses = osl_relation_list_count(stmt->access);
 
   if ((nb_domains + nb_scattering + nb_accesses) !=
       (osl_relation_list_count(list)))
@@ -434,23 +424,21 @@ void osl_statement_dispatch(osl_statement* stmt, osl_relation_list* list) {
  * \return A pointer to the statement structure that has been read.
  */
 osl_statement* osl_statement_pread(FILE* const file,
-                                     osl_interface* registry, int precision) {
-  osl_statement* stmt = osl_statement_malloc();
-  osl_relation_list* list;
-  osl_generic* new = NULL;
-  int i, nb_ext = 0;
+                                   osl_interface* const registry,
+                                   const int precision) {
+  osl_statement* const stmt = osl_statement_malloc();
 
   if (file) {
     // Read all statement relations.
-    list = osl_relation_list_pread(file, precision);
+    osl_relation_list* const list = osl_relation_list_pread(file, precision);
 
     // Store relations at the right place according to their type.
     osl_statement_dispatch(stmt, list);
 
     // Read the Extensions
-    nb_ext = osl_util_read_int(file, NULL);
-    for (i = 0; i < nb_ext; i++) {
-      new = osl_generic_read_one(file, registry);
+    const int nb_ext = osl_util_read_int(file, NULL);
+    for (int i = 0; i < nb_ext; i++) {
+      osl_generic* const new = osl_generic_read_one(file, registry);
       osl_generic_add(&stmt->extension, new);
     }
   }
@@ -467,9 +455,10 @@ osl_statement* osl_statement_pread(FILE* const file,
  * \see{osl_statement_pread}
  */
 osl_statement* osl_statement_read(FILE* const foo) {
-  int precision = osl_util_get_precision();
-  osl_interface* registry = osl_interface_get_default_registry();
-  osl_statement* statement = osl_statement_pread(foo, registry, precision);
+  const int precision = osl_util_get_precision();
+  osl_interface* const registry = osl_interface_get_default_registry();
+  osl_statement* const statement =
+      osl_statement_pread(foo, registry, precision);
 
   osl_interface_free(registry);
   return statement;
@@ -508,7 +497,7 @@ osl_statement* osl_statement_malloc(void) {
 void osl_statement_free(osl_statement* statement) {
   osl_statement* next;
 
-  while (statement != NULL) {
+  while (statement) {
     next = statement->next;
     osl_relation_free(statement->domain);
     osl_relation_free(statement->scattering);
@@ -532,7 +521,7 @@ void osl_statement_free(osl_statement* statement) {
  * \param[in]     statement The statement to add to the list.
  */
 void osl_statement_add(osl_statement** location, osl_statement* statement) {
-  while (*location != NULL)
+  while (*location)
     location = &((*location)->next);
 
   *location = statement;
@@ -548,7 +537,7 @@ void osl_statement_add(osl_statement** location, osl_statement* statement) {
 int osl_statement_number(const osl_statement* statement) {
   int number = 0;
 
-  while (statement != NULL) {
+  while (statement) {
     number++;
     statement = statement->next;
   }
@@ -564,13 +553,13 @@ int osl_statement_number(const osl_statement* statement) {
  * \return The clone of the n first nodes of the statement list.
  */
 osl_statement* osl_statement_nclone(const osl_statement* statement, int n) {
-  int first = 1, i = 0;
+  int i = 0;
   osl_statement* clone = NULL;
-  osl_statement* node;
   osl_statement* previous = NULL;
 
-  while ((statement != NULL) && ((n == -1) || (i < n))) {
-    node = osl_statement_malloc();
+  bool first = true;
+  while ((statement) && ((n == -1) || (i < n))) {
+    osl_statement* const node = osl_statement_malloc();
     node->domain = osl_relation_clone(statement->domain);
     node->scattering = osl_relation_clone(statement->scattering);
     node->access = osl_relation_list_clone(statement->access);
@@ -578,7 +567,7 @@ osl_statement* osl_statement_nclone(const osl_statement* statement, int n) {
     node->next = NULL;
 
     if (first) {
-      first = 0;
+      first = false;
       clone = node;
       previous = node;
     } else {
@@ -605,9 +594,8 @@ osl_statement* osl_statement_clone(const osl_statement* const statement) {
 }
 
 /// Clone first part of the union, return NULL if input is NULL.
-osl_relation* osl_relation_clone_one_safe(
-    const osl_relation* const relation) {
-  if (relation == NULL)
+osl_relation* osl_relation_clone_one_safe(const osl_relation* const relation) {
+  if (!relation)
     return NULL;
   return osl_relation_nclone(relation, 1);
 }
@@ -625,18 +613,16 @@ osl_relation* osl_relation_clone_one_safe(
  */
 osl_statement* osl_statement_remove_unions(
     const osl_statement* const statement) {
-  osl_relation* domain;
-  osl_relation* scattering;
   osl_statement* statement_ptr = NULL;
   osl_statement* result;
   if (!statement)
     return NULL;
 
   // Make at least one new statement, even if there are no relations.
-  domain = statement->domain;
+  osl_relation* domain = statement->domain;
   result = NULL;
   do {
-    scattering = statement->scattering;
+    osl_relation* scattering = statement->scattering;
     do {
       osl_statement* new_statement = osl_statement_malloc();
       new_statement->domain = osl_relation_clone_one_safe(domain);
@@ -650,11 +636,11 @@ osl_statement* osl_statement_remove_unions(
         statement_ptr->next = new_statement;
         statement_ptr = statement_ptr->next;
       }
-      if (scattering == NULL || scattering->next == NULL)
+      if (!scattering || !scattering->next)
         break;
       scattering = scattering->next;
     } while (1);
-    if (domain == NULL || domain->next == NULL)
+    if (!domain || !domain->next)
       break;
     domain = domain->next;
   } while (1);
@@ -670,45 +656,44 @@ osl_statement* osl_statement_remove_unions(
  * \param[in] s2 The second statement.
  * \return 1 if s1 and s2 are the same (content-wise), 0 otherwise.
  */
-int osl_statement_equal(const osl_statement* const s1,
-                        const osl_statement* const s2) {
+bool osl_statement_equal(const osl_statement* const s1,
+                         const osl_statement* const s2) {
   if (s1 == s2)
-    return 1;
+    return true;
 
-  if (((s1->next != NULL) && (s2->next == NULL)) ||
-      ((s1->next == NULL) && (s2->next != NULL))) {
+  if ((s1->next && !s2->next) || (!s1->next && s2->next)) {
     OSL_info("statements are not the same");
-    return 0;
+    return false;
   }
 
   if ((s1->next != NULL) && (s2->next != NULL)) {
     if (!osl_statement_equal(s1->next, s2->next)) {
       OSL_info("number of statements is not the same");
-      return 0;
+      return false;
     }
   }
 
   if (!osl_relation_equal(s1->domain, s2->domain)) {
     OSL_info("statement domains are not the same");
-    return 0;
+    return false;
   }
 
   if (!osl_relation_equal(s1->scattering, s2->scattering)) {
     OSL_info("statement scatterings are not the same");
-    return 0;
+    return false;
   }
 
   if (!osl_relation_list_equal(s1->access, s2->access)) {
     OSL_info("statement accesses are not the same");
-    return 0;
+    return false;
   }
 
   if (!osl_generic_equal(s1->extension, s2->extension)) {
     OSL_info("statement bodies are not the same");
-    return 0;
+    return false;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -721,52 +706,47 @@ int osl_statement_equal(const osl_statement* const s1,
  * \param[in] expected_nb_parameters Expected number of parameters.
  * \return 0 if the integrity check fails, 1 otherwise.
  */
-int osl_statement_integrity_check(const osl_statement* statement,
-                                  int expected_nb_parameters) {
-  int expected_nb_iterators;
-  osl_body* body = NULL;
-
-  while (statement != NULL) {
+bool osl_statement_integrity_check(const osl_statement* statement,
+                                   const int expected_nb_parameters) {
+  while (statement) {
     // Check the domain.
     if (!osl_relation_integrity_check(statement->domain, OSL_TYPE_DOMAIN,
                                       OSL_UNDEFINED, 0,
                                       expected_nb_parameters)) {
-      return 0;
+      return false;
     }
 
     // Get the number of iterators.
-    if (statement->domain != NULL)
-      expected_nb_iterators = statement->domain->nb_output_dims;
-    else
-      expected_nb_iterators = OSL_UNDEFINED;
+    const int expected_nb_iterators =
+        statement->domain ? statement->domain->nb_output_dims : OSL_UNDEFINED;
 
     // Check the scattering relation.
     if (!osl_relation_integrity_check(
             statement->scattering, OSL_TYPE_SCATTERING, OSL_UNDEFINED,
             expected_nb_iterators, expected_nb_parameters)) {
-      return 0;
+      return false;
     }
 
     // Check the access relations.
     if (!osl_relation_list_integrity_check(statement->access, OSL_TYPE_ACCESS,
                                            OSL_UNDEFINED, expected_nb_iterators,
                                            expected_nb_parameters)) {
-      return 0;
+      return false;
     }
 
     // Check the statement body.
-    body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
-    if ((expected_nb_iterators != OSL_UNDEFINED) && body &&
-        body->iterators != NULL &&
+    osl_body* const body =
+        osl_generic_lookup(statement->extension, OSL_URI_BODY);
+    if ((expected_nb_iterators != OSL_UNDEFINED) && body && body->iterators &&
         ((size_t)expected_nb_iterators != osl_strings_size(body->iterators))) {
       OSL_warning("unexpected number of original iterators");
-      return 0;
+      return false;
     }
 
     statement = statement->next;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -804,16 +784,18 @@ int osl_statement_get_nb_iterators(const osl_statement* const statement) {
  * \param[in,out] array_id      Maximum array identifier attribute.
  */
 void osl_statement_get_attributes(const osl_statement* statement,
-                                  int* nb_parameters, int* nb_iterators,
-                                  int* nb_scattdims, int* nb_localdims,
-                                  int* array_id) {
+                                  int* const nb_parameters,
+                                  int* const nb_iterators,
+                                  int* const nb_scattdims,
+                                  int* const nb_localdims,
+                                  int* const array_id) {
   int local_nb_parameters = OSL_UNDEFINED;
   int local_nb_iterators = OSL_UNDEFINED;
   int local_nb_scattdims = OSL_UNDEFINED;
   int local_nb_localdims = OSL_UNDEFINED;
   int local_array_id = OSL_UNDEFINED;
 
-  while (statement != NULL) {
+  while (statement) {
     osl_relation_get_attributes(statement->domain, &local_nb_parameters,
                                 &local_nb_iterators, &local_nb_scattdims,
                                 &local_nb_localdims, &local_array_id);
@@ -842,19 +824,18 @@ void osl_statement_get_attributes(const osl_statement* statement,
  * \return the body if found, NULL otherwise.
  */
 osl_body* osl_statement_get_body(const osl_statement* const statement) {
-  osl_body* body;
-  osl_extbody* ebody;
-
-  if (statement == NULL || statement->extension == NULL) {
+  if (!statement || !statement->extension) {
     return NULL;
   }
 
-  body = (osl_body*)osl_generic_lookup(statement->extension, OSL_URI_BODY);
-  if (body != NULL)
+  osl_body* const body = osl_generic_lookup(statement->extension, OSL_URI_BODY);
+  if (body)
     return body;
-  ebody =
-      (osl_extbody*)osl_generic_lookup(statement->extension, OSL_URI_EXTBODY);
-  if (ebody != NULL)
+
+  osl_extbody* const ebody =
+      osl_generic_lookup(statement->extension, OSL_URI_EXTBODY);
+  if (ebody)
     return ebody->body;
+
   return NULL;
 }

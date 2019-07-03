@@ -62,6 +62,7 @@
 #define OSL_STATEMENT_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include <osl/attributes.h>
 #include <osl/body.h>
@@ -139,8 +140,8 @@ osl_statement* osl_statement_clone(const osl_statement*)
     OSL_WARN_UNUSED_RESULT;
 osl_statement* osl_statement_remove_unions(const osl_statement*)
     OSL_WARN_UNUSED_RESULT;
-int osl_statement_equal(const osl_statement*, const osl_statement*);
-int osl_statement_integrity_check(const osl_statement*, int);
+bool osl_statement_equal(const osl_statement*, const osl_statement*);
+bool osl_statement_integrity_check(const osl_statement*, int);
 int osl_statement_get_nb_iterators(const osl_statement*);
 void osl_statement_get_attributes(const osl_statement*, int*, int*, int*,
                                   int*, int*);
