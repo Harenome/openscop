@@ -83,28 +83,25 @@
  * \param[in] level   Number of spaces before printing, for each line.
  */
 void osl_comment_idump(FILE* const file, const osl_comment* const comment,
-                       int level) {
-  int j;
-  size_t l;
-  char* tmp;
-
+                       const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (comment != NULL)
+  if (comment)
     fprintf(file, "+-- osl_comment\n");
   else
     fprintf(file, "+-- NULL comment\n");
 
-  if (comment != NULL) {
+  if (comment) {
     // Go to the right level.
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
 
     // Display the comment message (without any carriage return).
+    char* tmp;
     OSL_strdup(tmp, comment->comment);
-    for (l = 0; l < strlen(tmp); l++)
+    for (size_t l = 0; l < strlen(tmp); l++)
       if (tmp[l] == '\n')
         tmp[l] = ' ';
     fprintf(file, "comment: %s\n", tmp);
@@ -112,7 +109,7 @@ void osl_comment_idump(FILE* const file, const osl_comment* const comment,
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -140,7 +137,7 @@ char* osl_comment_sprint(const osl_comment* const comment) {
   char* string = NULL;
   char buffer[OSL_MAX_STRING];
 
-  if (comment != NULL) {
+  if (comment) {
     OSL_malloc(string, char*, high_water_mark * sizeof(char));
     string[0] = '\0';
 
@@ -170,9 +167,7 @@ char* osl_comment_sprint(const osl_comment* const comment) {
  * \return A pointer to the comment structure that has been read.
  */
 osl_comment* osl_comment_sread(char** input) {
-  osl_comment* comment;
-
-  if (*input == NULL) {
+  if (!*input) {
     OSL_debug("no comment optional tag");
     return NULL;
   }
@@ -181,7 +176,7 @@ osl_comment* osl_comment_sread(char** input) {
     OSL_error("comment too long");
 
   // Build the comment structure
-  comment = osl_comment_malloc();
+  osl_comment* const comment = osl_comment_malloc();
   OSL_strdup(comment->comment, *input);
 
   // Update the input pointer (everything has been read).
@@ -218,8 +213,8 @@ osl_comment* osl_comment_malloc(void) {
  * \param[in,out] comment The pointer to the comment structure to free.
  */
 void osl_comment_free(osl_comment* comment) {
-  if (comment != NULL) {
-    if (comment->comment != NULL)
+  if (comment) {
+    if (comment->comment)
       free(comment->comment);
     free(comment);
   }
@@ -237,12 +232,10 @@ void osl_comment_free(osl_comment* comment) {
  * \return A pointer to the clone of the comment structure.
  */
 osl_comment* osl_comment_clone(const osl_comment* const comment) {
-  osl_comment* clone;
-
-  if (comment == NULL)
+  if (!comment)
     return NULL;
 
-  clone = osl_comment_malloc();
+  osl_comment* const clone = osl_comment_malloc();
   OSL_strdup(clone->comment, comment->comment);
 
   return clone;
@@ -259,11 +252,11 @@ osl_comment* osl_comment_clone(const osl_comment* const comment) {
 bool osl_comment_equal(const osl_comment* const c1,
                        const osl_comment* const c2) {
   if (c1 == c2)
-    return 1;
+    return true;
 
-  if (((c1 == NULL) && (c2 != NULL)) || ((c1 != NULL) && (c2 == NULL))) {
+  if ((!c1 && c2) || (c1 && !c2)) {
     OSL_info("comments are not the same");
-    return 0;
+    return false;
   }
 
   if (strcmp(c1->comment, c2->comment)) {
@@ -273,7 +266,7 @@ bool osl_comment_equal(const osl_comment* const c1,
     // return 0;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -283,7 +276,7 @@ bool osl_comment_equal(const osl_comment* const c1,
  * \return An interface structure for the comment extension.
  */
 osl_interface* osl_comment_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_COMMENT);
   interface->idump = (osl_idump_f)osl_comment_idump;
