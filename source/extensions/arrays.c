@@ -85,30 +85,28 @@
  * \param[in] level  Number of spaces before printing, for each line.
  */
 void osl_arrays_idump(FILE* const file, const osl_arrays* const arrays,
-                      int level) {
-  int i, j;
-
+                      const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (arrays != NULL)
+  if (arrays)
     fprintf(file, "+-- osl_arrays\n");
   else
     fprintf(file, "+-- NULL arrays\n");
 
-  if (arrays != NULL) {
+  if (arrays) {
     // Go to the right level.
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
 
     // Display the number of names.
     fprintf(file, "nb_names: %d\n", arrays->nb_names);
 
     // Display the id/name.
-    for (i = 0; i < arrays->nb_names; i++) {
+    for (int i = 0; i < arrays->nb_names; i++) {
       // Go to the right level.
-      for (j = 0; j <= level; j++)
+      for (int j = 0; j <= level; j++)
         fprintf(file, "|\t");
 
       fprintf(file, "id: %2d, name: %s\n", arrays->id[i], arrays->names[i]);
@@ -116,7 +114,7 @@ void osl_arrays_idump(FILE* const file, const osl_arrays* const arrays,
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -140,12 +138,11 @@ void osl_arrays_dump(FILE* const file, const osl_arrays* const arrays) {
  * \return A string containing the OpenScop dump of the arrays structure.
  */
 char* osl_arrays_sprint(const osl_arrays* const arrays) {
-  int i;
   size_t high_water_mark = OSL_MAX_STRING;
   char* string = NULL;
   char buffer[OSL_MAX_STRING];
 
-  if (arrays != NULL) {
+  if (arrays) {
     OSL_malloc(string, char*, high_water_mark * sizeof(char));
     string[0] = '\0';
 
@@ -159,7 +156,7 @@ char* osl_arrays_sprint(const osl_arrays* const arrays) {
       sprintf(buffer, "# Mapping array-identifiers/array-names\n");
       osl_util_safe_strcat(&string, buffer, &high_water_mark);
     }
-    for (i = 0; i < arrays->nb_names; i++) {
+    for (int i = 0; i < arrays->nb_names; i++) {
       sprintf(buffer, "%d %s\n", arrays->id[i], arrays->names[i]);
       osl_util_safe_strcat(&string, buffer, &high_water_mark);
     }
@@ -186,28 +183,24 @@ char* osl_arrays_sprint(const osl_arrays* const arrays) {
  * \return A pointer to the arrays structure that has been read.
  */
 osl_arrays* osl_arrays_sread(char** input) {
-  int i, k;
-  int nb_names;
-  osl_arrays* arrays;
-
-  if (input == NULL) {
+  if (!input) {
     OSL_debug("no arrays optional tag");
     return NULL;
   }
 
   // Find the number of names provided.
-  nb_names = osl_util_read_int(NULL, input);
+  const int nb_names = osl_util_read_int(NULL, input);
 
   // Allocate the array of id and names.
-  arrays = osl_arrays_malloc();
+  osl_arrays* const arrays = osl_arrays_malloc();
   OSL_malloc(arrays->id, int*, (size_t)nb_names * sizeof(int));
   OSL_malloc(arrays->names, char**, (size_t)nb_names * sizeof(char*));
   arrays->nb_names = nb_names;
-  for (i = 0; i < nb_names; i++)
+  for (int i = 0; i < nb_names; i++)
     arrays->names[i] = NULL;
 
   // Get each array id/name.
-  for (k = 0; k < nb_names; k++) {
+  for (int k = 0; k < nb_names; k++) {
     // Get the array name id.
     arrays->id[k] = osl_util_read_int(NULL, input);
 
@@ -247,11 +240,9 @@ osl_arrays* osl_arrays_malloc(void) {
  * \param[in,out] arrays The pointer to the arrays structure we want to free.
  */
 void osl_arrays_free(osl_arrays* const arrays) {
-  int i;
-
-  if (arrays != NULL) {
+  if (arrays) {
     free(arrays->id);
-    for (i = 0; i < arrays->nb_names; i++)
+    for (int i = 0; i < arrays->nb_names; i++)
       free(arrays->names[i]);
     free(arrays->names);
     free(arrays);
@@ -270,18 +261,15 @@ void osl_arrays_free(osl_arrays* const arrays) {
  * \return A pointer to the clone of the arrays structure.
  */
 osl_arrays* osl_arrays_clone(const osl_arrays* const arrays) {
-  int i;
-  osl_arrays* clone;
-
-  if (arrays == NULL)
+  if (!arrays)
     return NULL;
 
-  clone = osl_arrays_malloc();
+  osl_arrays* const clone = osl_arrays_malloc();
   clone->nb_names = arrays->nb_names;
   OSL_malloc(clone->id, int*, (size_t)arrays->nb_names * sizeof(int));
   OSL_malloc(clone->names, char**, (size_t)arrays->nb_names * sizeof(char*));
 
-  for (i = 0; i < arrays->nb_names; i++) {
+  for (int i = 0; i < arrays->nb_names; i++) {
     clone->id[i] = arrays->id[i];
     OSL_strdup(clone->names[i], arrays->names[i]);
   }
@@ -299,41 +287,39 @@ osl_arrays* osl_arrays_clone(const osl_arrays* const arrays) {
  * \param[in] a2 The second arrays structure.
  * \return 1 if a1 and a2 are the same (content-wise), 0 otherwise.
  */
-bool osl_arrays_equal(const osl_arrays* const a1,
-                      const osl_arrays* const a2) {
-  int i, j, found;
-
+bool osl_arrays_equal(const osl_arrays* const a1, const osl_arrays* const a2) {
   if (a1 == a2)
-    return 1;
+    return true;
 
-  if (((a1 == NULL) && (a2 != NULL)) || ((a1 != NULL) && (a2 == NULL))) {
+  if ((!a1 && a2) || (a1 && !a2)) {
     OSL_info("arrays are not the same");
-    return 0;
+    return false;
   }
 
   // Check whether the number of names is the same.
   if (a1->nb_names != a2->nb_names) {
     OSL_info("arrays are not the same");
-    return 0;
+    return false;
   }
 
   // We accept a different order of the names, as long as the identifiers
   // are the same.
-  for (i = 0; i < a1->nb_names; i++) {
+  for (int i = 0; i < a1->nb_names; i++) {
+    bool found = false;
     found = 0;
-    for (j = 0; j < a2->nb_names; j++) {
+    for (int j = 0; j < a2->nb_names; j++) {
       if ((a1->id[i] == a2->id[j]) && (!strcmp(a1->names[i], a2->names[j]))) {
-        found = 1;
+        found = true;
         break;
       }
     }
-    if (found != 1) {
+    if (!found) {
       OSL_info("arrays are not the same");
-      return 0;
+      return false;
     }
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -346,23 +332,21 @@ bool osl_arrays_equal(const osl_arrays* const a1,
  * \return A strings structure containing all the array names.
  */
 osl_strings* osl_arrays_to_strings(const osl_arrays* const arrays) {
-  int i, max_id = 0;
-  osl_strings* strings = NULL;
-
-  if (arrays == NULL)
+  if (!arrays)
     return NULL;
 
   // Find the maximum array id.
+  int max_id = 0;
   if (arrays->nb_names >= 1) {
     max_id = arrays->id[0];
-    for (i = 1; i < arrays->nb_names; i++)
+    for (int i = 1; i < arrays->nb_names; i++)
       if (arrays->id[i] > max_id)
         max_id = arrays->id[i];
   }
 
   // Build a strings structure for this number of ids.
-  strings = osl_strings_generate("Dummy", max_id);
-  for (i = 0; i < arrays->nb_names; i++) {
+  osl_strings* const strings = osl_strings_generate("Dummy", max_id);
+  for (int i = 0; i < arrays->nb_names; i++) {
     free(strings->string[arrays->id[i] - 1]);
     OSL_strdup(strings->string[arrays->id[i] - 1], arrays->names[i]);
   }
@@ -380,7 +364,7 @@ osl_strings* osl_arrays_to_strings(const osl_arrays* const arrays) {
  * \return Updated number of elements, -1 means error
  */
 int osl_arrays_add(osl_arrays* const arrays, int id, const char* const name) {
-  if (arrays == NULL || name == NULL)
+  if (!arrays || !name)
     return -1;
 
   OSL_realloc(arrays->id, int*, (size_t)(arrays->nb_names + 1) * sizeof(int));
@@ -401,12 +385,12 @@ int osl_arrays_add(osl_arrays* const arrays, int id, const char* const name) {
  * \param[in] id     The variable's id.
  * \return index of the variable, array->nb_names means error
  */
-size_t osl_arrays_get_index_from_id(const osl_arrays* const arrays, int id) {
-  size_t i = 0;
-
-  if (arrays == NULL)
+size_t osl_arrays_get_index_from_id(const osl_arrays* const arrays,
+                                    const int id) {
+  if (!arrays)
     return 0;
 
+  size_t i = 0;
   for (i = 0; i < (size_t)arrays->nb_names; i++) {
     if (arrays->id[i] == id)
       break;
@@ -425,11 +409,10 @@ size_t osl_arrays_get_index_from_id(const osl_arrays* const arrays, int id) {
  */
 size_t osl_arrays_get_index_from_name(const osl_arrays* const arrays,
                                       const char* const name) {
-  size_t i = 0;
-
-  if (arrays == NULL || name == NULL)
+  if (!arrays || !name)
     return 0;
 
+  size_t i = 0;
   for (i = 0; i < (size_t)arrays->nb_names; i++) {
     if (!strcmp(arrays->names[i], name))
       break;
@@ -446,7 +429,7 @@ size_t osl_arrays_get_index_from_name(const osl_arrays* const arrays,
  * \return An interface structure for the arrays extension.
  */
 osl_interface* osl_arrays_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_ARRAYS);
   interface->idump = (osl_idump_f)osl_arrays_idump;
