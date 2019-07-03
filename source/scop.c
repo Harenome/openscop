@@ -88,49 +88,49 @@
  * \param scop  The scop structure whose information has to be printed.
  * \param level Number of spaces before printing, for each line.
  */
-void osl_scop_idump(FILE* const file, const osl_scop* scop, int level) {
-  int j, first = 1;
-
+void osl_scop_idump(FILE* const file, const osl_scop* scop, const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (scop != NULL)
+  if (scop)
     fprintf(file, "+-- osl_scop\n");
   else
     fprintf(file, "+-- NULL scop\n");
 
-  while (scop != NULL) {
+  bool first = true;
+  while (scop) {
     if (!first) {
       // Go to the right level.
-      for (j = 0; j < level; j++)
+      for (int j = 0; j < level; j++)
         fprintf(file, "|\t");
       fprintf(file, "|   osl_scop\n");
-    } else
-      first = 0;
+    } else {
+      first = false;
+    }
 
     // A blank line.
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
     // Print the version.
-    for (j = 0; j < level; j++)
+    for (int j = 0; j < level; j++)
       fprintf(file, "|\t");
     fprintf(file, "|\tVersion: %d\n", scop->version);
 
     // A blank line.
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
     // Print the language.
-    for (j = 0; j < level; j++)
+    for (int j = 0; j < level; j++)
       fprintf(file, "|\t");
     fprintf(file, "|\tLanguage: %s\n", scop->language);
 
     // A blank line.
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
@@ -152,15 +152,15 @@ void osl_scop_idump(FILE* const file, const osl_scop* scop, int level) {
     scop = scop->next;
 
     // Next line.
-    if (scop != NULL) {
-      for (j = 0; j <= level; j++)
+    if (scop) {
+      for (int j = 0; j <= level; j++)
         fprintf(file, "|\t");
       fprintf(file, "V\n");
     }
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -183,7 +183,7 @@ void osl_scop_dump(FILE* const file, const osl_scop* const scop) {
  * \param[in] scop The scop (list) we have to generate names for.
  * \return A set of generated names for the input scop dimensions.
  */
-osl_names* osl_scop_names(const osl_scop* scop) {
+osl_names* osl_scop_names(const osl_scop* const scop) {
   int nb_parameters = OSL_UNDEFINED;
   int nb_iterators = OSL_UNDEFINED;
   int nb_scattdims = OSL_UNDEFINED;
@@ -205,14 +205,7 @@ osl_names* osl_scop_names(const osl_scop* scop) {
  * \param scop The scop structure whose information has to be printed.
  */
 void osl_scop_print(FILE* const file, const osl_scop* scop) {
-  int parameters_backedup = 0;
-  int arrays_backedup = 0;
-  osl_strings* parameters_backup = NULL;
-  osl_strings* arrays_backup = NULL;
-  osl_names* names;
-  osl_arrays* arrays;
-
-  if (scop == NULL) {
+  if (!scop) {
     fprintf(file, "# NULL scop\n");
     return;
   } else {
@@ -224,20 +217,25 @@ void osl_scop_print(FILE* const file, const osl_scop* scop) {
     OSL_warning("OpenScop integrity check failed. Something may go wrong.");
 
   // Generate the names for the various dimensions.
-  names = osl_scop_names(scop);
+  osl_names* const names = osl_scop_names(scop);
 
-  while (scop != NULL) {
+  while (scop) {
+    bool arrays_backedup = false;
+    bool parameters_backedup = false;
+    osl_strings* arrays_backup = NULL;
+    osl_strings* parameters_backup = NULL;
     // If possible, replace parameter names with scop parameter names.
     if (osl_generic_has_URI(scop->parameters, OSL_URI_STRINGS)) {
-      parameters_backedup = 1;
+      parameters_backedup = true;
       parameters_backup = names->parameters;
       names->parameters = scop->parameters->data;
     }
 
     // If possible, replace array names with arrays extension names.
-    arrays = osl_generic_lookup(scop->extension, OSL_URI_ARRAYS);
-    if (arrays != NULL) {
-      arrays_backedup = 1;
+    osl_arrays* const arrays =
+        osl_generic_lookup(scop->extension, OSL_URI_ARRAYS);
+    if (arrays) {
+      arrays_backedup = true;
       arrays_backup = names->arrays;
       names->arrays = osl_arrays_to_strings(arrays);
     }
@@ -273,13 +271,13 @@ void osl_scop_print(FILE* const file, const osl_scop* scop) {
 
     // If necessary, switch back parameter names.
     if (parameters_backedup) {
-      parameters_backedup = 0;
+      parameters_backedup = false;
       names->parameters = parameters_backup;
     }
 
     // If necessary, switch back array names.
     if (arrays_backedup) {
-      arrays_backedup = 0;
+      arrays_backedup = false;
       osl_strings_free(names->arrays);
       names->arrays = arrays_backup;
     }
@@ -298,14 +296,7 @@ void osl_scop_print(FILE* const file, const osl_scop* scop) {
  * \param scop The scop structure whose information has to be printed.
  */
 void osl_scop_print_scoplib(FILE* const file, const osl_scop* scop) {
-  int parameters_backedup = 0;
-  int arrays_backedup = 0;
-  osl_strings* parameters_backup = NULL;
-  osl_strings* arrays_backup = NULL;
-  osl_names* names;
-  osl_arrays* arrays;
-
-  if (scop == NULL) {
+  if (!scop) {
     fprintf(file, "# NULL scop\n");
     return;
   } else {
@@ -321,9 +312,13 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop* scop) {
   }
 
   // Generate the names for the various dimensions.
-  names = osl_scop_names(scop);
+  osl_names* const names = osl_scop_names(scop);
 
-  while (scop != NULL) {
+  while (scop) {
+    bool arrays_backedup = false;
+    bool parameters_backedup = false;
+    osl_strings* arrays_backup = NULL;
+    osl_strings* parameters_backup = NULL;
     // If possible, replace parameter names with scop parameter names.
     if (osl_generic_has_URI(scop->parameters, OSL_URI_STRINGS)) {
       parameters_backedup = 1;
@@ -332,9 +327,10 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop* scop) {
     }
 
     // If possible, replace array names with arrays extension names.
-    arrays = osl_generic_lookup(scop->extension, OSL_URI_ARRAYS);
-    if (arrays != NULL) {
-      arrays_backedup = 1;
+    osl_arrays* const arrays =
+        osl_generic_lookup(scop->extension, OSL_URI_ARRAYS);
+    if (arrays) {
+      arrays_backedup = true;
       arrays_backup = names->arrays;
       names->arrays = osl_arrays_to_strings(arrays);
     }
@@ -374,13 +370,13 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop* scop) {
 
     // If necessary, switch back parameter names.
     if (parameters_backedup) {
-      parameters_backedup = 0;
+      parameters_backedup = false;
       names->parameters = parameters_backup;
     }
 
     // If necessary, switch back array names.
     if (arrays_backedup) {
-      arrays_backedup = 0;
+      arrays_backedup = false;
       osl_strings_free(names->arrays);
       names->arrays = arrays_backup;
     }
@@ -408,34 +404,27 @@ void osl_scop_print_scoplib(FILE* const file, const osl_scop* scop) {
  * \return A pointer to the scop structure that has been read.
  */
 osl_scop* osl_scop_pread(FILE* const file, osl_interface* const registry,
-                           int precision) {
+                         const int precision) {
+  if (!file)
+    return NULL;
+
   osl_scop* list = NULL;
   osl_scop* current = NULL;
-  osl_scop* scop;
-  osl_statement* stmt = NULL;
-  osl_statement* prev = NULL;
-  osl_strings* language;
-  int nb_statements;
-  char* tmp;
-  int first = 1;
-  int i;
-
-  if (file == NULL)
-    return NULL;
+  bool first = true;
 
   while (1) {
     //
     // I. START TAG
     //
-    tmp = osl_util_read_uptotag(file, NULL, OSL_URI_SCOP);
-    if (tmp == NULL) {
+    char* const tmp = osl_util_read_uptotag(file, NULL, OSL_URI_SCOP);
+    if (!tmp) {
       OSL_debug("no more scop in the file");
       break;
     } else {
       free(tmp);
     }
 
-    scop = osl_scop_malloc();
+    osl_scop* const scop = osl_scop_malloc();
     scop->registry = osl_interface_clone(registry);
 
     //
@@ -443,14 +432,14 @@ osl_scop* osl_scop_pread(FILE* const file, osl_interface* const registry,
     //
 
     // Read the language.
-    language = osl_strings_read(file);
+    osl_strings* const language = osl_strings_read(file);
     if (osl_strings_size(language) == 0)
       OSL_error("no language (backend) specified");
 
     if (osl_strings_size(language) > 1)
       OSL_warning("uninterpreted information (after language)");
 
-    if (language != NULL) {
+    if (language) {
       OSL_strdup(scop->language, language->string[0]);
       osl_strings_free(language);
     }
@@ -467,11 +456,13 @@ osl_scop* osl_scop_pread(FILE* const file, osl_interface* const registry,
     //
 
     // Read the number of statements.
-    nb_statements = osl_util_read_int(file, NULL);
+    const int nb_statements = osl_util_read_int(file, NULL);
 
-    for (i = 0; i < nb_statements; i++) {
+    osl_statement* prev = NULL;
+    for (int i = 0; i < nb_statements; i++) {
       // Read each statement.
-      stmt = osl_statement_pread(file, scop->registry, precision);
+      osl_statement* const stmt =
+          osl_statement_pread(file, scop->registry, precision);
       if (scop->statement == NULL)
         scop->statement = stmt;
       else
@@ -489,7 +480,7 @@ osl_scop* osl_scop_pread(FILE* const file, osl_interface* const registry,
     // Add the new scop to the list.
     if (first) {
       list = scop;
-      first = 0;
+      first = false;
     } else {
       current->next = scop;
     }
@@ -510,10 +501,10 @@ osl_scop* osl_scop_pread(FILE* const file, osl_interface* const registry,
  * (2) the list of known interface is set to the default one.
  * \see{osl_scop_pread}
  */
-osl_scop* osl_scop_read(FILE* foo) {
-  int precision = osl_util_get_precision();
-  osl_interface* registry = osl_interface_get_default_registry();
-  osl_scop* scop = osl_scop_pread(foo, registry, precision);
+osl_scop* osl_scop_read(FILE* const foo) {
+  const int precision = osl_util_get_precision();
+  osl_interface* const registry = osl_interface_get_default_registry();
+  osl_scop* const scop = osl_scop_pread(foo, registry, precision);
 
   osl_interface_free(registry);
   return scop;
@@ -553,10 +544,8 @@ osl_scop* osl_scop_malloc(void) {
  * \param scop The pointer to the scop we want to free.
  */
 void osl_scop_free(osl_scop* scop) {
-  osl_scop* tmp;
-
-  while (scop != NULL) {
-    if (scop->language != NULL)
+  while (scop) {
+    if (scop->language)
       free(scop->language);
     osl_generic_free(scop->parameters);
     osl_relation_free(scop->context);
@@ -564,7 +553,7 @@ void osl_scop_free(osl_scop* scop) {
     osl_interface_free(scop->registry);
     osl_generic_free(scop->extension);
 
-    tmp = scop->next;
+    osl_scop* const tmp = scop->next;
     free(scop);
     scop = tmp;
   }
@@ -582,7 +571,7 @@ void osl_scop_free(osl_scop* scop) {
  * \param[in]     scop      The scop to add to the list.
  */
 void osl_scop_add(osl_scop** location, osl_scop* const scop) {
-  while (*location != NULL)
+  while (*location)
     location = &((*location)->next);
 
   *location = scop;
@@ -598,7 +587,7 @@ void osl_scop_add(osl_scop** location, osl_scop* const scop) {
 size_t osl_scop_number(const osl_scop* scop) {
   size_t number = 0;
 
-  while (scop != NULL) {
+  while (scop) {
     number++;
     scop = scop->next;
   }
@@ -615,14 +604,13 @@ size_t osl_scop_number(const osl_scop* scop) {
  */
 osl_scop* osl_scop_clone(const osl_scop* scop) {
   osl_scop* clone = NULL;
-  osl_scop* node;
   osl_scop* previous = NULL;
-  int first = 1;
+  bool first = true;
 
-  while (scop != NULL) {
-    node = osl_scop_malloc();
+  while (scop) {
+    osl_scop* const node = osl_scop_malloc();
     node->version = scop->version;
-    if (scop->language != NULL)
+    if (scop->language)
       OSL_strdup(node->language, scop->language);
     node->context = osl_relation_clone(scop->context);
     node->parameters = osl_generic_clone(scop->parameters);
@@ -631,7 +619,7 @@ osl_scop* osl_scop_clone(const osl_scop* scop) {
     node->extension = osl_generic_clone(scop->extension);
 
     if (first) {
-      first = 0;
+      first = false;
       clone = node;
       previous = node;
     } else {
@@ -653,20 +641,17 @@ osl_scop* osl_scop_clone(const osl_scop* scop) {
  * \returns  An identical SCoP without unions of relations.
  */
 osl_scop* osl_scop_remove_unions(const osl_scop* scop) {
-  osl_statement* statement;
-  osl_statement* new_statement;
-  osl_statement* scop_statement_ptr;
-  osl_scop* new_scop;
   osl_scop* scop_ptr;
   osl_scop* result = NULL;
 
-  for (; scop != NULL; scop = scop->next) {
-    statement = scop->statement;
-    scop_statement_ptr = NULL;
-    new_scop = osl_scop_malloc();
+  for (; scop; scop = scop->next) {
+    osl_statement* statement = scop->statement;
+    osl_statement* scop_statement_ptr = NULL;
+    osl_scop* const new_scop = osl_scop_malloc();
 
-    for (; statement != NULL; statement = statement->next) {
-      new_statement = osl_statement_remove_unions(statement);
+    for (; statement; statement = statement->next) {
+      osl_statement* const new_statement =
+          osl_statement_remove_unions(statement);
       if (!scop_statement_ptr) {
         scop_statement_ptr = new_statement;
         new_scop->statement = scop_statement_ptr;
@@ -675,13 +660,13 @@ osl_scop* osl_scop_remove_unions(const osl_scop* scop) {
         scop_statement_ptr = scop_statement_ptr->next;
       }
     }
-    while (scop_statement_ptr && scop_statement_ptr->next != NULL)
+    while (scop_statement_ptr && scop_statement_ptr->next)
       scop_statement_ptr = scop_statement_ptr->next;
 
     new_scop->context = osl_relation_clone(scop->context);
     new_scop->extension = osl_generic_clone(scop->extension);
-    if (scop->language != NULL) {
-      new_scop->language = (char*)malloc(strlen(scop->language) + 1);
+    if (scop->language) {
+      new_scop->language = malloc(strlen(scop->language) + 1);
       new_scop->language = strcpy(new_scop->language, scop->language);
     }
     new_scop->parameters = osl_generic_clone(scop->parameters);
@@ -708,53 +693,53 @@ osl_scop* osl_scop_remove_unions(const osl_scop* scop) {
  * \return 1 if s1 and s2 are the same (content-wise), 0 otherwise.
  */
 bool osl_scop_equal(const osl_scop* s1, const osl_scop* s2) {
-  while ((s1 != NULL) && (s2 != NULL)) {
+  while (s1 && s2) {
     if (s1 == s2)
-      return 1;
+      return true;
 
     if (s1->version != s2->version) {
       OSL_info("versions are not the same");
-      return 0;
+      return false;
     }
 
     if (strcmp(s1->language, s2->language) != 0) {
       OSL_info("languages are not the same");
-      return 0;
+      return false;
     }
 
     if (!osl_relation_equal(s1->context, s2->context)) {
       OSL_info("contexts are not the same");
-      return 0;
+      return false;
     }
 
     if (!osl_generic_equal(s1->parameters, s2->parameters)) {
       OSL_info("parameters are not the same");
-      return 0;
+      return false;
     }
 
     if (!osl_statement_equal(s1->statement, s2->statement)) {
       OSL_info("statements are not the same");
-      return 0;
+      return false;
     }
 
     if (!osl_interface_equal(s1->registry, s2->registry)) {
       OSL_info("registries are not the same");
-      return 0;
+      return false;
     }
 
     if (!osl_generic_equal(s1->extension, s2->extension)) {
       OSL_info("extensions are not the same");
-      return 0;
+      return false;
     }
 
     s1 = s1->next;
     s2 = s2->next;
   }
 
-  if (((s1 == NULL) && (s2 != NULL)) || ((s1 != NULL) && (s2 == NULL)))
-    return 0;
+  if ((!s1 && s2) || (s1 && !s2))
+    return false;
 
-  return 1;
+  return true;
 }
 
 /**
@@ -764,12 +749,10 @@ bool osl_scop_equal(const osl_scop* s1, const osl_scop* s2) {
  * \param scop  The scop we want to check.
  * \return 0 if the integrity check fails, 1 otherwise.
  */
-int osl_scop_integrity_check(const osl_scop* scop) {
-  int expected_nb_parameters;
-
-  while (scop != NULL) {
+bool osl_scop_integrity_check(const osl_scop* scop) {
+  while (scop) {
     // Check the language.
-    if ((scop->language != NULL) &&
+    if ((scop->language) &&
         (!strcmp(scop->language, "caml") || !strcmp(scop->language, "Caml") ||
          !strcmp(scop->language, "ocaml") || !strcmp(scop->language, "OCaml")))
       fprintf(stderr, "[OpenScop] Alert: What ?! Caml ?! Are you sure ?!?!\n");
@@ -778,23 +761,21 @@ int osl_scop_integrity_check(const osl_scop* scop) {
     if (!osl_relation_integrity_check(scop->context, OSL_TYPE_CONTEXT,
                                       OSL_UNDEFINED, OSL_UNDEFINED,
                                       OSL_UNDEFINED))
-      return 0;
+      return false;
 
     // Get the number of parameters.
-    if (scop->context != NULL)
-      expected_nb_parameters = scop->context->nb_parameters;
-    else
-      expected_nb_parameters = OSL_UNDEFINED;
+    const int expected_nb_parameters =
+        scop->context ? scop->context->nb_parameters : OSL_UNDEFINED;
 
     // TODO : check the number of parameter strings.
 
     if (!osl_statement_integrity_check(scop->statement, expected_nb_parameters))
-      return 0;
+      return false;
 
     scop = scop->next;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -804,51 +785,47 @@ int osl_scop_integrity_check(const osl_scop* scop) {
  * \param scop  The scop we want to check.
  * \return 0 if the integrity check fails, 1 otherwise.
  */
-int osl_scop_check_compatible_scoplib(const osl_scop* scop) {
+bool osl_scop_check_compatible_scoplib(const osl_scop* scop) {
   if (!osl_scop_integrity_check(scop))
-    return 0;
-  if (scop->next != NULL)
-    return 0;
-  if (scop == NULL || scop->statement == NULL)
+    return false;
+  if (scop->next)
+    return false;
+  if (!scop || !scop->statement)
     return 1;
 
-  osl_relation* domain;
-  osl_statement* statement;
-  osl_relation* scattering;
-  int precision = scop->statement->scattering->precision;
-  int i, j;
+  const int precision = scop->statement->scattering->precision;
 
-  statement = scop->statement;
+  const osl_statement* statement = scop->statement;
   while (statement != NULL) {
-    scattering = statement->scattering;
+    const osl_relation* scattering = statement->scattering;
 
     if (scattering->nb_local_dims != 0) {
       OSL_error("Local dims in scattering matrix");
-      return 0;
+      return false;
     }
 
-    domain = statement->domain;
-    while (domain != NULL) {
+    const osl_relation* domain = statement->domain;
+    while (domain) {
       if (domain->nb_local_dims != 0) {
         OSL_error("Local dims in domain matrix");
-        return 0;
+        return false;
       }
       domain = domain->next;
     }
 
     // Check if there is only the -Identity in the output_dims
     // and the lines MUST be in the right order
-    for (i = 0; i < scattering->nb_rows; i++) {
-      for (j = 0; j < scattering->nb_output_dims; j++) {
+    for (int i = 0; i < scattering->nb_rows; i++) {
+      for (int j = 0; j < scattering->nb_output_dims; j++) {
         if (i == j) {  // -1
           if (!osl_int_mone(precision, scattering->m[i][j + 1])) {
             OSL_error("Wrong -Identity");
-            return 0;
+            return false;
           }
         } else {  // 0
           if (!osl_int_zero(precision, scattering->m[i][j + 1])) {
             OSL_error("Wrong -Identity");
-            return 0;
+            return false;
           }
         }
       }
@@ -857,7 +834,7 @@ int osl_scop_check_compatible_scoplib(const osl_scop* scop) {
     statement = statement->next;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -867,7 +844,7 @@ int osl_scop_check_compatible_scoplib(const osl_scop* scop) {
  * \return The number of global parameters in the scop.
  */
 int osl_scop_get_nb_parameters(const osl_scop* scop) {
-  if (scop->context == NULL) {
+  if (!scop->context) {
     OSL_debug("no context domain, assuming 0 parameters");
     return 0;
   } else {
@@ -885,17 +862,13 @@ int osl_scop_get_nb_parameters(const osl_scop* scop) {
  * \param interface The extension interface to register within the scop.
  */
 void osl_scop_register_extension(osl_scop* scop, osl_interface* interface) {
-  osl_generic* textual;
-  osl_generic* new;
-  char* extension_string;
-
-  if ((interface != NULL) && (scop != NULL)) {
+  if (interface && scop) {
     osl_interface_add(&scop->registry, interface);
 
-    textual = osl_generic_lookup(scop->extension, interface->URI);
-    if (textual != NULL) {
-      extension_string = ((osl_textual*)textual->data)->textual;
-      new = osl_generic_sread(&extension_string, interface);
+    osl_textual* const t = osl_generic_lookup(scop->extension, interface->URI);
+    if (t) {
+      char* extension_string = t->textual;
+      osl_generic* const new = osl_generic_sread(&extension_string, interface);
       osl_generic_add(&scop->extension, new);
     }
   }
@@ -919,16 +892,16 @@ void osl_scop_register_extension(osl_scop* scop, osl_interface* interface) {
  * \param[in,out] nb_localdims  Number of local dimensions attribute.
  * \param[in,out] array_id      Maximum array identifier attribute.
  */
-void osl_scop_get_attributes(const osl_scop* scop, int* nb_parameters,
-                             int* nb_iterators, int* nb_scattdims,
-                             int* nb_localdims, int* array_id) {
+void osl_scop_get_attributes(const osl_scop* scop, int* const nb_parameters,
+                             int* const nb_iterators, int* const nb_scattdims,
+                             int* const nb_localdims, int* const array_id) {
   int local_nb_parameters = OSL_UNDEFINED;
   int local_nb_iterators = OSL_UNDEFINED;
   int local_nb_scattdims = OSL_UNDEFINED;
   int local_nb_localdims = OSL_UNDEFINED;
   int local_array_id = OSL_UNDEFINED;
 
-  while (scop != NULL) {
+  while (scop) {
     osl_relation_get_attributes(scop->context, &local_nb_parameters,
                                 &local_nb_iterators, &local_nb_scattdims,
                                 &local_nb_localdims, &local_array_id);
@@ -956,13 +929,12 @@ void osl_scop_get_attributes(const osl_scop* scop, int* nb_parameters,
 void osl_scop_normalize_scattering(osl_scop* scop) {
   int max_scattering_dims = 0;
   osl_statement* statement;
-  osl_relation* extended;
 
-  if ((scop != NULL) && (scop->statement != NULL)) {
+  if (scop && scop->statement) {
     // Get the max number of scattering dimensions.
     statement = scop->statement;
-    while (statement != NULL) {
-      if (statement->scattering != NULL) {
+    while (statement) {
+      if (statement->scattering) {
         max_scattering_dims =
             OSL_max(max_scattering_dims, statement->scattering->nb_output_dims);
       }
@@ -971,10 +943,10 @@ void osl_scop_normalize_scattering(osl_scop* scop) {
 
     // Normalize.
     statement = scop->statement;
-    while (statement != NULL) {
-      if (statement->scattering != NULL) {
-        extended = osl_relation_extend_output(statement->scattering,
-                                              max_scattering_dims);
+    while (statement) {
+      if (statement->scattering) {
+        osl_relation* const extended = osl_relation_extend_output(
+            statement->scattering, max_scattering_dims);
         osl_relation_free(statement->scattering);
         statement->scattering = extended;
       }
