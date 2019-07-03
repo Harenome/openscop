@@ -84,31 +84,29 @@
  */
 void osl_coordinates_idump(FILE* const file,
                            const osl_coordinates* const coordinates,
-                           int level) {
-  int j;
-
+                           const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (coordinates != NULL)
+  if (coordinates)
     fprintf(file, "+-- osl_coordinates\n");
   else
     fprintf(file, "+-- NULL coordinates\n");
 
-  if (coordinates != NULL) {
+  if (coordinates) {
     // Go to the right level.
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
 
     // Display the file name.
-    if (coordinates->name != NULL)
+    if (coordinates->name)
       fprintf(file, "File name__: %s\n", coordinates->name);
     else
       fprintf(file, "NULL file name\n");
 
     // Go to the right level.
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
 
     // Display the lines.
@@ -117,7 +115,7 @@ void osl_coordinates_idump(FILE* const file,
             coordinates->column_end);
 
     // Go to the right level.
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
 
     // Display the indentation.
@@ -125,7 +123,7 @@ void osl_coordinates_idump(FILE* const file,
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -154,7 +152,7 @@ char* osl_coordinates_sprint(const osl_coordinates* const coordinates) {
   char* string = NULL;
   char buffer[OSL_MAX_STRING];
 
-  if (coordinates != NULL) {
+  if (coordinates) {
     OSL_malloc(string, char*, high_water_mark * sizeof(char));
     string[0] = '\0';
 
@@ -195,15 +193,13 @@ char* osl_coordinates_sprint(const osl_coordinates* const coordinates) {
  * \return A pointer to the coordinates structure that has been read.
  */
 osl_coordinates* osl_coordinates_sread(char** input) {
-  osl_coordinates* coordinates;
-
-  if (*input == NULL) {
+  if (!*input) {
     OSL_debug("no coordinates optional tag");
     return NULL;
   }
 
   // Build the coordinates structure.
-  coordinates = osl_coordinates_malloc();
+  osl_coordinates* const coordinates = osl_coordinates_malloc();
 
   // Read the file name (and path).
   coordinates->name = osl_util_read_line(NULL, input);
@@ -253,7 +249,7 @@ osl_coordinates* osl_coordinates_malloc(void) {
  * \param coordinates The pointer to the coordinates structure to free.
  */
 void osl_coordinates_free(osl_coordinates* const coordinates) {
-  if (coordinates != NULL) {
+  if (coordinates) {
     free(coordinates->name);
     free(coordinates);
   }
@@ -272,12 +268,10 @@ void osl_coordinates_free(osl_coordinates* const coordinates) {
  */
 osl_coordinates* osl_coordinates_clone(
     const osl_coordinates* const coordinates) {
-  osl_coordinates* clone;
-
-  if (coordinates == NULL)
+  if (!coordinates)
     return NULL;
 
-  clone = osl_coordinates_malloc();
+  osl_coordinates* const clone = osl_coordinates_malloc();
   OSL_strdup(clone->name, coordinates->name);
   clone->line_start = coordinates->line_start;
   clone->column_start = coordinates->column_start;
@@ -299,42 +293,42 @@ osl_coordinates* osl_coordinates_clone(
 bool osl_coordinates_equal(const osl_coordinates* const c1,
                            const osl_coordinates* const c2) {
   if (c1 == c2)
-    return 1;
+    return true;
 
-  if (((c1 == NULL) && (c2 != NULL)) || ((c1 != NULL) && (c2 == NULL)))
-    return 0;
+  if ((!c1 && c2) || (c1 && !c2))
+    return false;
 
   if (strcmp(c1->name, c2->name)) {
     OSL_info("file names are not the same");
-    return 0;
+    return false;
   }
 
   if (c1->line_start != c2->line_start) {
     OSL_info("starting lines are not the same");
-    return 0;
+    return false;
   }
 
   if (c1->column_start != c2->column_start) {
     OSL_info("starting columns are not the same");
-    return 0;
+    return false;
   }
 
   if (c1->line_end != c2->line_end) {
     OSL_info("Ending lines are not the same");
-    return 0;
+    return false;
   }
 
   if (c1->column_end != c2->column_end) {
     OSL_info("Ending columns are not the same");
-    return 0;
+    return false;
   }
 
   if (c1->indent != c2->indent) {
     OSL_info("indentations are not the same");
-    return 0;
+    return false;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -344,7 +338,7 @@ bool osl_coordinates_equal(const osl_coordinates* const c1,
  * \return An interface structure for the coordinates extension.
  */
 osl_interface* osl_coordinates_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_COORDINATES);
   interface->idump = (osl_idump_f)osl_coordinates_idump;
