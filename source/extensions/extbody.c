@@ -84,31 +84,28 @@
  * \param[in] level  Number of spaces before printing, for each line.
  */
 void osl_extbody_idump(FILE* const file, const osl_extbody* const ebody,
-                       int level) {
-  size_t i;
-  int j;
-
+                       const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (ebody != NULL)
+  if (ebody)
     fprintf(file, "+-- osl_extbody\n");
   else
     fprintf(file, "+-- NULL extbody\n");
 
-  if (ebody != NULL) {
+  if (ebody) {
     // Go to the right level.
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
 
     // Display the number of ebody.
     fprintf(file, "nb_access: %zu\n", ebody->nb_access);
 
     // Display the coordinates.
-    for (i = 0; i < ebody->nb_access; i++) {
+    for (size_t i = 0; i < ebody->nb_access; i++) {
       // Go to the right level.
-      for (j = 0; j <= level; j++)
+      for (int j = 0; j <= level; j++)
         fprintf(file, "|\t");
 
       fprintf(file, "start: %d, length: %d\n", ebody->start[i],
@@ -120,7 +117,7 @@ void osl_extbody_idump(FILE* const file, const osl_extbody* const ebody,
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -144,9 +141,8 @@ void osl_extbody_dump(FILE* const file, const osl_extbody* const ebody) {
  * \return A string containing the OpenScop dump of the ebodystructure.
  */
 char* osl_extbody_sprint(const osl_extbody* const ebody) {
-  size_t i;
   size_t high_water_mark = OSL_MAX_STRING;
-  char *string = NULL, *body_string = NULL;
+  char* string = NULL;
   char buffer[OSL_MAX_STRING];
 
   if (ebody != NULL) {
@@ -163,12 +159,12 @@ char* osl_extbody_sprint(const osl_extbody* const ebody) {
       sprintf(buffer, "# Access coordinates (start/length)\n");
       osl_util_safe_strcat(&string, buffer, &high_water_mark);
     }
-    for (i = 0; i < ebody->nb_access; i++) {
+    for (size_t i = 0; i < ebody->nb_access; i++) {
       sprintf(buffer, "%d %d\n", ebody->start[i], ebody->length[i]);
       osl_util_safe_strcat(&string, buffer, &high_water_mark);
     }
 
-    body_string = osl_body_sprint(ebody->body);
+    char* const body_string = osl_body_sprint(ebody->body);
     osl_util_safe_strcat(&string, body_string, &high_water_mark);
     free(body_string);
   }
@@ -193,31 +189,27 @@ char* osl_extbody_sprint(const osl_extbody* const ebody) {
  *                      Updated to the position after what has been read.
  * \return A pointer to the extbody structure that has been read.
  */
-osl_extbody* osl_extbody_sread(char** input) {
-  size_t k, nb_access_unsigned;
-  int nb_access;
-  osl_extbody* ebody;
-
-  if (input == NULL) {
+osl_extbody* osl_extbody_sread(char** const input) {
+  if (!input) {
     OSL_debug("no extbody optional tag");
     return NULL;
   }
 
   // Find the number of ebody provided.
-  nb_access = osl_util_read_int(NULL, input);
+  const int nb_access = osl_util_read_int(NULL, input);
   if (nb_access < 0) {
     OSL_error("negative number of access");
   }
-  nb_access_unsigned = (size_t)nb_access;
+  const size_t nb_access_unsigned = (size_t)nb_access;
 
   // Allocate the array of start and length.
-  ebody = osl_extbody_malloc();
+  osl_extbody* const ebody = osl_extbody_malloc();
   OSL_malloc(ebody->start, int*, nb_access_unsigned * sizeof(int));
   OSL_malloc(ebody->length, int*, nb_access_unsigned * sizeof(int));
   ebody->nb_access = nb_access_unsigned;
 
   // Get each array start/length.
-  for (k = 0; k < nb_access_unsigned; k++) {
+  for (size_t k = 0; k < nb_access_unsigned; k++) {
     ebody->start[k] = osl_util_read_int(NULL, input);
     ebody->length[k] = osl_util_read_int(NULL, input);
   }
@@ -257,8 +249,8 @@ osl_extbody* osl_extbody_malloc(void) {
  * this function frees the allocated memory for an ebody structure.
  * \param[in,out] ebody The pointer to the extbody structure we want to free.
  */
-void osl_extbody_free(osl_extbody* ebody) {
-  if (ebody != NULL) {
+void osl_extbody_free(osl_extbody* const ebody) {
+  if (ebody) {
     free(ebody->start);
     free(ebody->length);
     osl_body_free(ebody->body);
@@ -278,18 +270,15 @@ void osl_extbody_free(osl_extbody* ebody) {
  * \return A pointer to the clone of the extbody structure.
  */
 osl_extbody* osl_extbody_clone(const osl_extbody* const ebody) {
-  size_t i;
-  osl_extbody* clone;
-
-  if (ebody == NULL)
+  if (!ebody)
     return NULL;
 
-  clone = osl_extbody_malloc();
+  osl_extbody* const clone = osl_extbody_malloc();
   clone->nb_access = ebody->nb_access;
   OSL_malloc(clone->start, int*, ebody->nb_access * sizeof(int));
   OSL_malloc(clone->length, int*, ebody->nb_access * sizeof(int));
 
-  for (i = 0; i < ebody->nb_access; i++) {
+  for (size_t i = 0; i < ebody->nb_access; i++) {
     clone->start[i] = ebody->start[i];
     clone->length[i] = ebody->length[i];
   }
@@ -311,35 +300,33 @@ osl_extbody* osl_extbody_clone(const osl_extbody* const ebody) {
  */
 bool osl_extbody_equal(const osl_extbody* const e1,
                        const osl_extbody* const e2) {
-  size_t i, j, found;
-
   if (e1 == e2)
-    return 1;
+    return true;
 
-  if (((e1 == NULL) && (e2 != NULL)) || ((e1 != NULL) && (e2 == NULL))) {
+  if ((!e1 && e2) || (e1 && !e2)) {
     OSL_info("extbody are not the same");
-    return 0;
+    return false;
   }
 
   // Check whether the number of ebody is the same.
   if (e1->nb_access != e2->nb_access) {
     OSL_info("extbody are not the same");
-    return 0;
+    return false;
   }
 
   // We accept a different order of the start/length, as long as the
   // identifiers are the same.
-  for (i = 0; i < e1->nb_access; i++) {
-    found = 0;
-    for (j = 0; j < e2->nb_access; j++) {
+  for (size_t i = 0; i < e1->nb_access; i++) {
+    bool found = false;
+    for (size_t j = 0; j < e2->nb_access; j++) {
       if ((e1->start[i] == e2->start[j]) && (e1->length[i] == e2->length[j])) {
-        found = 1;
+        found = true;
         break;
       }
     }
-    if (found != 1) {
+    if (!found) {
       OSL_info("extbody are not the same");
-      return 0;
+      return false;
     }
   }
 
@@ -353,7 +340,7 @@ bool osl_extbody_equal(const osl_extbody* const e1,
  * \return An interface structure for the extbody extension.
  */
 osl_interface* osl_extbody_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_EXTBODY);
   interface->idump = (osl_idump_f)osl_extbody_idump;
@@ -371,7 +358,8 @@ osl_interface* osl_extbody_interface(void) {
  * osl_extbody_add function:
  * This function add an entry in the list of coordinates
  */
-void osl_extbody_add(osl_extbody* ebody, int start, int length) {
+void osl_extbody_add(osl_extbody* const ebody, const int start,
+                     const int length) {
   ebody->nb_access++;
 
   OSL_realloc(ebody->start, int*, sizeof(int) * ebody->nb_access);
