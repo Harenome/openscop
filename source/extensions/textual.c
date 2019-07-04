@@ -86,27 +86,25 @@
  */
 void osl_textual_idump(FILE* const file, const osl_textual* const textual,
                        int level) {
-  int j;
-  char* tmp;
-
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (textual != NULL) {
+  if (textual) {
+    char* tmp;
     fprintf(file, "+-- osl_textual: ");
 
     // Display the textual message (without any carriage return).
     OSL_strdup(tmp, textual->textual);
-    for (j = 0; j < (int)strlen(tmp); j++)
+    for (int j = 0; j < (int)strlen(tmp); j++)
       if (tmp[j] == '\n')
         tmp[j] = ' ';
 
     if (strlen(tmp) > 40) {
-      for (j = 0; j < 20; j++)
+      for (int j = 0; j < 20; j++)
         fprintf(file, "%c", tmp[j]);
       fprintf(file, "   ...   ");
-      for (j = (int)strlen(tmp) - 20; j < (int)strlen(tmp); j++)
+      for (int j = (int)strlen(tmp) - 20; j < (int)strlen(tmp); j++)
         fprintf(file, "%c", tmp[j]);
       fprintf(file, "\n");
     } else {
@@ -118,7 +116,7 @@ void osl_textual_idump(FILE* const file, const osl_textual* const textual,
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -145,12 +143,12 @@ void osl_textual_dump(FILE* const file, const osl_textual* const textual) {
 char * osl_textual_sprint(const osl_textual* const textual) {
   char * string = NULL;
 
-  if ((textual != NULL) && (textual->textual != NULL)) {
+  if (textual && textual->textual) {
     if (strlen(textual->textual) > OSL_MAX_STRING) 
       OSL_error("textual too long");
     
     string = strdup(textual->textual);
-    if (string == NULL)
+    if (!string)
       OSL_error("memory overflow");
   }
 
@@ -184,10 +182,10 @@ char* osl_textual_sprint(const osl_textual* const textual) {
  *                           Updated to the position after what has been read.
  * \return A pointer to the textual structure that has been read.
  */
-osl_textual* osl_textual_sread(char** extensions) {
+osl_textual* osl_textual_sread(char** const extensions) {
   osl_textual* textual = NULL;
 
-  if (*extensions != NULL) {
+  if (*extensions) {
     textual = osl_textual_malloc();
     OSL_strdup(textual->textual, *extensions);
 
@@ -226,9 +224,9 @@ osl_textual* osl_textual_malloc(void) {
  * structure.
  * \param[in,out] textual The pointer to the textual structure to be freed.
  */
-void osl_textual_free(osl_textual* textual) {
-  if (textual != NULL) {
-    if (textual->textual != NULL)
+void osl_textual_free(osl_textual* const textual) {
+  if (textual) {
+    if (textual->textual)
       free(textual->textual);
     free(textual);
   }
@@ -289,7 +287,8 @@ bool osl_textual_equal(const osl_textual* f1, const osl_textual* f2) {
  * \param[in] f2  The second textual structure.
  * \return 1.
  */
-bool osl_textual_equal(const osl_textual* f1, const osl_textual* f2) {
+bool osl_textual_equal(const osl_textual* const f1,
+                       const osl_textual* const f2) {
   (void)f1;
   (void)f2;
   return 1;
@@ -303,7 +302,7 @@ bool osl_textual_equal(const osl_textual* f1, const osl_textual* f2) {
  * \return An interface structure for the textual extension.
  */
 osl_interface* osl_textual_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_TEXTUAL);
   interface->idump = (osl_idump_f)osl_textual_idump;
