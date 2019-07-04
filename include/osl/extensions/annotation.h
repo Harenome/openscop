@@ -140,6 +140,10 @@ void osl_annotation_append_prefix(osl_annotation* annotation, int prefix_type,
                                   char* prefix);
 void osl_annotation_append_suffix(osl_annotation* annotation, int suffix_type,
                                   char* suffix);
+void osl_annotation_append_prelude(osl_annotation* annotation, int prelude_type,
+                                   char* prelude);
+void osl_annotation_append_postlude(osl_annotation* annotation,
+                                    int postlude_type, char* postlude);
 
 #if defined(__cplusplus)
 }

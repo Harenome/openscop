@@ -323,6 +323,18 @@ void osl_annotation_append_suffix(osl_annotation* const annotation,
   osl_annotation_text_append(&annotation->suffix, suffix_type, suffix);
 }
 
+void osl_annotation_append_prelude(osl_annotation* const annotation,
+                                   const int prelude_type,
+                                   char* const prelude) {
+  osl_annotation_text_append(&annotation->prelude, prelude_type, prelude);
+}
+
+void osl_annotation_append_postlude(osl_annotation* const annotation,
+                                    const int postlude_type,
+                                    char* const postlude) {
+  osl_annotation_text_append(&annotation->postlude, postlude_type, postlude);
+}
+
 osl_annotation* osl_annotation_clone(const osl_annotation* const source) {
   osl_annotation* const clone = osl_annotation_malloc();
 
