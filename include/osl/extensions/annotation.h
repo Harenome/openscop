@@ -97,6 +97,8 @@ typedef struct osl_annotation_text osl_annotation_text;
 struct osl_annotation {
   osl_annotation_text prefix;
   osl_annotation_text suffix;
+  osl_annotation_text prelude;
+  osl_annotation_text postlude;
 };
 typedef struct osl_annotation osl_annotation;
 

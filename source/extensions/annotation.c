@@ -200,6 +200,8 @@ void osl_annotation_idump(FILE* const file, const osl_annotation* annotation,
 
   osl_annotation_text_idump(file, &annotation->prefix, level + 2);
   osl_annotation_text_idump(file, &annotation->suffix, level + 2);
+  osl_annotation_text_idump(file, &annotation->prelude, level + 2);
+  osl_annotation_text_idump(file, &annotation->postlude, level + 2);
 
   /* Last line. */
   osl_annotation_idump_indent(file, level);
@@ -238,6 +240,8 @@ char* osl_annotation_sprint(const osl_annotation* annotation) {
 
   _osl_annotation_sprint_text("Prefix", prefix);
   _osl_annotation_sprint_text("Suffix", suffix);
+  _osl_annotation_sprint_text("Prelude", prelude);
+  _osl_annotation_sprint_text("Postlude", postlude);
 
 #undef _osl_annotation_sprint_text
 
@@ -269,6 +273,8 @@ osl_annotation* osl_annotation_sread(char** input) {
 
   osl_annotation_sread_text(prefix);
   osl_annotation_sread_text(suffix);
+  osl_annotation_sread_text(prelude);
+  osl_annotation_sread_text(postlude);
 
   return output;
 }
@@ -286,6 +292,8 @@ osl_annotation* osl_annotation_malloc(void) {
 
   osl_annotation_text_init(&annotation->prefix);
   osl_annotation_text_init(&annotation->suffix);
+  osl_annotation_text_init(&annotation->prelude);
+  osl_annotation_text_init(&annotation->postlude);
 
   return annotation;
 }
@@ -293,6 +301,8 @@ osl_annotation* osl_annotation_malloc(void) {
 void osl_annotation_free(osl_annotation* annotation) {
   osl_annotation_text_clean(&annotation->prefix);
   osl_annotation_text_clean(&annotation->suffix);
+  osl_annotation_text_clean(&annotation->prelude);
+  osl_annotation_text_clean(&annotation->postlude);
   free(annotation);
 }
 
@@ -305,6 +315,8 @@ osl_annotation* osl_annotation_clone(const osl_annotation* const source) {
 
   clone->prefix = osl_annotation_text_clone(&source->prefix);
   clone->suffix = osl_annotation_text_clone(&source->suffix);
+  clone->prelude = osl_annotation_text_clone(&source->prelude);
+  clone->postlude = osl_annotation_text_clone(&source->postlude);
 
   return clone;
 }
@@ -319,7 +331,9 @@ bool osl_annotation_equal(const osl_annotation* const r1,
 
   /* Both r1 and r2 are non null pointers at this point. */
   bool equal = osl_annotation_text_equal(&r1->prefix, &r2->prefix) &&
-               osl_annotation_text_equal(&r1->suffix, &r2->suffix);
+               osl_annotation_text_equal(&r1->suffix, &r2->suffix) &&
+               osl_annotation_text_equal(&r1->prelude, &r2->prelude) &&
+               osl_annotation_text_equal(&r1->postlude, &r2->postlude);
 
   return equal;
 }
