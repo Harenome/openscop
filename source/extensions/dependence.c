@@ -89,23 +89,23 @@
  * - 18/09/2003: first version.
  */
 void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
-                          int level) {
-  int j, first = 1;
+                          const int level) {
+  bool first = true;
   osl_statement* tmp;
 
-  if (dependence != NULL) { /* Go to the right level. */
-    for (j = 0; j < level; j++)
+  if (dependence) { /* Go to the right level. */
+    for (int j = 0; j < level; j++)
       fprintf(file, "|\t");
     fprintf(file, "+-- osl_dependence\n");
   } else {
-    for (j = 0; j < level; j++)
+    for (int j = 0; j < level; j++)
       fprintf(file, "|\t");
     fprintf(file, "+-- NULL dependence\n");
   }
 
-  while (dependence != NULL) {
+  while (dependence) {
     if (!first) { /* Go to the right level. */
-      for (j = 0; j < level; j++)
+      for (int j = 0; j < level; j++)
         fprintf(file, "|\t");
       fprintf(file, "|   osl_dependence\n");
     } else {
@@ -113,12 +113,12 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     }
 
     /* A blank line. */
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
     /* Go to the right level and print the type. */
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
     fprintf(file, "Type: ");
     switch (dependence->type) {
@@ -146,33 +146,33 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     }
 
     /* A blank line. */
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
     /* Go to the right level and print the depth. */
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
     fprintf(file, "Depth: %d\n", dependence->depth);
 
     /* A blank line. */
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
     /* Ref source and target */
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
     fprintf(file, "Ref source: %d, Ref target: %d\n", dependence->ref_source,
             dependence->ref_target);
 
     /* A blank line. */
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
     /* Print the source statement. */
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
     fprintf(file, "Statement label: %d\n", dependence->label_source);
     tmp = dependence->stmt_source_ptr->next;
@@ -181,7 +181,7 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     dependence->stmt_source_ptr->next = tmp;
 
     /* Print the target statement. */
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
     fprintf(file, "Target label: %d\n", dependence->label_target);
     tmp = dependence->stmt_target_ptr->next;
@@ -190,7 +190,7 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     dependence->stmt_target_ptr->next = tmp;
 
     /* Print the dependence polyhedron. */
-    for (j = 0; j <= level; j++)
+    for (int j = 0; j <= level; j++)
       fprintf(file, "|\t");
     fprintf(file, "%d %d %d %d %d %d %d %d\n",
             dependence->source_nb_output_dims_domain,
@@ -206,15 +206,15 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     dependence = dependence->next;
 
     /* Next line. */
-    if (dependence != NULL) {
-      for (j = 0; j <= level; j++)
+    if (dependence) {
+      for (int j = 0; j <= level; j++)
         fprintf(file, "|\t");
       fprintf(file, "V\n");
     }
   }
 
   /* The last line. */
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -235,7 +235,7 @@ void osl_dependence_dump(FILE* const file,
  */
 void osl_dependence_print(FILE* const file,
                           const osl_dependence* const dependence) {
-  char* string = osl_dependence_sprint(dependence);
+  char* const string = osl_dependence_sprint(dependence);
   fprintf(file, "%s\n", string);
   free(string);
 }
@@ -251,8 +251,6 @@ char* osl_dependence_sprint(const osl_dependence* const dependence) {
   size_t buffer_size = 2048;
   char* buffer;
   char buff[2048];
-  const char* type;
-  char* pbuffer;
 
   OSL_malloc(buffer, char*, buffer_size);
   buffer[0] = '\0';
@@ -263,6 +261,7 @@ char* osl_dependence_sprint(const osl_dependence* const dependence) {
   strcat(buffer, buff);
 
   if (nb_deps) {
+    const char* type;
     for (tmp = dependence, nb_deps = 1; tmp; tmp = tmp->next, ++nb_deps) {
       switch (tmp->type) {
         case OSL_UNDEFINED:
@@ -304,7 +303,7 @@ char* osl_dependence_sprint(const osl_dependence* const dependence) {
       osl_util_safe_strcat(&buffer, buff, &buffer_size);
 
       /* Output dependence domain. */
-      pbuffer = osl_relation_sprint(tmp->domain);
+      char* const pbuffer = osl_relation_sprint(tmp->domain);
       osl_util_safe_strcat(&buffer, pbuffer, &buffer_size);
       free(pbuffer);
     }
@@ -317,13 +316,12 @@ char* osl_dependence_sprint(const osl_dependence* const dependence) {
  * osl_dependence_read_one_dep function:
  * Read one dependence from a string.
  */
-static osl_dependence* osl_dependence_read_one_dep(char** input,
-                                                    int precision) {
-  osl_dependence* dep = osl_dependence_malloc();
-  char* buffer;
+static osl_dependence* osl_dependence_read_one_dep(char** const input,
+                                                   const int precision) {
+  osl_dependence* const dep = osl_dependence_malloc();
 
   /* Dependence type */
-  buffer = osl_util_read_string(NULL, input);
+  char* const buffer = osl_util_read_string(NULL, input);
   if (!strcmp(buffer, "RAW"))
     dep->type = OSL_DEPENDENCE_RAW;
   else if (!strcmp(buffer, "RAR"))
@@ -361,8 +359,8 @@ static osl_dependence* osl_dependence_read_one_dep(char** input,
  * osl_dependence_sread function:
  * Retrieve a osl_dependence* list from the option tag in the scop.
  */
-osl_dependence* osl_dependence_sread(char** input) {
-  int precision = osl_util_get_precision();
+osl_dependence* osl_dependence_sread(char** const input) {
+  const int precision = osl_util_get_precision();
   return osl_dependence_psread(input, precision);
 }
 
@@ -370,11 +368,11 @@ osl_dependence* osl_dependence_sread(char** input) {
  * osl_dependence_psread function
  * Retrieve a osl_dependence* list from the option tag in the scop.
  */
-osl_dependence* osl_dependence_psread(char** input, int precision) {
+osl_dependence* osl_dependence_psread(char** const input, const int precision) {
   osl_dependence* first = NULL;
   osl_dependence* currdep = NULL;
 
-  if (*input == NULL) {
+  if (!*input) {
     OSL_debug("no dependence optional tag");
     return NULL;
   }
@@ -386,7 +384,7 @@ osl_dependence* osl_dependence_psread(char** input, int precision) {
   /* For each of them, read 1 and shift of the read size. */
   for (i = 0; i < nbdeps; i++) {
     osl_dependence* adep = osl_dependence_read_one_dep(input, precision);
-    if (first == NULL) {
+    if (!first) {
       currdep = first = adep;
     } else {
       currdep->next = adep;
@@ -447,7 +445,7 @@ osl_dependence* osl_dependence_malloc(void) {
  */
 void osl_dependence_free(osl_dependence* dependence) {
   osl_dependence* next;
-  while (dependence != NULL) {
+  while (dependence) {
     next = dependence->next;
     osl_relation_free(dependence->domain);
     free(dependence);
@@ -467,14 +465,14 @@ void osl_dependence_free(osl_dependence* dependence) {
  * \param n         The number of nodes we want to copy (-1 for infinity).
  * \return The clone of the n first nodes of the dependence list.
  */
-static osl_dependence* osl_dependence_nclone(const osl_dependence* dep,
-                                               int n) {
-  int first = 1, i = 0;
+static osl_dependence* osl_dependence_nclone(const osl_dependence* dep, int n) {
+  bool first = true;
+  int i = 0;
   osl_dependence* clone = NULL;
   osl_dependence* node;
   osl_dependence* previous = NULL;
 
-  while ((dep != NULL) && ((n == -1) || (i < n))) {
+  while (dep && ((n == -1) || (i < n))) {
     node = osl_dependence_malloc();
     node->stmt_source_ptr = dep->stmt_source_ptr;
     node->stmt_target_ptr = dep->stmt_target_ptr;
@@ -497,7 +495,7 @@ static osl_dependence* osl_dependence_nclone(const osl_dependence* dep,
     node->usr = NULL;
 
     if (first) {
-      first = 0;
+      first = false;
       clone = node;
       previous = node;
     } else {
@@ -532,45 +530,35 @@ osl_dependence* osl_dependence_clone(const osl_dependence* const dep) {
  * \param[in] d2 The second dependence.
  * \return 1 if d1 and d2 are the same (content-wise), 0 otherwise.
  */
-bool osl_dependence_equal(const osl_dependence* d1,
-                          const osl_dependence* d2) {
+bool osl_dependence_equal(const osl_dependence* d1, const osl_dependence* d2) {
   if (d1 == d2)
-    return 1;
+    return true;
 
-  if ((d1->next != NULL && d2->next == NULL) ||
-      (d1->next == NULL && d2->next != NULL))
-    return 0;
+  if ((d1->next && !d2->next) || (!d1->next && d2->next))
+    return false;
 
-  if (d1->next != NULL && d2->next != NULL)
+  if (d1->next && d2->next)
     if (!osl_dependence_equal(d1->next, d2->next))
-      return 0;
+      return false;
 
   if (!osl_relation_equal(d1->domain, d2->domain))
-    return 0;
+    return false;
 
   if (d1->label_source != d2->label_source ||
       d1->label_target != d2->label_target ||
       d1->ref_source != d2->ref_source || d1->ref_target != d2->ref_target ||
       d1->depth != d2->depth || d1->type != d2->type ||
-
       d1->source_nb_output_dims_domain != d2->source_nb_output_dims_domain ||
-
       d1->source_nb_output_dims_access != d2->source_nb_output_dims_access ||
-
       d1->target_nb_output_dims_domain != d2->target_nb_output_dims_domain ||
-
       d1->target_nb_output_dims_access != d2->target_nb_output_dims_access ||
-
       d1->source_nb_local_dims_domain != d2->source_nb_local_dims_domain ||
-
       d1->source_nb_local_dims_access != d2->source_nb_local_dims_access ||
-
       d1->target_nb_local_dims_domain != d2->target_nb_local_dims_domain ||
-
       d1->target_nb_local_dims_access != d2->target_nb_local_dims_access)
-    return 0;
+    return false;
 
-  return 1;
+  return true;
 }
 
 /**
@@ -584,8 +572,8 @@ bool osl_dependence_equal(const osl_dependence* d1,
  */
 void osl_dependence_add(osl_dependence** start, osl_dependence** now,
                         osl_dependence* dependence) {
-  if (dependence != NULL) {
-    if (*start == NULL) {
+  if (dependence) {
+    if (!*start) {
       *start = dependence;
       *now = *start;
     } else {
@@ -593,7 +581,7 @@ void osl_dependence_add(osl_dependence** start, osl_dependence** now,
       *now = (*now)->next;
     }
 
-    while ((*now)->next != NULL)
+    while ((*now)->next)
       *now = (*now)->next;
   }
 }
@@ -608,7 +596,7 @@ void osl_dependence_add(osl_dependence** start, osl_dependence** now,
 int osl_nb_dependences(const osl_dependence* deps) {
   const osl_dependence* dep = deps;
   int num = 0;
-  while (dep != NULL) {
+  while (dep) {
     num++;
     dep = dep->next;
   }
@@ -622,7 +610,7 @@ int osl_nb_dependences(const osl_dependence* deps) {
  * \return An interface structure for the dependence extension.
  */
 osl_interface* osl_dependence_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_DEPENDENCE);
   interface->idump = (osl_idump_f)osl_dependence_idump;
