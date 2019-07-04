@@ -82,11 +82,10 @@
  * \param[in] null  The null structure to print.
  * \param[in] level Number of spaces before printing, for each line.
  */
-void osl_null_idump(FILE* const file, const osl_null* const null, int level) {
-  int j;
-
+void osl_null_idump(FILE* const file, const osl_null* const null,
+                    const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
   if (null != NULL)
@@ -95,7 +94,7 @@ void osl_null_idump(FILE* const file, const osl_null* const null, int level) {
     fprintf(file, "+-- NULL null\n");
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -145,15 +144,13 @@ char* osl_null_sprint(const osl_null* const null) {
  * \return A pointer to the null structure that has been read.
  */
 osl_null* osl_null_sread(char** input) {
-  osl_null* null;
-
-  if (*input == NULL) {
+  if (!*input) {
     OSL_debug("no null optional tag");
     return NULL;
   }
 
   // Build the null structure
-  null = osl_null_malloc();
+  osl_null* const null = osl_null_malloc();
 
   // Update the input pointer (everything has been read and ignored).
   input += strlen(*input);
@@ -204,12 +201,10 @@ void osl_null_free(osl_null* null) {
  * \return A pointer to the clone of the null structure.
  */
 osl_null* osl_null_clone(const osl_null* null) {
-  osl_null* clone;
-
   if (null == NULL)
     return NULL;
 
-  clone = osl_null_malloc();
+  osl_null* const clone = osl_null_malloc();
   return clone;
 }
 
@@ -223,14 +218,14 @@ osl_null* osl_null_clone(const osl_null* null) {
  */
 bool osl_null_equal(const osl_null* const c1, const osl_null* const c2) {
   if (c1 == c2)
-    return 1;
+    return true;
 
-  if (((c1 == NULL) && (c2 != NULL)) || ((c1 != NULL) && (c2 == NULL))) {
+  if ((!c1 && c2) || (c1 && !c2)) {
     OSL_info("nulls are not the same");
-    return 0;
+    return false;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -240,7 +235,7 @@ bool osl_null_equal(const osl_null* const c1, const osl_null* const c2) {
  * \return An interface structure for the null extension.
  */
 osl_interface* osl_null_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_NULL);
   interface->idump = (osl_idump_f)osl_null_idump;
