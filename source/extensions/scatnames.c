@@ -83,22 +83,20 @@
  * \param[in] scatnames Scatnames structure to print.
  * \param[in] level     Number of spaces before printing, for each line.
  */
-void osl_scatnames_idump(FILE* const file,
-                         const osl_scatnames* const scatnames, int level) {
-  int j;
-
+void osl_scatnames_idump(FILE* const file, const osl_scatnames* const scatnames,
+                         const int level) {
   // Go to the right level.
-  for (j = 0; j < level; j++)
+  for (int j = 0; j < level; j++)
     fprintf(file, "|\t");
 
-  if (scatnames != NULL)
+  if (scatnames)
     fprintf(file, "+-- osl_scatnames\n");
   else
     fprintf(file, "+-- NULL scatnames\n");
 
-  if (scatnames != NULL) {
+  if (scatnames) {
     // Go to the right level.
-    for (j = 0; j <= level + 1; j++)
+    for (int j = 0; j <= level + 1; j++)
       fprintf(file, "|\t");
     fprintf(file, "\n");
 
@@ -107,7 +105,7 @@ void osl_scatnames_idump(FILE* const file,
   }
 
   // The last line.
-  for (j = 0; j <= level; j++)
+  for (int j = 0; j <= level; j++)
     fprintf(file, "|\t");
   fprintf(file, "\n");
 }
@@ -151,17 +149,15 @@ char* osl_scatnames_sprint(const osl_scatnames* const scatnames) {
  * \return A pointer to the scatnames structure that has been read.
  */
 osl_scatnames* osl_scatnames_sread(char** input) {
-  osl_scatnames* scatnames = NULL;
-  osl_strings* names = NULL;
-
-  if (*input == NULL) {
+  if (!*input) {
     OSL_debug("no scatnames optional tag");
     return NULL;
   }
 
   // Build the scatnames structure
-  names = osl_strings_sread(input);
-  if (names != NULL) {
+  osl_scatnames* scatnames = NULL;
+  osl_strings* const names = osl_strings_sread(input);
+  if (names) {
     scatnames = osl_scatnames_malloc();
     scatnames->names = names;
   }
@@ -197,7 +193,7 @@ osl_scatnames* osl_scatnames_malloc(void) {
  * \param[in,out] scatnames The pointer to the scatnames structure to free.
  */
 void osl_scatnames_free(osl_scatnames* scatnames) {
-  if (scatnames != NULL) {
+  if (scatnames) {
     osl_strings_free(scatnames->names);
     free(scatnames);
   }
@@ -215,12 +211,10 @@ void osl_scatnames_free(osl_scatnames* scatnames) {
  * \return A pointer to the clone of the scatnames structure.
  */
 osl_scatnames* osl_scatnames_clone(const osl_scatnames* const scatnames) {
-  osl_scatnames* clone;
-
-  if (scatnames == NULL)
+  if (!scatnames)
     return NULL;
 
-  clone = osl_scatnames_malloc();
+  osl_scatnames* const clone = osl_scatnames_malloc();
   clone->names = osl_strings_clone(scatnames->names);
 
   return clone;
@@ -237,15 +231,15 @@ osl_scatnames* osl_scatnames_clone(const osl_scatnames* const scatnames) {
 bool osl_scatnames_equal(const osl_scatnames* const s1,
                          const osl_scatnames* const s2) {
   if (s1 == s2)
-    return 1;
+    return true;
 
-  if (((s1 == NULL) && (s2 != NULL)) || ((s1 != NULL) && (s2 == NULL)))
-    return 0;
+  if ((!s1 && s2) || (s1 && !s2))
+    return false;
 
   if (!osl_strings_equal(s1->names, s2->names))
-    return 0;
+    return false;
 
-  return 1;
+  return true;
 }
 
 /**
@@ -255,7 +249,7 @@ bool osl_scatnames_equal(const osl_scatnames* const s1,
  * \return An interface structure for the scatnames extension.
  */
 osl_interface* osl_scatnames_interface(void) {
-  osl_interface* interface = osl_interface_malloc();
+  osl_interface* const interface = osl_interface_malloc();
 
   OSL_strdup(interface->URI, OSL_URI_SCATNAMES);
   interface->idump = (osl_idump_f)osl_scatnames_idump;
