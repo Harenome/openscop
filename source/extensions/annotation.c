@@ -85,6 +85,10 @@ static int osl_annotation_text_append(osl_annotation_text* text, int line_type,
 static void osl_annotation_text_idump(FILE* file,
                                       const osl_annotation_text* text,
                                       int level);
+static void osl_annotation_text_idump_type(FILE* const file, const int t);
+static void osl_annotation_text_idump_with_section(const char* name, FILE* file,
+                                      const osl_annotation_text* text,
+                                      int level);
 
 /******************************************************************************
  * osl_annotation_text: local functions definitions                           *
@@ -111,13 +115,58 @@ int osl_annotation_text_append(osl_annotation_text* const text,
   return 0;
 }
 
+void osl_annotation_text_idump_with_section(const char* name, FILE* const file,
+                               const osl_annotation_text* const text,
+                               const int level) {
+
+  osl_annotation_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", name);
+  osl_annotation_text_idump(file, text, level + 1);
+}
+
+void osl_annotation_text_idump_type(FILE* const file, const int t) {
+  if (!t) {
+    fprintf(file, "(none)");
+  } else {
+    fprintf(file, "(");
+
+    bool first = true;
+    if (t & OSL_ANNOTATION_TEXT_USER) {
+      fprintf(file, "%s%s", first ? "" : " & ", "user");
+      first = false;
+    }
+
+    if (t & OSL_ANNOTATION_TEXT_PRAGMA) {
+      fprintf(file, "%s%s", first ? "" : " & ", "pragma");
+      first = false;
+    }
+
+    fprintf(file, ")");
+  }
+}
+
 void osl_annotation_text_idump(FILE* const file,
                                const osl_annotation_text* const text,
                                const int level) {
+  /* Blank line... */
+  osl_annotation_idump_indent(file, level + 1);
+  fprintf(file, "\n");
+  /* Line count. */
+  osl_annotation_idump_indent(file, level);
+  fprintf(file, "+--count: %zu\n", text->count);
+  /* Blank line... */
+  osl_annotation_idump_indent(file, level + 1);
+  fprintf(file, "\n");
   for (size_t i = 0; i < text->count; ++i) {
     osl_annotation_idump_indent(file, level);
-    fprintf(file, "+--type %zu: %d\n", i, text->types[i]);
-    fprintf(file, "+--line %zu: %s\n", i, text->lines[i]);
+    fprintf(file, "+--[%zu] type: %d ", i, text->types[i]);
+    osl_annotation_text_idump_type(file, text->types[i]);
+    fprintf(file, "\n");
+    osl_annotation_idump_indent(file, level);
+    fprintf(file, "+--[%zu] line: %s\n", i, text->lines[i]);
+    /* Blank line... */
+    osl_annotation_idump_indent(file, level + 1);
+    fprintf(file, "\n");
   }
 }
 
@@ -204,17 +253,19 @@ void osl_annotation_idump(FILE* const file,
     fprintf(file, "+-- NULL annotation\n");
   }
 
-  /* Blank line... */
-  osl_annotation_idump_indent(file, level);
-  fprintf(file, "\n");
+  if (annotation) {
+    /* Blank line... */
+    osl_annotation_idump_indent(file, level + 2);
+    fprintf(file, "\n");
 
-  osl_annotation_text_idump(file, &annotation->prefix, level + 2);
-  osl_annotation_text_idump(file, &annotation->suffix, level + 2);
-  osl_annotation_text_idump(file, &annotation->prelude, level + 2);
-  osl_annotation_text_idump(file, &annotation->postlude, level + 2);
+    osl_annotation_text_idump_with_section("Prefix", file, &annotation->prefix, level + 1);
+    osl_annotation_text_idump_with_section("Suffix", file, &annotation->suffix, level + 1);
+    osl_annotation_text_idump_with_section("Prelude", file, &annotation->prelude, level + 1);
+    osl_annotation_text_idump_with_section("Postlude", file, &annotation->postlude, level + 1);
+  }
 
   /* Last line. */
-  osl_annotation_idump_indent(file, level);
+  osl_annotation_idump_indent(file, level + 2);
   fprintf(file, "\n");
 }
 void osl_annotation_dump(FILE* const file,
