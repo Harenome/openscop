@@ -63,123 +63,32 @@
 #include "osl/extensions/region.h"
 #include "osl/macros.h"
 
-static inline void osl_region_idump_indent(FILE* const file, int level);
-
-static void osl_region_text_init(osl_region_text* text);
-static void osl_region_text_clean(osl_region_text* text);
-
-static osl_region_text osl_region_text_clone(const osl_region_text* source);
-static bool osl_region_text_equal(const osl_region_text* t1,
-                                  const osl_region_text* t2);
-static int osl_region_text_append(osl_region_text* text, int line_type,
-                                  char* line);
-static void osl_region_text_idump(FILE* file, const osl_region_text* text,
-                                  int level);
-
 /******************************************************************************
- * osl_region_text functions                                                *
+ * Local functions declarations                                               *
  ******************************************************************************/
 
-int osl_region_text_append(osl_region_text* text, int line_type, char* line) {
-  const size_t count = text->count + 1;
+static inline void osl_region_idump_indent(FILE* const file, int level);
 
-  char** lines = realloc(text->lines, count * sizeof *lines);
-  if (!lines)
-    return 1;
+/**
+ * \brief Get a region's annotations.
+ * \param[in, out] region The targetted region.
+ * \return The region's annotations.
+ *
+ * \note If the region has not been annotated yet, this function first creates
+ * an osl_annotation and stores it in the region's extension list.
+ *
+ * \return The region's annotation.
+ */
+static inline osl_annotation* osl_region_get_annotation(osl_region* region);
 
-  int* types = realloc(text->types, count * sizeof *types);
-  if (!types)
-    return 1;
+/******************************************************************************
+ * Local variables                                                            *
+ ******************************************************************************/
 
-  text->lines = lines;
-  text->types = types;
-
-  text->lines[text->count] = line;
-  text->types[text->count] = line_type;
-  text->count = count;
-
-  return 0;
-}
-
-void osl_region_text_idump(FILE* const file, const osl_region_text* text,
-                           int level) {
-  for (size_t i = 0; i < text->count; ++i) {
-    osl_region_idump_indent(file, level);
-    fprintf(file, "+--type %zu: %d\n", i, text->types[i]);
-    fprintf(file, "+--line %zu: %s\n", i, text->lines[i]);
-  }
-}
-
-osl_region_text osl_region_text_clone(const osl_region_text* source) {
-  osl_region_text destination = {
-      .count = 0,
-      .types = 0,
-      .lines = 0,
-  };
-  for (size_t i = 0; i < source->count; ++i) {
-    char* line = strdup(source->lines[i]);
-    osl_region_text_append(&destination, source->types[i], line);
-  }
-  return destination;
-}
-
-void osl_region_text_init(osl_region_text* text) {
-  text->count = 0;
-  text->types = 0;
-  text->lines = 0;
-}
-
-void osl_region_text_clean(osl_region_text* text) {
-  if (text->lines) {
-    for (size_t i = 0; i < text->count; ++i) {
-      if (text->lines[i])
-        free(text->lines[i]);
-    }
-    free(text->lines);
-  }
-  if (text->types) {
-    free(text->types);
-  }
-}
-
-bool osl_region_text_equal(const osl_region_text* t1,
-                           const osl_region_text* t2) {
-  if (t1 == t2)
-    return true;
-
-  if ((t1 && !t2) || (!t1 && t2) || (t1->count != t2->count)) {
-    return false;
-  }
-
-  bool equal = true;
-  for (size_t i = 0; equal && i < t1->count; ++i) {
-    if (t1->types[i] != t2->types[i] || strcmp(t1->lines[i], t2->lines[i])) {
-      equal = false;
-    }
-  }
-
-  return equal;
-}
-
-void osl_region_append_prefix(osl_region* region, int prefix_type,
-                              char* prefix) {
-  osl_region_text_append(&region->prefix, prefix_type, prefix);
-}
-
-void osl_region_append_suffix(osl_region* region, int suffix_type,
-                              char* suffix) {
-  osl_region_text_append(&region->suffix, suffix_type, suffix);
-}
-
-void osl_region_append_prelude(osl_region* region, int prelude_type,
-                               char* prelude) {
-  osl_region_text_append(&region->prelude, prelude_type, prelude);
-}
-
-void osl_region_append_postlude(osl_region* region, int postlude_type,
-                                char* postlude) {
-  osl_region_text_append(&region->postlude, postlude_type, postlude);
-}
+static const char* _region_location_strings[] = {
+  [OSL_REGION_NONE] = "none",
+  [OSL_REGION_GLOBAL] = "global",
+};
 
 /******************************************************************************
  * Structure display functions                                                *
@@ -192,37 +101,35 @@ void osl_region_idump_indent(FILE* const file, int level) {
 }
 
 void osl_region_idump(FILE* const file, const osl_region* region, int level) {
+  /* Region header. */
   osl_region_idump_indent(file, level);
-
-  if (region != NULL) {
-    fprintf(file, "+-- osl_region\n");
-  } else {
-    fprintf(file, "+-- NULL region\n");
-  }
+  fprintf(file, "+-- %s\n", region ? "osl_region" : "NULL region");
+  /* Blank line... */
+  osl_region_idump_indent(file, level + 2);
+  fprintf(file, "\n");
 
   bool first = true;
   size_t count = 1;
   while (region) {
+    /* Region counter, if needed. */
     if (!first) {
       osl_region_idump_indent(file, level);
       fprintf(file, "|   osl_region (node %zu)\n", count);
+      /* Blank line... */
+      osl_region_idump_indent(file, level + 2);
+      fprintf(file, "\n");
     } else {
       first = 0;
     }
-
-    /* Blank line... */
-    osl_region_idump_indent(file, level);
-    fprintf(file, "\n");
-
     /* Location */
-    osl_region_idump_indent(file, level);
-    fprintf(file, "+--location: %d\n", region->location);
-
-    osl_region_text_idump(file, &region->prefix, level + 2);
-    osl_region_text_idump(file, &region->suffix, level + 2);
-    osl_region_text_idump(file, &region->prelude, level + 2);
-    osl_region_text_idump(file, &region->postlude, level + 2);
-
+    osl_region_idump_indent(file, level + 1);
+    fprintf(file, "+--location: %d (%s)\n", region->location,
+            _region_location_strings[region->location]);
+    /* Blank line... */
+    osl_region_idump_indent(file, level + 2);
+    fprintf(file, "\n");
+    /* Extensions */
+    osl_generic_idump(file, region->extensions, level + 1);
     ++count;
     region = region->next;
   }
@@ -231,6 +138,7 @@ void osl_region_idump(FILE* const file, const osl_region* region, int level) {
   osl_region_idump_indent(file, level);
   fprintf(file, "\n");
 }
+
 void osl_region_dump(FILE* const file, const osl_region* region) {
   osl_region_idump(file, region, 0);
 }
@@ -261,28 +169,14 @@ char* osl_region_sprint(const osl_region* region) {
     sprintf(buffer, "%d\n", region->location);
     osl_util_safe_strcat(&string, buffer, &high_water_mark);
 
-#define _osl_region_sprint_text(name, field)                   \
-  do {                                                         \
-    sprintf(buffer, "# %s count \n", name);                    \
-    osl_util_safe_strcat(&string, buffer, &high_water_mark);   \
-    sprintf(buffer, "%d\n", (int)region->field.count);         \
-    osl_util_safe_strcat(&string, buffer, &high_water_mark);   \
-    sprintf(buffer, "# %s lines (if any)\n", name);            \
-    osl_util_safe_strcat(&string, buffer, &high_water_mark);   \
-    for (size_t i = 0; i < region->field.count; ++i) {         \
-      sprintf(buffer, "%d ", region->field.types[i]);          \
-      osl_util_safe_strcat(&string, buffer, &high_water_mark); \
-      sprintf(buffer, "%s\n", region->field.lines[i]);         \
-      osl_util_safe_strcat(&string, buffer, &high_water_mark); \
-    }                                                          \
-  } while (0)
+    const int extension_count = osl_generic_number(region->extensions);
+    sprintf(buffer, "# Number of extensions \n%d\n", extension_count);
+    osl_util_safe_strcat(&string, buffer, &high_water_mark);
 
-    _osl_region_sprint_text("Prefix", prefix);
-    _osl_region_sprint_text("Suffix", suffix);
-    _osl_region_sprint_text("Prelude", prelude);
-    _osl_region_sprint_text("Postlude", postlude);
-
-#undef _osl_region_sprint_text
+    char* const extensions_string = osl_generic_sprint(region->extensions);
+    sprintf(buffer, "%s\n", extensions_string);
+    osl_util_safe_strcat(&string, buffer, &high_water_mark);
+    free(extensions_string);
 
     region = region->next;
   }
@@ -310,20 +204,13 @@ osl_region* osl_region_sread(char** input) {
   for (int i = 0; i < region_count; ++i) {
     current->location = osl_util_read_int(NULL, input);
 
-#define osl_region_sread_text(field)                            \
-  do {                                                          \
-    size_t line_count = (size_t)osl_util_read_int(NULL, input); \
-    for (size_t j = 0; j < line_count; ++j) {                   \
-      const int line_type = osl_util_read_int(NULL, input);     \
-      char* const line = osl_util_read_line(NULL, input);       \
-      osl_region_text_append(&current->field, line_type, line); \
-    }                                                           \
-  } while (0)
-
-    osl_region_sread_text(prefix);
-    osl_region_sread_text(suffix);
-    osl_region_sread_text(prelude);
-    osl_region_sread_text(postlude);
+    const int extension_count = osl_util_read_int(NULL, input);
+    osl_interface* const registry = osl_interface_get_default_registry();
+    for (int j = 0; j < extension_count; ++j) {
+      osl_generic* const extension = osl_generic_sread_one(input, registry);
+      osl_generic_add(&current->extensions, extension);
+    }
+    osl_interface_free(registry);
 
     if (i + 1 < region_count) {
       current->next = osl_region_malloc();
@@ -346,12 +233,7 @@ osl_region* osl_region_malloc(void) {
   }
 
   region->location = 0;
-
-  osl_region_text_init(&region->prefix);
-  osl_region_text_init(&region->suffix);
-  osl_region_text_init(&region->prelude);
-  osl_region_text_init(&region->postlude);
-
+  region->extensions = 0;
   region->next = NULL;
 
   return region;
@@ -361,11 +243,8 @@ void osl_region_free(osl_region* region) {
   while (region) {
     osl_region* const tmp = region;
 
-    /* Free strings. */
-    osl_region_text_clean(&region->prefix);
-    osl_region_text_clean(&region->suffix);
-    osl_region_text_clean(&region->prelude);
-    osl_region_text_clean(&region->postlude);
+    /* Free extensions. */
+    osl_generic_free(region->extensions);
 
     /* Move along. */
     region = region->next;
@@ -383,10 +262,7 @@ osl_region* osl_region_clone_one(const osl_region* source) {
   osl_region* clone = osl_region_malloc();
 
   clone->location = source->location;
-  clone->prefix = osl_region_text_clone(&source->prefix);
-  clone->suffix = osl_region_text_clone(&source->suffix);
-  clone->prelude = osl_region_text_clone(&source->prelude);
-  clone->postlude = osl_region_text_clone(&source->postlude);
+  clone->extensions = osl_generic_clone(source->extensions);
 
   return clone;
 }
@@ -419,10 +295,7 @@ bool osl_region_equal_one(const osl_region* r1, const osl_region* r2) {
 
   /* Both r1 and r2 are non null pointers at this point. */
   bool equal = r1->location == r2->location &&
-               osl_region_text_equal(&r1->prefix, &r2->prefix) &&
-               osl_region_text_equal(&r1->suffix, &r2->suffix) &&
-               osl_region_text_equal(&r1->prelude, &r2->prelude) &&
-               osl_region_text_equal(&r1->postlude, &r2->postlude);
+               osl_generic_equal(r1->extensions, r2->extensions);
 
   return equal;
 }
@@ -444,6 +317,39 @@ size_t osl_region_count(const osl_region* region) {
   return count;
 }
 
+void osl_region_append_prefix(osl_region* const region, const int prefix_type,
+                              char* const prefix) {
+  osl_annotation* const annotation = osl_region_get_annotation(region);
+  if (annotation) {
+    osl_annotation_append_prefix(annotation, prefix_type, prefix);
+  }
+}
+
+void osl_region_append_suffix(osl_region* const region, const int suffix_type,
+                              char* const suffix) {
+  osl_annotation* const annotation = osl_region_get_annotation(region);
+  if (annotation) {
+    osl_annotation_append_suffix(annotation, suffix_type, suffix);
+  }
+}
+
+void osl_region_append_prelude(osl_region* const region, const int prelude_type,
+                               char* const prelude) {
+  osl_annotation* const annotation = osl_region_get_annotation(region);
+  if (annotation) {
+    osl_annotation_append_prelude(annotation, prelude_type, prelude);
+  }
+}
+
+void osl_region_append_postlude(osl_region* const region, const int postlude_type,
+                                char* const postlude) {
+  osl_annotation* const annotation = osl_region_get_annotation(region);
+  if (annotation) {
+    osl_annotation_append_postlude(annotation, postlude_type, postlude);
+  }
+}
+
+
 osl_interface* osl_region_interface(void) {
   osl_interface* const interface = osl_interface_malloc();
 
@@ -459,3 +365,27 @@ osl_interface* osl_region_interface(void) {
 
   return interface;
 }
+
+/******************************************************************************
+ * Local functions definitions                                                *
+ ******************************************************************************/
+
+osl_annotation* osl_region_get_annotation(osl_region* const region) {
+  osl_annotation* const existing =  osl_generic_lookup(region->extensions, OSL_URI_ANNOTATION);
+  if (existing)
+    return existing;
+
+  /* Create a new annotation. */
+  osl_annotation* const annotation = osl_annotation_malloc();
+
+  /* Embed the annotation in an osl_generic. */
+  osl_generic* const container = osl_generic_malloc();
+  container->interface = osl_annotation_interface();
+  container->data = annotation;
+
+  /* Add the annotation in the extensions list in the region. */
+  osl_generic_add(&region->extensions, container);
+
+  return annotation;
+}
+

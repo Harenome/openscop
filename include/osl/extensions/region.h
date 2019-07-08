@@ -64,6 +64,8 @@
 
 #include <osl/attributes.h>
 #include <osl/strings.h>
+#include <osl/generic.h>
+#include <osl/extensions/annotation.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -76,44 +78,15 @@ extern "C" {
 #define OSL_REGION_NONE 0
 #define OSL_REGION_GLOBAL 1
 
-/* Texts */
-
-/** \brief No corresponding text. */
-#define OSL_REGION_TEXT_NONE 0
-/** \brief Text provided by the user. */
-#define OSL_REGION_TEXT_USER 1
-/** \brief The text must be preceded with "#pragma". */
-#define OSL_REGION_TEXT_PRAGMA 2
-
-struct osl_region_text {
-  int* types;
-  char** lines;
-  size_t count;
-};
-typedef struct osl_region_text osl_region_text;
-
 /**
  * \brief Regions
- *
- * Inspect the following field with bit masks:
- * - prefix_type
- * - suffix_type,
- * - prelude_type,
- * - poslude_type,
- *
- * For instance, the corresponding text may be provided by the user and required
- * to be preceded with "#pragma":
- *    prefix_type = OSL_REGION_TEXT_USER & OSL_REGION_TEXT_PRAGMA;
- *    prefix = "<some text>";
  */
 struct osl_region {
   /** Location of the region. */
   int location;
 
-  osl_region_text prefix;
-  osl_region_text suffix;
-  osl_region_text prelude;
-  osl_region_text postlude;
+  /* Extensions. */
+  osl_generic* extensions;
 
   struct osl_region* next;
 };
