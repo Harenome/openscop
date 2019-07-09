@@ -86,28 +86,19 @@
 void osl_extbody_idump(FILE* const file, const osl_extbody* const ebody,
                        const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (ebody)
-    fprintf(file, "+-- osl_extbody\n");
-  else
-    fprintf(file, "+-- NULL extbody\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", ebody ? "osl_extbody" : "NULL extbody");
 
   if (ebody) {
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
-
+    osl_util_idump_indent(file, level + 1);
     // Display the number of ebody.
     fprintf(file, "nb_access: %zu\n", ebody->nb_access);
 
     // Display the coordinates.
     for (size_t i = 0; i < ebody->nb_access; i++) {
       // Go to the right level.
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-
+      osl_util_idump_indent(file, level + 1);
       fprintf(file, "start: %d, length: %d\n", ebody->start[i],
               ebody->length[i]);
     }
@@ -117,9 +108,7 @@ void osl_extbody_idump(FILE* const file, const osl_extbody* const ebody,
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

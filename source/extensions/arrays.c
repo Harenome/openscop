@@ -87,36 +87,25 @@
 void osl_arrays_idump(FILE* const file, const osl_arrays* const arrays,
                       const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (arrays)
-    fprintf(file, "+-- osl_arrays\n");
-  else
-    fprintf(file, "+-- NULL arrays\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", arrays ? "osl_arrays" : "NULL arrays");
 
   if (arrays) {
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
-
+    osl_util_idump_indent(file, level + 1);
     // Display the number of names.
     fprintf(file, "nb_names: %d\n", arrays->nb_names);
 
     // Display the id/name.
     for (int i = 0; i < arrays->nb_names; i++) {
       // Go to the right level.
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-
+      osl_util_idump_indent(file, level + 1);
       fprintf(file, "id: %2d, name: %s\n", arrays->id[i], arrays->names[i]);
     }
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

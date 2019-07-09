@@ -87,8 +87,7 @@
 void osl_textual_idump(FILE* const file, const osl_textual* const textual,
                        int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
+  osl_util_idump_indent(file, level);
 
   if (textual) {
     char* tmp;
@@ -116,9 +115,7 @@ void osl_textual_idump(FILE* const file, const osl_textual* const textual,
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

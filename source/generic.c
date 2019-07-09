@@ -85,49 +85,33 @@
 void osl_generic_idump(FILE* const file, const osl_generic* generic,
                        const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (generic)
-    fprintf(file, "+-- osl_generic\n");
-  else
-    fprintf(file, "+-- NULL generic\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", generic ? "osl_generic" : "NULL generic");
 
   bool first = true;
   while (generic) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_generic\n");
     } else {
       first = false;
     }
 
     // A blank line
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     osl_interface_idump(file, generic->interface, level + 1);
-
     if (generic->interface)
       generic->interface->idump(file, generic->data, level + 1);
 
     generic = generic->next;
-
     // Next line.
-    if (generic) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (generic)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

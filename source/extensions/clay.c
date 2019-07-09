@@ -85,18 +85,12 @@
 void osl_clay_idump(FILE* const file, const osl_clay* const clay,
                     const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", clay ? "osl_clay" : "NULL clay");
 
-  if (clay != NULL)
-    fprintf(file, "+-- osl_clay\n");
-  else
-    fprintf(file, "+-- NULL clay\n");
-
-  if (clay != NULL) {
+  if (clay) {
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
 
     // Display the clay script (without any carriage return).
     char* tmp;
@@ -109,9 +103,7 @@ void osl_clay_idump(FILE* const file, const osl_clay* const clay,
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

@@ -85,18 +85,12 @@
 void osl_comment_idump(FILE* const file, const osl_comment* const comment,
                        const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (comment)
-    fprintf(file, "+-- osl_comment\n");
-  else
-    fprintf(file, "+-- NULL comment\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", comment ? "osl_comment" : "NULL comment");
 
   if (comment) {
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
 
     // Display the comment message (without any carriage return).
     char* tmp;
@@ -109,9 +103,7 @@ void osl_comment_idump(FILE* const file, const osl_comment* const comment,
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

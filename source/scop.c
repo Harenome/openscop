@@ -90,79 +90,50 @@
  */
 void osl_scop_idump(FILE* const file, const osl_scop* scop, const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (scop)
-    fprintf(file, "+-- osl_scop\n");
-  else
-    fprintf(file, "+-- NULL scop\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", scop ? "osl_scop" : "NULL scop");
 
   bool first = true;
   while (scop) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_scop\n");
     } else {
       first = false;
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Print the version.
-    for (int j = 0; j < level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level);
     fprintf(file, "|\tVersion: %d\n", scop->version);
-
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Print the language.
-    for (int j = 0; j < level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level);
     fprintf(file, "|\tLanguage: %s\n", scop->language);
-
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Print the context of the scop.
     osl_relation_idump(file, scop->context, level + 1);
-
     // Print the parameters.
     osl_generic_idump(file, scop->parameters, level + 1);
-
     // Print the statements.
     osl_statement_idump(file, scop->statement, level + 1);
-
     // Print the registered extension interfaces.
     osl_interface_idump(file, scop->registry, level + 1);
-
     // Print the extensions.
     osl_generic_idump(file, scop->extension, level + 1);
 
     scop = scop->next;
-
     // Next line.
-    if (scop) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (scop)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

@@ -84,13 +84,8 @@ void osl_pluto_unroll_idump(FILE* const file,
                             const osl_pluto_unroll* pluto_unroll,
                             const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (pluto_unroll)
-    fprintf(file, "+-- osl_pluto_unroll\n");
-  else
-    fprintf(file, "+-- NULL pluto_unroll\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", pluto_unroll ? "osl_pluto_unroll" : "NULL pluto_unroll");
 
   size_t number = 1;
   bool first = true;
@@ -98,48 +93,36 @@ void osl_pluto_unroll_idump(FILE* const file,
     // Go to the right level.
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
-
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_pluto_unroll (node %zu)\n", number++);
     } else {
       first = false;
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     // Display the names of iterators.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--iterator: %s\n", pluto_unroll->iter);
 
     // Display the names of iterators.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--jam: %i\n", pluto_unroll->jam);
 
     // Display the names of iterators.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--factor: %u\n", pluto_unroll->factor);
 
     pluto_unroll = pluto_unroll->next;
 
     // Next line.
-    if (pluto_unroll) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (pluto_unroll)
+      osl_util_idump_next_link(file, level);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

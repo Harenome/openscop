@@ -85,18 +85,10 @@
 void osl_null_idump(FILE* const file, const osl_null* const null,
                     const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (null != NULL)
-    fprintf(file, "+-- osl_null\n");
-  else
-    fprintf(file, "+-- NULL null\n");
-
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", null != NULL ? "osl_null" : "NULL null");
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

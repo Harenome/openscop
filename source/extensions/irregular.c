@@ -87,18 +87,12 @@
 void osl_irregular_idump(FILE* const file, const osl_irregular* const irregular,
                          const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (irregular)
-    fprintf(file, "+-- osl_irregular\n");
-  else
-    fprintf(file, "+-- NULL irregular\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", irregular ? "osl_irregular" : "NULL irregular");
 
   if (irregular) {
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
 
     // Display the irregular contents.
 
@@ -128,9 +122,7 @@ void osl_irregular_idump(FILE* const file, const osl_irregular* const irregular,
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

@@ -83,41 +83,30 @@
  */
 void osl_vector_idump(FILE* const file, const osl_vector* const vector,
                       const int level) {
+  // Go to the right level.
+  osl_util_idump_indent(file, level);
   if (vector) {
-    // Go to the right level.
-    for (int j = 0; j < level; j++)
-      fprintf(file, "|\t");
     fprintf(file, "+-- osl_vector (");
     osl_int_dump_precision(file, vector->precision);
     fprintf(file, ")\n");
 
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "%d\n", vector->size);
 
     // Display the vector.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
-
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "[ ");
-
     for (int j = 0; j < vector->size; j++) {
       osl_int_print(file, vector->precision, vector->v[j]);
       fprintf(file, " ");
     }
-
     fprintf(file, "]\n");
   } else {
-    // Go to the right level.
-    for (int j = 0; j < level; j++)
-      fprintf(file, "|\t");
     fprintf(file, "+-- NULL vector\n");
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

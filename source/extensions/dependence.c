@@ -93,33 +93,21 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
   bool first = true;
   osl_statement* tmp;
 
-  if (dependence) { /* Go to the right level. */
-    for (int j = 0; j < level; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "+-- osl_dependence\n");
-  } else {
-    for (int j = 0; j < level; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "+-- NULL dependence\n");
-  }
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", dependence ? "osl_dependence" : "NULL dependence");
 
   while (dependence) {
     if (!first) { /* Go to the right level. */
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_dependence\n");
     } else {
       first = 0;
     }
 
     /* A blank line. */
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     /* Go to the right level and print the type. */
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "Type: ");
     switch (dependence->type) {
       case OSL_UNDEFINED:
@@ -146,34 +134,23 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     }
 
     /* A blank line. */
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     /* Go to the right level and print the depth. */
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "Depth: %d\n", dependence->depth);
 
     /* A blank line. */
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     /* Ref source and target */
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "Ref source: %d, Ref target: %d\n", dependence->ref_source,
             dependence->ref_target);
 
     /* A blank line. */
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     /* Print the source statement. */
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "Statement label: %d\n", dependence->label_source);
     tmp = dependence->stmt_source_ptr->next;
     dependence->stmt_source_ptr->next = NULL;
@@ -181,8 +158,7 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     dependence->stmt_source_ptr->next = tmp;
 
     /* Print the target statement. */
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "Target label: %d\n", dependence->label_target);
     tmp = dependence->stmt_target_ptr->next;
     dependence->stmt_target_ptr->next = NULL;
@@ -190,8 +166,7 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     dependence->stmt_target_ptr->next = tmp;
 
     /* Print the dependence polyhedron. */
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "%d %d %d %d %d %d %d %d\n",
             dependence->source_nb_output_dims_domain,
             dependence->source_nb_output_dims_access,
@@ -206,17 +181,12 @@ void osl_dependence_idump(FILE* const file, const osl_dependence* dependence,
     dependence = dependence->next;
 
     /* Next line. */
-    if (dependence) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (dependence)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   /* The last line. */
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

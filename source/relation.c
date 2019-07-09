@@ -174,8 +174,7 @@ void osl_relation_print_type(FILE* const file, const osl_relation* relation) {
 void osl_relation_idump(FILE* const file, const osl_relation* relation,
                         const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
+  osl_util_idump_indent(file, level);
 
   if (relation) {
     fprintf(file, "+-- osl_relation (");
@@ -191,8 +190,7 @@ void osl_relation_idump(FILE* const file, const osl_relation* relation,
   while (relation) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_relation (");
       osl_relation_print_type(file, relation);
       fprintf(file, ", ");
@@ -203,8 +201,7 @@ void osl_relation_idump(FILE* const file, const osl_relation* relation,
     }
 
     // A blank line
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "%d %d %d %d %d %d\n", relation->nb_rows,
             relation->nb_columns, relation->nb_output_dims,
             relation->nb_input_dims, relation->nb_local_dims,
@@ -212,8 +209,7 @@ void osl_relation_idump(FILE* const file, const osl_relation* relation,
 
     // Display the relation.
     for (int i = 0; i < relation->nb_rows; i++) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level + 1);
 
       fprintf(file, "[ ");
 
@@ -229,19 +225,13 @@ void osl_relation_idump(FILE* const file, const osl_relation* relation,
 
     // Next line.
     if (relation) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "|\n");
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
+      osl_util_idump_blank_line(file, level + 1);
+      osl_util_idump_next_link(file, level + 1);
     }
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

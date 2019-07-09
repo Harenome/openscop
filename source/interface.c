@@ -99,8 +99,7 @@
 void osl_interface_idump(FILE* const file, const osl_interface* interface,
                          const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
+  osl_util_idump_indent(file, level);
 
   if (interface)
     fprintf(file, "+-- osl_interface: URI = %s\n", interface->URI);
@@ -111,8 +110,7 @@ void osl_interface_idump(FILE* const file, const osl_interface* interface,
   while (interface) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
 
       if (interface->URI)
         fprintf(file, "|   osl_interface: URI = %s\n", interface->URI);
@@ -126,19 +124,13 @@ void osl_interface_idump(FILE* const file, const osl_interface* interface,
 
     // Next line.
     if (interface) {
-      for (int j = 0; j <= level + 1; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "\n");
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
+      osl_util_idump_blank_line(file, level + 2);
+      osl_util_idump_next_link(file, level + 1);
     }
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

@@ -87,13 +87,8 @@
  */
 void osl_loop_idump(FILE* const file, const osl_loop* loop, const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (loop)
-    fprintf(file, "+-- osl_loop\n");
-  else
-    fprintf(file, "+-- NULL loop\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", loop ? "osl_loop" : "NULL loop");
 
   bool first = true;
   size_t number = 1;
@@ -101,31 +96,23 @@ void osl_loop_idump(FILE* const file, const osl_loop* loop, const int level) {
     // Go to the right level.
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
-
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_loop (node %zu)\n", number);
     } else {
       first = false;
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Display the number of names.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--iterator: %s\n", loop->iter);
 
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--nb_stmts: %zu\n", loop->nb_stmts);
 
     // Display the id/name.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--stmt_ids:");
     for (size_t i = 0; i < loop->nb_stmts; i++) {
       // Go to the right level.
@@ -133,33 +120,25 @@ void osl_loop_idump(FILE* const file, const osl_loop* loop, const int level) {
     }
     fprintf(file, "\n");
 
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--private_vars: %s\n", loop->private_vars);
 
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--directive: %d\n", loop->directive);
 
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--user: %s\n", loop->user);
 
     loop = loop->next;
     number++;
 
     // Next line.
-    if (loop) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (loop)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

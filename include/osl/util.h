@@ -87,6 +87,9 @@ char* osl_util_strdup(char const*);
 int osl_util_get_precision(void);
 void osl_util_print_provided(FILE*, bool, const char*);
 char* osl_util_identifier_substitution(const char*, char**);
+void osl_util_idump_indent(FILE*, size_t);
+void osl_util_idump_blank_line(FILE*, size_t);
+void osl_util_idump_next_link(FILE*, size_t);
 
 #if defined(__cplusplus)
 }

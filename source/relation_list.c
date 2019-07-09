@@ -84,47 +84,32 @@
 void osl_relation_list_idump(FILE* const file, const osl_relation_list* l,
                              const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (l)
-    fprintf(file, "+-- osl_relation_list\n");
-  else
-    fprintf(file, "+-- NULL relation list\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", l ? "osl_relation_list" : "NULL relation list");
 
   bool first = true;
   while (l) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_relation_list\n");
     } else {
       first = false;
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Print a relation.
     osl_relation_idump(file, l->elt, level + 1);
 
     l = l->next;
-
     // Next line.
-    if (l) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (l)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

@@ -86,34 +86,25 @@
 void osl_symbols_idump(FILE* const file, const osl_symbols* symbols,
                        const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (symbols)
-    fprintf(file, "+-- osl_symbols\n");
-  else
-    fprintf(file, "+-- NULL symbols\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", symbols ? "osl_symbols" : "NULL symbols");
 
   bool first = true;
   size_t number = 1;
   while (symbols) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_symbol_t (node %zu)\n", number);
     } else {
       first = false;
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     // 1. Print the symbol kind.
-    for (int i = 0; i <= level; i++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     if (symbols->type != OSL_UNDEFINED) {
       fprintf(file, "+-- Type: ");
       switch (symbols->type) {
@@ -137,35 +128,27 @@ void osl_symbols_idump(FILE* const file, const osl_symbols* symbols,
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     // 2. Print the origin of the symbol.
-    for (int i = 0; i <= level; i++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     if (symbols->generated != OSL_UNDEFINED)
       fprintf(file, "+-- Origin: %d\n", symbols->generated);
     else
       fprintf(file, "+-- Undefined origin\n");
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     // 3. Print the number of array dimensions for the symbol.
-    for (int i = 0; i <= level; i++)
-      fprintf(file, "|\t");
+    osl_util_idump_indent(file, level + 1);
     if (symbols->nb_dims != OSL_UNDEFINED)
       fprintf(file, "+-- Number of Dimensions: %d\n", symbols->nb_dims);
     else
       fprintf(file, "+-- Undefined number of dimensions\n");
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     // 4. Print the symbol identifier.
     osl_generic_idump(file, symbols->identifier, level + 1);
@@ -182,17 +165,12 @@ void osl_symbols_idump(FILE* const file, const osl_symbols* symbols,
     symbols = symbols->next;
     number++;
     // Next line.
-    if (symbols) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (symbols)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

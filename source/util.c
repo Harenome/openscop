@@ -690,3 +690,18 @@ char* osl_util_identifier_substitution(const char* const expression,
 
   return string;
 }
+
+void osl_util_idump_indent(FILE* const file, const size_t level) {
+  for (size_t i = 0; i < level; ++i)
+    fprintf(file, "|\t");
+}
+
+void osl_util_idump_blank_line(FILE* const file, const size_t level) {
+  osl_util_idump_indent(file, level);
+  fprintf(file, "\n");
+}
+
+void osl_util_idump_next_link(FILE* const file, const size_t level) {
+  osl_util_idump_indent(file, level);
+  fprintf(file, "V\n");
+}

@@ -86,28 +86,18 @@
 void osl_scatnames_idump(FILE* const file, const osl_scatnames* const scatnames,
                          const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (scatnames)
-    fprintf(file, "+-- osl_scatnames\n");
-  else
-    fprintf(file, "+-- NULL scatnames\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", scatnames ? "osl_scatnames" : "NULL scatnames");
 
   if (scatnames) {
     // Go to the right level.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Display the list of scattering names.
     osl_strings_idump(file, scatnames->names, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

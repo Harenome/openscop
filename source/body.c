@@ -85,20 +85,14 @@
 void osl_body_idump(FILE* const file, const osl_body* const body,
                     const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
+  osl_util_idump_indent(file, level);
 
   if (body) {
     fprintf(file, "+-- osl_body\n");
-
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
-
+    osl_util_idump_blank_line(file, level + 2);
     // Print the iterators
     osl_strings_idump(file, body->iterators, level + 1);
-
     // Print the original body expression.
     osl_strings_idump(file, body->expression, level + 1);
   } else {
@@ -106,9 +100,7 @@ void osl_body_idump(FILE* const file, const osl_body* const body,
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

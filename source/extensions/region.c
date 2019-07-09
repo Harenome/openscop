@@ -67,8 +67,6 @@
  * Local functions declarations                                               *
  ******************************************************************************/
 
-static inline void osl_region_idump_indent(FILE* const file, int level);
-
 /**
  * \brief Get a region's annotations.
  * \param[in, out] region The targetted region.
@@ -94,40 +92,32 @@ static const char* _region_location_strings[] = {
  * Structure display functions                                                *
  ******************************************************************************/
 
-void osl_region_idump_indent(FILE* const file, int level) {
-  for (int j = 0; j < level; ++j) {
-    fprintf(file, "|\t");
-  }
-}
-
 void osl_region_idump(FILE* const file, const osl_region* region, int level) {
   /* Region header. */
-  osl_region_idump_indent(file, level);
+  osl_util_idump_indent(file, level);
   fprintf(file, "+-- %s\n", region ? "osl_region" : "NULL region");
   /* Blank line... */
-  osl_region_idump_indent(file, level + 2);
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 2);
 
   bool first = true;
   size_t count = 1;
   while (region) {
     /* Region counter, if needed. */
     if (!first) {
-      osl_region_idump_indent(file, level);
+      osl_util_idump_next_link(file, level + 1);
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_region (node %zu)\n", count);
       /* Blank line... */
-      osl_region_idump_indent(file, level + 2);
-      fprintf(file, "\n");
+      osl_util_idump_blank_line(file, level + 2);
     } else {
       first = 0;
     }
     /* Location */
-    osl_region_idump_indent(file, level + 1);
+    osl_util_idump_indent(file, level + 1);
     fprintf(file, "+--location: %d (%s)\n", region->location,
             _region_location_strings[region->location]);
     /* Blank line... */
-    osl_region_idump_indent(file, level + 2);
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
     /* Extensions */
     osl_generic_idump(file, region->extensions, level + 1);
     ++count;
@@ -135,8 +125,7 @@ void osl_region_idump(FILE* const file, const osl_region* region, int level) {
   }
 
   /* Last line. */
-  osl_region_idump_indent(file, level);
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level);
 }
 
 void osl_region_dump(FILE* const file, const osl_region* region) {

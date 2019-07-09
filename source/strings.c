@@ -84,8 +84,7 @@
  */
 void osl_strings_idump(FILE* const file, const osl_strings* const strings,
                        const int level) {
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
+  osl_util_idump_indent(file, level);
 
   if (strings) {
     const size_t nb_strings = osl_strings_size(strings);
@@ -97,9 +96,7 @@ void osl_strings_idump(FILE* const file, const osl_strings* const strings,
     fprintf(file, "+-- NULL strings\n");
 
   // A blank line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

@@ -86,46 +86,33 @@ void osl_coordinates_idump(FILE* const file,
                            const osl_coordinates* const coordinates,
                            const int level) {
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
-  if (coordinates)
-    fprintf(file, "+-- osl_coordinates\n");
-  else
-    fprintf(file, "+-- NULL coordinates\n");
+  osl_util_idump_indent(file, level);
+  fprintf(file, "+-- %s\n", coordinates ? "osl_coordinates" : "NULL coordinates");
 
   if (coordinates) {
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
-
+    osl_util_idump_indent(file, level + 1);
     // Display the file name.
     if (coordinates->name)
-      fprintf(file, "File name__: %s\n", coordinates->name);
+      fprintf(file, "File name  : %s\n", coordinates->name);
     else
       fprintf(file, "NULL file name\n");
 
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
-
+    osl_util_idump_indent(file, level + 1);
     // Display the lines.
     fprintf(file, "Coordinates: [%d,%d -> %d,%d]\n", coordinates->line_start,
             coordinates->column_start, coordinates->line_end,
             coordinates->column_end);
 
     // Go to the right level.
-    for (int j = 0; j <= level; j++)
-      fprintf(file, "|\t");
-
+    osl_util_idump_indent(file, level + 1);
     // Display the indentation.
     fprintf(file, "Indentation: %d\n", coordinates->indent);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**

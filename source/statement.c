@@ -97,9 +97,7 @@ void osl_statement_idump(FILE* const file, const osl_statement* statement,
   int number = 1;
 
   // Go to the right level.
-  for (int j = 0; j < level; j++)
-    fprintf(file, "|\t");
-
+  osl_util_idump_indent(file, level);
   if (statement)
     fprintf(file, "+-- osl_statement (S%d)\n", number);
   else
@@ -109,27 +107,21 @@ void osl_statement_idump(FILE* const file, const osl_statement* statement,
   while (statement) {
     if (!first) {
       // Go to the right level.
-      for (int j = 0; j < level; j++)
-        fprintf(file, "|\t");
+      osl_util_idump_indent(file, level);
       fprintf(file, "|   osl_statement (S%d)\n", number);
     } else {
       first = false;
     }
 
     // A blank line.
-    for (int j = 0; j <= level + 1; j++)
-      fprintf(file, "|\t");
-    fprintf(file, "\n");
+    osl_util_idump_blank_line(file, level + 2);
 
     // Print the domain of the statement.
     osl_relation_idump(file, statement->domain, level + 1);
-
     // Print the scattering of the statement.
     osl_relation_idump(file, statement->scattering, level + 1);
-
     // Print the array access information of the statement.
     osl_relation_list_idump(file, statement->access, level + 1);
-
     // Print the original body expression.
     osl_generic_idump(file, statement->extension, level + 1);
 
@@ -137,17 +129,12 @@ void osl_statement_idump(FILE* const file, const osl_statement* statement,
     number++;
 
     // Next line.
-    if (statement) {
-      for (int j = 0; j <= level; j++)
-        fprintf(file, "|\t");
-      fprintf(file, "V\n");
-    }
+    if (statement)
+      osl_util_idump_next_link(file, level + 1);
   }
 
   // The last line.
-  for (int j = 0; j <= level; j++)
-    fprintf(file, "|\t");
-  fprintf(file, "\n");
+  osl_util_idump_blank_line(file, level + 1);
 }
 
 /**
