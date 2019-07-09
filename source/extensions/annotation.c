@@ -86,9 +86,10 @@ static void osl_annotation_text_idump(FILE* file,
                                       const osl_annotation_text* text,
                                       int level);
 static void osl_annotation_text_idump_type(FILE* const file, const int t);
-static void osl_annotation_text_idump_with_section(const char* name, FILE* file,
-                                      const osl_annotation_text* text,
-                                      int level);
+static void osl_annotation_text_idump_with_section(
+    const char* name, FILE* file, const osl_annotation_text* text, int level);
+static void osl_annotation_text_sread(osl_annotation_text* const destination,
+                               char** const input);
 
 /******************************************************************************
  * osl_annotation_text: local functions definitions                           *
@@ -115,10 +116,9 @@ int osl_annotation_text_append(osl_annotation_text* const text,
   return 0;
 }
 
-void osl_annotation_text_idump_with_section(const char* name, FILE* const file,
-                               const osl_annotation_text* const text,
-                               const int level) {
-
+void osl_annotation_text_idump_with_section(
+    const char* name, FILE* const file, const osl_annotation_text* const text,
+    const int level) {
   osl_annotation_idump_indent(file, level);
   fprintf(file, "+-- %s\n", name);
   osl_annotation_text_idump(file, text, level + 1);
@@ -258,10 +258,14 @@ void osl_annotation_idump(FILE* const file,
     osl_annotation_idump_indent(file, level + 2);
     fprintf(file, "\n");
 
-    osl_annotation_text_idump_with_section("Prefix", file, &annotation->prefix, level + 1);
-    osl_annotation_text_idump_with_section("Suffix", file, &annotation->suffix, level + 1);
-    osl_annotation_text_idump_with_section("Prelude", file, &annotation->prelude, level + 1);
-    osl_annotation_text_idump_with_section("Postlude", file, &annotation->postlude, level + 1);
+    osl_annotation_text_idump_with_section("Prefix", file, &annotation->prefix,
+                                           level + 1);
+    osl_annotation_text_idump_with_section("Suffix", file, &annotation->suffix,
+                                           level + 1);
+    osl_annotation_text_idump_with_section("Prelude", file,
+                                           &annotation->prelude, level + 1);
+    osl_annotation_text_idump_with_section("Postlude", file,
+                                           &annotation->postlude, level + 1);
   }
 
   /* Last line. */
@@ -282,7 +286,7 @@ char* osl_annotation_sprint(const osl_annotation* const annotation) {
   OSL_malloc(string, char*, high_water_mark * sizeof(char));
   string[0] = '\0';
 
-  sprintf(buffer, sep);
+  sprintf(buffer, "%s", sep);
   osl_util_safe_strcat(&string, buffer, &high_water_mark);
 
 #define _osl_annotation_sprint_text(name, field)               \
@@ -299,7 +303,7 @@ char* osl_annotation_sprint(const osl_annotation* const annotation) {
       sprintf(buffer, "%s\n", annotation->field.lines[i]);     \
       osl_util_safe_strcat(&string, buffer, &high_water_mark); \
     }                                                          \
-    sprintf(buffer, sep);                                      \
+    sprintf(buffer, "%s", sep);                                \
     osl_util_safe_strcat(&string, buffer, &high_water_mark);   \
   } while (0)
 
