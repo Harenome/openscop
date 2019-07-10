@@ -61,8 +61,8 @@
 #ifndef OSL_STATEMENT_H
 #define OSL_STATEMENT_H
 
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include <osl/attributes.h>
 #include <osl/body.h>
@@ -84,10 +84,10 @@ extern "C" {
  * conventions (e.g. "S1" for the first statement in the list).
  */
 struct osl_statement {
-  osl_relation* domain;      /**< Iteration domain of the statement */
-  osl_relation* scattering;  /**< Scattering relation of the statement*/
-  osl_relation_list* access; /**< Access information */
-  osl_generic* extension;    /**< A list of statement extensions */
+  osl_relation* domain;       /**< Iteration domain of the statement */
+  osl_relation* scattering;   /**< Scattering relation of the statement*/
+  osl_relation_list* access;  /**< Access information */
+  osl_generic* extension;     /**< A list of statement extensions */
   void* usr;                  /**< A user-defined field, not touched
                                    AT ALL by the OpenScop Library. */
   struct osl_statement* next; /**< Next statement in the linked list */
@@ -102,16 +102,15 @@ typedef struct osl_statement* osl_statement_p OSL_DEPRECATED;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_statement_idump(FILE*, const osl_statement*, int)
-    OSL_NONNULL_ARGS(1);
+void osl_statement_idump(FILE*, const osl_statement*, int) OSL_NONNULL_ARGS(1);
 void osl_statement_dump(FILE*, const osl_statement*) OSL_NONNULL_ARGS(1);
 void osl_statement_pprint(FILE*, const osl_statement*, const osl_names*)
     OSL_NONNULL_ARGS(1);
 void osl_statement_print(FILE*, const osl_statement*) OSL_NONNULL_ARGS(1);
 
 // SCoPLib Compatibility
-void osl_statement_pprint_scoplib(FILE*, const osl_statement*,
-                                  const osl_names*) OSL_NONNULL_ARGS(1);
+void osl_statement_pprint_scoplib(FILE*, const osl_statement*, const osl_names*)
+    OSL_NONNULL_ARGS(1);
 
 /******************************************************************************
  *                              Reading function                              *
@@ -135,16 +134,15 @@ void osl_statement_add(osl_statement**, osl_statement*);
 void osl_statement_compact(osl_statement*, int);
 int osl_statement_number(const osl_statement*);
 osl_statement* osl_statement_nclone(const osl_statement*,
-                                      int) OSL_WARN_UNUSED_RESULT;
-osl_statement* osl_statement_clone(const osl_statement*)
-    OSL_WARN_UNUSED_RESULT;
+                                    int) OSL_WARN_UNUSED_RESULT;
+osl_statement* osl_statement_clone(const osl_statement*) OSL_WARN_UNUSED_RESULT;
 osl_statement* osl_statement_remove_unions(const osl_statement*)
     OSL_WARN_UNUSED_RESULT;
 bool osl_statement_equal(const osl_statement*, const osl_statement*);
 bool osl_statement_integrity_check(const osl_statement*, int);
 int osl_statement_get_nb_iterators(const osl_statement*);
-void osl_statement_get_attributes(const osl_statement*, int*, int*, int*,
-                                  int*, int*);
+void osl_statement_get_attributes(const osl_statement*, int*, int*, int*, int*,
+                                  int*);
 osl_body* osl_statement_get_body(const osl_statement*);
 #if defined(__cplusplus)
 }

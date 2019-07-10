@@ -63,9 +63,9 @@
 #include <stdio.h>
 
 #include <osl/attributes.h>
-#include <osl/strings.h>
-#include <osl/generic.h>
 #include <osl/extensions/annotation.h>
+#include <osl/generic.h>
+#include <osl/strings.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -98,8 +98,7 @@ typedef struct osl_region osl_region;
 
 void osl_region_idump(FILE* file, const osl_region* region, int level)
     OSL_NONNULL_ARGS(1);
-void osl_region_dump(FILE* file, const osl_region* region)
-    OSL_NONNULL_ARGS(1);
+void osl_region_dump(FILE* file, const osl_region* region) OSL_NONNULL_ARGS(1);
 char* osl_region_sprint(const osl_region* region);
 
 /******************************************************************************
@@ -121,8 +120,7 @@ void osl_region_free(osl_region* region);
 
 osl_region* osl_region_clone_one(const osl_region* region)
     OSL_WARN_UNUSED_RESULT;
-osl_region* osl_region_clone(const osl_region* region)
-    OSL_WARN_UNUSED_RESULT;
+osl_region* osl_region_clone(const osl_region* region) OSL_WARN_UNUSED_RESULT;
 
 bool osl_region_equal_one(const osl_region* a1, const osl_region* a2);
 bool osl_region_equal(const osl_region* a1, const osl_region* a2);

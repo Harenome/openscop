@@ -93,8 +93,7 @@ typedef struct osl_scatnames* osl_scatnames_p OSL_DEPRECATED;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_scatnames_idump(FILE*, const osl_scatnames*, int)
-    OSL_NONNULL_ARGS(1);
+void osl_scatnames_idump(FILE*, const osl_scatnames*, int) OSL_NONNULL_ARGS(1);
 void osl_scatnames_dump(FILE*, const osl_scatnames*) OSL_NONNULL_ARGS(1);
 char* osl_scatnames_sprint(const osl_scatnames*) OSL_WARN_UNUSED_RESULT;
 
@@ -115,8 +114,7 @@ void osl_scatnames_free(osl_scatnames*);
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_scatnames* osl_scatnames_clone(const osl_scatnames*)
-    OSL_WARN_UNUSED_RESULT;
+osl_scatnames* osl_scatnames_clone(const osl_scatnames*) OSL_WARN_UNUSED_RESULT;
 bool osl_scatnames_equal(const osl_scatnames*, const osl_scatnames*);
 osl_interface* osl_scatnames_interface(void) OSL_WARN_UNUSED_RESULT;
 

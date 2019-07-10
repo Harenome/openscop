@@ -78,9 +78,9 @@ extern "C" {
  * The osl_symbols structure stores information regarding the symbols.
  */
 struct osl_symbols {
-  int type;                 /**< Symbol type (variable, iterator...) */
-  int generated;            /**< Flag to determine its origin */
-  int nb_dims;              /**< Number of array dimensions */
+  int type;                /**< Symbol type (variable, iterator...) */
+  int generated;           /**< Flag to determine its origin */
+  int nb_dims;             /**< Number of array dimensions */
   osl_generic* identifier; /**< Symbol identifier */
   osl_generic* datatype;   /**< Symbol Datatype (int, float...) */
   osl_generic* scope;      /**< Scope of symbol */
@@ -121,14 +121,13 @@ void osl_symbols_free(osl_symbols*);
  ******************************************************************************/
 
 void osl_symbols_add(osl_symbols**, osl_symbols*);
-osl_symbols* osl_symbols_nclone(const osl_symbols*,
-                                  int) OSL_WARN_UNUSED_RESULT;
+osl_symbols* osl_symbols_nclone(const osl_symbols*, int) OSL_WARN_UNUSED_RESULT;
 osl_symbols* osl_symbols_clone(const osl_symbols*) OSL_WARN_UNUSED_RESULT;
 bool osl_symbols_equal(const osl_symbols*, const osl_symbols*);
 osl_symbols* osl_symbols_lookup(osl_symbols*,
-                                  osl_generic*) OSL_WARN_UNUSED_RESULT;
+                                osl_generic*) OSL_WARN_UNUSED_RESULT;
 osl_symbols* osl_symbols_remove(osl_symbols**,
-                                  osl_symbols*) OSL_WARN_UNUSED_RESULT;
+                                osl_symbols*) OSL_WARN_UNUSED_RESULT;
 int osl_symbols_get_nb_symbols(const osl_symbols*);
 osl_interface* osl_symbols_interface(void) OSL_WARN_UNUSED_RESULT;
 

@@ -92,7 +92,8 @@ typedef struct osl_extbody* osl_extbody_p OSL_DEPRECATED;
 typedef struct osl_extbody const osl_const_extbody_t OSL_DEPRECATED;
 typedef struct osl_extbody* const osl_extbody_const_p OSL_DEPRECATED;
 typedef struct osl_extbody const* osl_const_extbody_p OSL_DEPRECATED;
-typedef struct osl_extbody const* const osl_const_extbody_const_p OSL_DEPRECATED;
+typedef struct osl_extbody const* const osl_const_extbody_const_p
+    OSL_DEPRECATED;
 
 /******************************************************************************
  *                          Structure display function                        *

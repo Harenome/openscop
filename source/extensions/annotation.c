@@ -83,7 +83,7 @@ static void osl_annotation_text_idump_type(FILE* const file, const int t);
 static void osl_annotation_text_idump_with_section(
     const char* name, FILE* file, const osl_annotation_text* text, int level);
 static void osl_annotation_text_sread(osl_annotation_text* const destination,
-                               char** const input);
+                                      char** const input);
 
 /******************************************************************************
  * osl_annotation_text: local functions definitions                           *

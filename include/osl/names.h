@@ -109,8 +109,8 @@ void osl_names_free(osl_names*);
  ******************************************************************************/
 osl_names* osl_names_clone(const osl_names*) OSL_WARN_UNUSED_RESULT;
 osl_names* osl_names_generate(const char*, int, const char*, int, const char*,
-                                int, const char*, int, const char*,
-                                int) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
+                              int, const char*, int, const char*,
+                              int) OSL_WARN_UNUSED_RESULT OSL_NONNULL;
 #if defined(__cplusplus)
 }
 #endif

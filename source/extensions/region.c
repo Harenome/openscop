@@ -84,8 +84,8 @@ static inline osl_annotation* osl_region_get_annotation(osl_region* region);
  ******************************************************************************/
 
 static const char* _region_location_strings[] = {
-  [OSL_REGION_NONE] = "none",
-  [OSL_REGION_GLOBAL] = "global",
+    [OSL_REGION_NONE] = "none",
+    [OSL_REGION_GLOBAL] = "global",
 };
 
 /******************************************************************************
@@ -330,14 +330,13 @@ void osl_region_append_prelude(osl_region* const region, const int prelude_type,
   }
 }
 
-void osl_region_append_postlude(osl_region* const region, const int postlude_type,
-                                char* const postlude) {
+void osl_region_append_postlude(osl_region* const region,
+                                const int postlude_type, char* const postlude) {
   osl_annotation* const annotation = osl_region_get_annotation(region);
   if (annotation) {
     osl_annotation_append_postlude(annotation, postlude_type, postlude);
   }
 }
-
 
 osl_interface* osl_region_interface(void) {
   osl_interface* const interface = osl_interface_malloc();
@@ -360,7 +359,8 @@ osl_interface* osl_region_interface(void) {
  ******************************************************************************/
 
 osl_annotation* osl_region_get_annotation(osl_region* const region) {
-  osl_annotation* const existing =  osl_generic_lookup(region->extensions, OSL_URI_ANNOTATION);
+  osl_annotation* const existing =
+      osl_generic_lookup(region->extensions, OSL_URI_ANNOTATION);
   if (existing)
     return existing;
 
@@ -377,4 +377,3 @@ osl_annotation* osl_region_get_annotation(osl_region* const region) {
 
   return annotation;
 }
-

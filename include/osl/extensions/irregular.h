@@ -111,8 +111,7 @@ typedef struct osl_irregular* osl_irregular_p OSL_DEPRECATED;
  *                          Structure display function                        *
  ******************************************************************************/
 
-void osl_irregular_idump(FILE*, const osl_irregular*, int)
-    OSL_NONNULL_ARGS(1);
+void osl_irregular_idump(FILE*, const osl_irregular*, int) OSL_NONNULL_ARGS(1);
 void osl_irregular_dump(FILE*, const osl_irregular*) OSL_NONNULL_ARGS(1);
 char* osl_irregular_sprint(const osl_irregular*) OSL_WARN_UNUSED_RESULT;
 
@@ -133,16 +132,14 @@ void osl_irregular_free(osl_irregular*);
  *                            Processing functions                            *
  ******************************************************************************/
 
-osl_irregular* osl_irregular_clone(const osl_irregular*)
-    OSL_WARN_UNUSED_RESULT;
+osl_irregular* osl_irregular_clone(const osl_irregular*) OSL_WARN_UNUSED_RESULT;
 bool osl_irregular_equal(const osl_irregular*, const osl_irregular*);
 osl_irregular* osl_irregular_add_control(const osl_irregular*, char**, int,
-                                           const char*) OSL_WARN_UNUSED_RESULT;
+                                         const char*) OSL_WARN_UNUSED_RESULT;
 osl_irregular* osl_irregular_add_exit(const osl_irregular*, char**, int,
-                                        const char*) OSL_WARN_UNUSED_RESULT;
-osl_irregular* osl_irregular_add_predicates(const osl_irregular*,
-                                              const int*,
-                                              int) OSL_WARN_UNUSED_RESULT;
+                                      const char*) OSL_WARN_UNUSED_RESULT;
+osl_irregular* osl_irregular_add_predicates(const osl_irregular*, const int*,
+                                            int) OSL_WARN_UNUSED_RESULT;
 osl_interface* osl_irregular_interface(void) OSL_WARN_UNUSED_RESULT;
 #if defined(__cplusplus)
 }

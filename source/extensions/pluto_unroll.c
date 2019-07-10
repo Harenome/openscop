@@ -85,7 +85,8 @@ void osl_pluto_unroll_idump(FILE* const file,
                             const int level) {
   // Go to the right level.
   osl_util_idump_indent(file, level);
-  fprintf(file, "+-- %s\n", pluto_unroll ? "osl_pluto_unroll" : "NULL pluto_unroll");
+  fprintf(file, "+-- %s\n",
+          pluto_unroll ? "osl_pluto_unroll" : "NULL pluto_unroll");
 
   size_t number = 1;
   bool first = true;

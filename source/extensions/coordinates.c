@@ -87,7 +87,8 @@ void osl_coordinates_idump(FILE* const file,
                            const int level) {
   // Go to the right level.
   osl_util_idump_indent(file, level);
-  fprintf(file, "+-- %s\n", coordinates ? "osl_coordinates" : "NULL coordinates");
+  fprintf(file, "+-- %s\n",
+          coordinates ? "osl_coordinates" : "NULL coordinates");
 
   if (coordinates) {
     // Go to the right level.
